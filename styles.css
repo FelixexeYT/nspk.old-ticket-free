@@ -97,9 +97,14 @@ body {
     text-align: center;
 }
 
-.old-logo-wrap { margin-bottom: 30px; }
+.old-logo-wrap {
+    margin-bottom: 30px;
+}
 
-.old-logo { width: 150px; height: auto; }
+.old-logo {
+    width: 150px;
+    height: auto;
+}
 
 .old-success {
     font-size: 17px;
@@ -123,7 +128,9 @@ body {
     margin-bottom: 28px;
 }
 
-.old-price-currency { font-size: 40px; }
+.old-price-currency {
+    font-size: 40px;
+}
 
 .old-date {
     font-size: 18px;
@@ -198,6 +205,16 @@ body {
 
 .old-download-btn:hover { background: #6aa838; }
 
+/* ===== Адаптив ===== */
+@media (max-width: 480px) {
+    .old-body { padding: 24px 16px; }
+    .old-price { font-size: 48px; }
+    .old-timer-value { font-size: 38px; }
+    .old-qr { max-width: 100%; }
+    .old-transport { font-size: 20px; }
+    .old-date, .old-vehicle { font-size: 16px; }
+    .old-success { font-size: 16px; }
+}
 /* ===== ЧЕК (Экран 3) ===== */
 .receipt-section {
     background: #ffffff;
@@ -223,7 +240,9 @@ body {
     width: auto;
 }
 
-.receipt-back:hover { text-decoration: underline; }
+.receipt-back:hover {
+    text-decoration: underline;
+}
 
 .receipt-content {
     font-size: 15px;
@@ -259,15 +278,13 @@ body {
     border: none;
 }
 
-/* ===== Адаптив ===== */
 @media (max-width: 480px) {
-    .old-body { padding: 24px 16px; }
-    .old-price { font-size: 48px; }
-    .old-timer-value { font-size: 38px; }
-    .old-qr { max-width: 100%; }
-    .old-transport { font-size: 20px; }
-    .old-date, .old-vehicle { font-size: 16px; }
-    .old-success { font-size: 16px; }
-    .receipt-section { padding: 16px; }
-    .receipt-qr img { width: 100%; height: auto; max-width: 100%; }
+    .receipt-section {
+        padding: 16px;
+    }
+    .receipt-qr img {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+    }
 }
