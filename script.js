@@ -129,7 +129,8 @@ function showTicket() {
             startTime: Date.now()
         };
 
-        localStorage.setItem('ticketData', JSON.stringify(data));
+        // sessionStorage вместо localStorage — данные живут только пока вкладка открыта
+        sessionStorage.setItem('ticketData', JSON.stringify(data));
 
         renderTicket(data);
         renderReceipt(data);
@@ -160,48 +161,40 @@ document.addEventListener('DOMContentLoaded', function() {
     if (downloadBtn) downloadBtn.addEventListener('click', e => { e.preventDefault(); openReceipt(); });
     if (receiptBackBtn) receiptBackBtn.addEventListener('click', e => { e.preventDefault(); history.back(); });
 
-    // ▼▼▼ ГЛАВНОЕ ИЗМЕНЕНИЕ ▼▼▼
-    // Смотрим на хеш в URL: если его нет — всегда показываем форму
     const hash = location.hash.replace('#', '');
+    const savedData = sessionStorage.getItem('ticketData');
 
-    // Если пользователь зашёл без хеша (обычный заход) — сбрасываем старый билет
-    if (!hash) {
-        localStorage.removeItem('ticketData');
-        window._ticketData = null;
-        if (timerInterval) clearInterval(timerInterval);
-        switchView('form');
-        history.replaceState({ view: 'form' }, '', location.pathname + '#form');
-        return;
-    }
+    // СЛУЧАЙ 1: URL с #ticket или #receipt И есть данные — восстанавливаем
+    if ((hash === 'ticket' || hash === 'receipt') && savedData) {
+        try {
+            const data = JSON.parse(savedData);
+            renderTicket(data);
+            renderReceipt(data);
 
-    // Если в URL есть #ticket или #receipt — восстанавливаем билет
-    if (hash === 'ticket' || hash === 'receipt') {
-        const savedData = localStorage.getItem('ticketData');
-        if (savedData) {
-            try {
-                const data = JSON.parse(savedData);
-                renderTicket(data);
-                renderReceipt(data);
-                switchView(hash);
-                history.replaceState({ view: hash }, '', location.pathname + '#' + hash);
-                return;
-            } catch (e) {
-                console.error('Ошибка чтения данных:', e);
-                localStorage.removeItem('ticketData');
-            }
+            // Правильная цепочка истории:
+            // 1) текущую запись делаем "form" (без новой записи)
+            // 2) показываем нужный экран
+            // 3) добавляем новую запись для него
+            history.replaceState({ view: 'form' }, '', location.pathname + '#form');
+            switchView(hash);
+            history.pushState({ view: hash }, '', location.pathname + '#' + hash);
+            return;
+        } catch (e) {
+            console.error('Ошибка:', e);
+            sessionStorage.removeItem('ticketData');
         }
-        // Если данных нет — показываем форму
-        switchView('form');
-        history.replaceState({ view: 'form' }, '', location.pathname + '#form');
-        return;
     }
 
-    // На всякий случай — форма
+    // СЛУЧАЙ 2: обычный заход — показываем форму
+    sessionStorage.removeItem('ticketData');
+    window._ticketData = null;
+    if (timerInterval) clearInterval(timerInterval);
     switchView('form');
-    history.replaceState({ view: 'form' }, '', location.pathname + '#form');
+    // Убираем хеш из URL, чтобы кнопка Назад уходила за пределы сайта корректно
+    history.replaceState({ view: 'form' }, '', location.pathname);
 });
 
-// ===== Системная кнопка «Назад» =====
+// ===== Системная кнопка «Назад» (Android/iOS/Alt+Left) =====
 window.addEventListener('popstate', function(e) {
     if (e.state && e.state.view) {
         switchView(e.state.view);
