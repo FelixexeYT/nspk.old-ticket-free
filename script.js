@@ -32,39 +32,85 @@ function generateTicketNumber() {
     return stamp + Math.floor(100000 + Math.random() * 900000);
 }
 
-// ===== Основная логика =====
-let time = 0;
+// ===== Таймер =====
 let timerInterval = null;
 
-function startTimer() {
-    if (timerInterval) return;
-    timerInterval = setInterval(() => {
-        time++;
-        const h = Math.floor(time / 3600);
-        const m = Math.floor((time % 3600) / 60);
-        const s = time % 60;
+function startTimerFrom(startTimestamp) {
+    if (timerInterval) clearInterval(timerInterval);
+
+    function tick() {
+        const elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+        const h = Math.floor(elapsed / 3600);
+        const m = Math.floor((elapsed % 3600) / 60);
+        const s = elapsed % 60;
         const str = h > 0
             ? `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
             : `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
         const el = document.getElementById('timer');
         if (el) el.textContent = str;
-    }, 1000);
+    }
+
+    tick();
+    timerInterval = setInterval(tick, 1000);
 }
 
+// ===== Переключение экранов =====
+function showView(view) {
+    document.getElementById('inputSection').style.display = 'none';
+    document.getElementById('ticketSection').style.display = 'none';
+    document.getElementById('receiptSection').style.display = 'none';
+
+    if (view === 'form') {
+        document.getElementById('inputSection').style.display = 'block';
+    } else if (view === 'ticket') {
+        document.getElementById('ticketSection').style.display = 'block';
+    } else if (view === 'receipt') {
+        document.getElementById('receiptSection').style.display = 'block';
+    }
+
+    window.scrollTo(0, 0);
+    localStorage.setItem('currentView', view);
+}
+
+// ===== Отрисовка билета =====
+function renderTicket(data) {
+    document.getElementById('displayType').textContent = data.type;
+    document.getElementById('displayBusNumber').textContent = data.route;
+    document.getElementById('displayVehicleNumber').textContent = data.vehicle;
+    document.getElementById('displayPrice').textContent = data.price;
+    document.getElementById('currentDate').textContent = data.displayDate;
+    document.getElementById('displaySerial').textContent = data.serial;
+    document.getElementById('displayTicketNumber').textContent = data.ticketNumber;
+
+    document.getElementById('qrCode').src =
+        `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`;
+
+    window._ticketData = data;
+    startTimerFrom(data.startTime);
+}
+
+// ===== Отрисовка чека =====
+function renderReceipt(data) {
+    document.getElementById('receiptDate').textContent = data.qrDate.replace('A', ' ');
+    document.getElementById('receiptSerial').textContent = data.serial;
+    document.getElementById('receiptNumber').textContent = data.ticketNumber;
+    document.getElementById('receiptTransport').textContent = data.type;
+    document.getElementById('receiptRoute').textContent = data.route;
+    document.getElementById('receiptVehicle').textContent = data.vehicle;
+    document.getElementById('receiptDateTime').textContent = data.qrDate.replace('A', ' ');
+    document.getElementById('receiptPrice').textContent = data.price + '.0 ₽';
+
+    document.getElementById('receiptQrCode').src =
+        `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`;
+}
+
+// ===== Показ билета (после «Продолжить») =====
 function showTicket() {
     try {
-        console.log('=== showTicket запущена ===');
-
         const typeEl = document.getElementById('transportType');
         const routeEl = document.getElementById('routeNumber');
         const vehicleEl = document.getElementById('vehicleNumber');
         const priceEl = document.getElementById('price');
-
-        if (!typeEl || !routeEl || !vehicleEl || !priceEl) {
-            console.error('Не найдены поля ввода!');
-            alert('Ошибка: не найдены поля ввода');
-            return;
-        }
 
         const type = typeEl.value || 'Троллейбус';
         const route = routeEl.value.trim() || '7М';
@@ -75,112 +121,105 @@ function showTicket() {
         const serial = generateSerial();
         const ticketNumber = generateTicketNumber();
 
-        // Заполняем билет
-        document.getElementById('displayType').textContent = type;
-        document.getElementById('displayBusNumber').textContent = route;
-        document.getElementById('displayVehicleNumber').textContent = vehicle;
-        document.getElementById('displayPrice').textContent = price;
-        document.getElementById('currentDate').textContent = displayDate;
-        document.getElementById('displaySerial').textContent = serial;
-        document.getElementById('displayTicketNumber').textContent = ticketNumber;
-
-        // QR-код
         const typeEng = type === 'Автобус' ? 'bus' : 'trolleybus';
         const qrText = `https://qr.bilet.nspk.ru/payment?paytagid=${serial}&type=${typeEng}&route=${route}&ts=${vehicle}&date=${qrDate}&price=${price}`;
-        console.log('QR text:', qrText);
 
-        document.getElementById('qrCode').src =
-            `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(qrText)}`;
-
-        // Сохраняем данные для чека
-        window._ticketData = {
+        const data = {
             type, route, vehicle, price, qrDate, displayDate,
-            serial, ticketNumber, typeEng
+            serial, ticketNumber, typeEng, qrText,
+            startTime: Date.now()
         };
 
-        // Переключаем экраны
-        const inputSection = document.getElementById('inputSection');
-        const ticketSection = document.getElementById('ticketSection');
-        console.log('Скрываем форму, показываем билет');
-        inputSection.style.display = 'none';
-        ticketSection.style.display = 'block';
-        window.scrollTo(0, 0);
+        localStorage.setItem('ticketData', JSON.stringify(data));
 
-        startTimer();
-        console.log('=== Готово ===');
+        renderTicket(data);
+        renderReceipt(data);
+
+        showView('ticket');
+        history.pushState({view: 'ticket'}, '', location.pathname + '#ticket');
     } catch (err) {
-        console.error('ОШИБКА в showTicket:', err);
+        console.error('ОШИБКА:', err);
         alert('Произошла ошибка: ' + err.message);
     }
 }
 
-function downloadTicket() {
+// ===== Показ чека (после «Скачать билет») =====
+function openReceipt() {
     const d = window._ticketData;
     if (!d) {
         alert('Сначала создайте билет!');
         return;
     }
-
-    const receiptHTML = `<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<title>Чек</title>
-<style>
-    body { font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 500px; }
-    .label { color: #666; font-size: 12px; display: block; margin-top: 12px; }
-    .value { font-size: 15px; }
-    .qr { margin-top: 20px; }
-    .qr img { width: 400px; height: 400px; }
-</style>
-</head>
-<body>
-    <div class="value">${d.qrDate.replace('A', ' ')}</div>
-    <span class="label">Вид билета</span><div class="value">Разовый билет QRPay</div>
-    <span class="label">Серия билета</span><div class="value">${d.serial}</div>
-    <span class="label">Номер билета</span><div class="value">${d.ticketNumber}</div>
-    <span class="label">ИНН перевозчика</span><div class="value">5507022628</div>
-    <span class="label">Наименование перевозчика</span><div class="value">АО "Пассажирское предприятие № 8"</div>
-    <span class="label">Вид транспорта</span><div class="value">${d.type}</div>
-    <span class="label">Маршрут/Станция</span><div class="value">${d.route}</div>
-    <span class="label">Номер ТС</span><div class="value">${d.vehicle}</div>
-    <span class="label">Дата и время поездки</span><div class="value">${d.qrDate}</div>
-    <span class="label">Стоимость</span><div class="value">${d.price}.0 ₽</div>
-    <div class="qr">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent('https://qr.bilet.nspk.ru/payment?paytagid=' + d.serial + '&type=' + d.typeEng + '&route=' + d.route + '&ts=' + d.vehicle + '&date=' + d.qrDate + '&price=' + d.price)}" alt="QR">
-    </div>
-</body>
-</html>`;
-
-    const w = window.open('', '_blank');
-    w.document.write(receiptHTML);
-    w.document.close();
+    showView('receipt');
+    history.pushState({view: 'receipt'}, '', location.pathname + '#receipt');
 }
 
-// ===== Навешиваем обработчики после загрузки =====
+// ===== Инициализация при загрузке =====
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('=== Страница загружена ===');
-    console.log('Кнопка «Продолжить»:', document.getElementById('continueBtn'));
-    console.log('Кнопка «Скачать»:', document.getElementById('downloadBtn'));
-
+    // Обработчики кнопок
     const continueBtn = document.getElementById('continueBtn');
     const downloadBtn = document.getElementById('downloadBtn');
+    const receiptBackBtn = document.getElementById('receiptBackBtn');
 
     if (continueBtn) {
         continueBtn.addEventListener('click', function(e) {
-            console.log('Клик по кнопке «Продолжить»');
             e.preventDefault();
             showTicket();
         });
-    } else {
-        console.error('Кнопка continueBtn НЕ найдена!');
     }
 
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function(e) {
-            console.log('Клик по кнопке «Скачать»');
             e.preventDefault();
-            downloadTicket();
+            openReceipt();
         });
+    }
+
+    if (receiptBackBtn) {
+        receiptBackBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            history.back();
+        });
+    }
+
+    // Восстановление состояния
+    const savedData = localStorage.getItem('ticketData');
+    const savedView = localStorage.getItem('currentView') || 'form';
+
+    if (!savedData) {
+        showView('form');
+        history.replaceState({view: 'form'}, '', location.pathname);
+        return;
+    }
+
+    try {
+        const data = JSON.parse(savedData);
+        renderTicket(data);
+        renderReceipt(data);
+
+        const viewToShow = ['form', 'ticket', 'receipt'].includes(savedView) ? savedView : 'ticket';
+        showView(viewToShow);
+        history.replaceState({view: viewToShow}, '', location.pathname);
+    } catch (e) {
+        console.error('Ошибка чтения данных:', e);
+        localStorage.removeItem('ticketData');
+        showView('form');
+        history.replaceState({view: 'form'}, '', location.pathname);
+    }
+});
+
+// ===== Обработка кнопки «Назад» в браузере =====
+window.addEventListener('popstate', function(e) {
+    console.log('popstate:', e.state);
+    if (e.state && e.state.view) {
+        showView(e.state.view);
+    } else {
+        // Если состояния нет — восстанавливаем из localStorage
+        const savedData = localStorage.getItem('ticketData');
+        if (savedData) {
+            showView('ticket');
+        } else {
+            showView('form');
+        }
     }
 });
