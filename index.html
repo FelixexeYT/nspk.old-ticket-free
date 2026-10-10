@@ -7,13 +7,37 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <!-- Верхняя панель с выбором типа чека -->
+    <div class="top-bar">
+        <span class="top-bar-label">Вид чека:</span>
+        <button class="type-btn active" data-type="ticket">Билет</button>
+        <button class="type-btn" data-type="receipt">Чек</button>
+    </div>
+
+    <!-- Белое окно ввода -->
     <div class="input-container" id="inputSection">
-        <input type="text" id="busNumber" placeholder="Номер автобуса">
+        <h1 class="form-title">Данные билета</h1>
+
+        <label for="transportType">Вид транспорта:</label>
+        <select id="transportType">
+            <option value="Автобус">Автобус</option>
+            <option value="Троллейбус">Троллейбус</option>
+        </select>
+
+        <label for="routeNumber">Номер маршрута:</label>
+        <input type="text" id="routeNumber" placeholder="Номер маршрута">
+
+        <label for="vehicleNumber">Номер т/с:</label>
         <input type="text" id="vehicleNumber" placeholder="Номер т/с">
+
+        <label for="price">Стоимость поездки:</label>
         <input type="text" id="price" placeholder="Стоимость поездки">
+
         <button onclick="showTicket()">Показать билет</button>
     </div>
 
+    <!-- Билет (открывается после нажатия кнопки) -->
     <div class="ticket-container" id="ticketSection" style="display: none;">
         <div class="ticket">
             <div class="header">
@@ -24,24 +48,22 @@
             </div>
             <p>Ваш проезд успешно оплачен!</p>
             <div class="ticket-details">
-                <p><strong>Автобус:</strong> <span id="displayBusNumber"></span></p>
+                <p><strong id="displayType">Автобус</strong>: №<span id="displayBusNumber"></span></p>
                 <h2 class="price"><span id="displayPrice"></span></h2>
                 <p id="currentDate"></p>
-                <p>Т/С: <span id="displayVehicleNumber"></span></p>
+                <p class="vehicle-number-row">Т/С: <span id="displayVehicleNumber"></span></p>
             </div>
             <p>С момента оплаты прошло: <span id="timer">00:00</span></p>
         </div>
-    </div>
 
-    <div class="sticky-banner">
-        <p>Ваша поездка оплачена, пожалуйста, сохраните билет в памяти телефона до конца поездки</p>
-        <button onclick="startTimer()">Сохранить билет</button>
-    </div>
+        <div class="qr-code-container">
+            <img id="qrCode" src="" alt="QR Code" class="qr-code">
+        </div>
 
-    <div class="qr-code-container">
-    <a href="https://qr.bilet.nspk.ru/payment?paytagid=103000100598asdaf" target="_blank">
-        <img src="qr-code.png" alt="QR Code" class="qr-code">
-    </a>
+        <div class="sticky-banner">
+            <p>Ваша поездка оплачена, пожалуйста, сохраните билет в памяти телефона до конца поездки</p>
+            <button onclick="saveTicket()">Сохранить билет</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
