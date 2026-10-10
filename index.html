@@ -11,17 +11,17 @@
     <div class="card" id="inputSection">
         <h1>Данные билета</h1>
 
-        <!-- Верхняя панель теперь внутри карточки -->
-        <div class="top-bar" id="topBar">
-            <span class="top-bar-label">Вид чека:</span>
-            <button class="type-btn active" data-type="ticket">Билет</button>
-            <button class="type-btn" data-type="receipt">Чек</button>
-        </div>
-
         <label for="transportType">Вид транспорта:</label>
         <select id="transportType">
             <option value="Автобус">Автобус</option>
             <option value="Троллейбус">Троллейбус</option>
+        </select>
+
+        <label for="ticketType">Тип билета:</label>
+        <select id="ticketType">
+            <option value="spb">СПБ</option>
+            <option value="2gis">2ГИС</option>
+            <option value="oldspb">Старый СПБ</option>
         </select>
 
         <label for="routeNumber">Номер маршрута:</label>
