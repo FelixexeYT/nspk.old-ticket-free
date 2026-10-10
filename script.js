@@ -54,7 +54,7 @@ function startTimerFrom(startTimestamp) {
     timerInterval = setInterval(tick, 1000);
 }
 
-// ===== Переключение экранов (без записи в историю) =====
+// ===== Переключение экранов =====
 function switchView(view) {
     ['inputSection', 'ticketSection', 'receiptSection'].forEach(id => {
         const el = document.getElementById(id);
@@ -72,13 +72,12 @@ function switchView(view) {
     window.scrollTo(0, 0);
 }
 
-// ===== Переход на другой экран + запись в историю =====
 function goTo(view) {
     switchView(view);
     history.pushState({ view: view }, '', location.pathname + '#' + view);
 }
 
-// ===== Отрисовка билета =====
+// ===== Отрисовка =====
 function renderTicket(data) {
     document.getElementById('displayType').textContent = data.type;
     document.getElementById('displayBusNumber').textContent = data.route;
@@ -95,7 +94,6 @@ function renderTicket(data) {
     startTimerFrom(data.startTime);
 }
 
-// ===== Отрисовка чека =====
 function renderReceipt(data) {
     document.getElementById('receiptDate').textContent = data.qrDate.replace('A', ' ');
     document.getElementById('receiptSerial').textContent = data.serial;
@@ -108,22 +106,6 @@ function renderReceipt(data) {
 
     document.getElementById('receiptQrCode').src =
         `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`;
-}
-
-// ===== Создать новый билет (вернуться к форме) =====
-function newTicket() {
-    localStorage.removeItem('ticketData');
-    window._ticketData = null;
-    if (timerInterval) clearInterval(timerInterval);
-
-    // Возвращаемся к форме без создания лишних записей
-    history.pushState({ view: 'form' }, '', location.pathname + '#form');
-    switchView('form');
-
-    // Чистим поля
-    document.getElementById('routeNumber').value = '';
-    document.getElementById('vehicleNumber').value = '';
-    document.getElementById('price').value = '';
 }
 
 // ===== Показ билета =====
@@ -173,50 +155,57 @@ document.addEventListener('DOMContentLoaded', function() {
     const continueBtn = document.getElementById('continueBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     const receiptBackBtn = document.getElementById('receiptBackBtn');
-    const newTicketBtn = document.getElementById('newTicketBtn');
 
     if (continueBtn) continueBtn.addEventListener('click', e => { e.preventDefault(); showTicket(); });
     if (downloadBtn) downloadBtn.addEventListener('click', e => { e.preventDefault(); openReceipt(); });
     if (receiptBackBtn) receiptBackBtn.addEventListener('click', e => { e.preventDefault(); history.back(); });
-    if (newTicketBtn) newTicketBtn.addEventListener('click', e => { e.preventDefault(); newTicket(); });
 
-    // Проверяем, есть ли сохранённый билет
-    const savedData = localStorage.getItem('ticketData');
+    // ▼▼▼ ГЛАВНОЕ ИЗМЕНЕНИЕ ▼▼▼
+    // Смотрим на хеш в URL: если его нет — всегда показываем форму
+    const hash = location.hash.replace('#', '');
 
-    if (!savedData) {
-        // Нет билета — показываем форму
+    // Если пользователь зашёл без хеша (обычный заход) — сбрасываем старый билет
+    if (!hash) {
+        localStorage.removeItem('ticketData');
+        window._ticketData = null;
+        if (timerInterval) clearInterval(timerInterval);
         switchView('form');
-        // Записываем стартовое состояние в историю
         history.replaceState({ view: 'form' }, '', location.pathname + '#form');
         return;
     }
 
-    // Есть билет — восстанавливаем его
-    try {
-        const data = JSON.parse(savedData);
-        renderTicket(data);
-        renderReceipt(data);
-
-        // Определяем, что показывать: хеш из URL или билет
-        const hash = location.hash.replace('#', '');
-        const view = ['ticket', 'receipt'].includes(hash) ? hash : 'ticket';
-
-        switchView(view);
-        history.replaceState({ view: view }, '', location.pathname + '#' + view);
-    } catch (e) {
-        console.error('Ошибка чтения данных:', e);
-        localStorage.removeItem('ticketData');
+    // Если в URL есть #ticket или #receipt — восстанавливаем билет
+    if (hash === 'ticket' || hash === 'receipt') {
+        const savedData = localStorage.getItem('ticketData');
+        if (savedData) {
+            try {
+                const data = JSON.parse(savedData);
+                renderTicket(data);
+                renderReceipt(data);
+                switchView(hash);
+                history.replaceState({ view: hash }, '', location.pathname + '#' + hash);
+                return;
+            } catch (e) {
+                console.error('Ошибка чтения данных:', e);
+                localStorage.removeItem('ticketData');
+            }
+        }
+        // Если данных нет — показываем форму
         switchView('form');
         history.replaceState({ view: 'form' }, '', location.pathname + '#form');
+        return;
     }
+
+    // На всякий случай — форма
+    switchView('form');
+    history.replaceState({ view: 'form' }, '', location.pathname + '#form');
 });
 
-// ===== Обработка системной кнопки «Назад» (Android/iOS) =====
+// ===== Системная кнопка «Назад» =====
 window.addEventListener('popstate', function(e) {
     if (e.state && e.state.view) {
         switchView(e.state.view);
     } else {
-        // Если пользователь дошёл до самого начала — показываем форму
         switchView('form');
     }
 });
