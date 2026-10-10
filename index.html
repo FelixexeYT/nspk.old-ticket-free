@@ -8,16 +8,15 @@
 </head>
 <body>
 
-    <!-- Верхняя панель с выбором типа чека -->
-    <div class="top-bar" id="topBar">
-        <span class="top-bar-label">Вид чека:</span>
-        <button class="type-btn active" data-type="ticket">Билет</button>
-        <button class="type-btn" data-type="receipt">Чек</button>
-    </div>
-
-    <!-- Форма ввода -->
     <div class="card" id="inputSection">
         <h1>Данные билета</h1>
+
+        <!-- Верхняя панель теперь внутри карточки -->
+        <div class="top-bar" id="topBar">
+            <span class="top-bar-label">Вид чека:</span>
+            <button class="type-btn active" data-type="ticket">Билет</button>
+            <button class="type-btn" data-type="receipt">Чек</button>
+        </div>
 
         <label for="transportType">Вид транспорта:</label>
         <select id="transportType">
@@ -34,14 +33,13 @@
         <label for="price">Стоимость проезда:</label>
         <input type="text" id="price" placeholder="Введите стоимость">
 
-        <button id="continueBtn" onclick="showTicket()">Продолжить</button>
+        <button onclick="showTicket()">Продолжить</button>
     </div>
 
     <!-- Билет -->
     <div class="ticket-page" id="ticketSection" style="display: none;">
         <div class="ticket-inner" id="ticketToDownload">
             <h1 class="header-title">Уведомление об оплате</h1>
-
             <p class="success-text">Ваш проезд успешно оплачен!</p>
 
             <div class="payment-info">
@@ -62,16 +60,16 @@
                 <div class="payment-timer__value" id="timer">00:00:00</div>
             </div>
 
-            <div class="ticket-qrcode">
+            <div class="ticket__qrcode">
                 <img id="qrCode" src="" alt="QR-код билета">
             </div>
 
-            <div class="ticket-info">
+            <div class="ticket__info">
                 Предъявите контролеру QR-код.<br>
                 Чтобы сохранить реквизиты билета, нажмите кнопку «Скачать»
             </div>
 
-            <button class="btn-download" onclick="saveTicket()">Скачать билет</button>
+            <button class="ticket__button" onclick="saveTicket()">Скачать билет</button>
         </div>
     </div>
 
