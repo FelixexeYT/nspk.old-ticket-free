@@ -9,15 +9,15 @@
 <body>
 
     <!-- Верхняя панель с выбором типа чека -->
-    <div class="top-bar">
+    <div class="top-bar" id="topBar">
         <span class="top-bar-label">Вид чека:</span>
         <button class="type-btn active" data-type="ticket">Билет</button>
         <button class="type-btn" data-type="receipt">Чек</button>
     </div>
 
-    <!-- Белое окно ввода -->
-    <div class="input-container" id="inputSection">
-        <h1 class="form-title">Данные билета</h1>
+    <!-- Форма ввода -->
+    <div class="card" id="inputSection">
+        <h1>Данные билета</h1>
 
         <label for="transportType">Вид транспорта:</label>
         <select id="transportType">
@@ -26,43 +26,52 @@
         </select>
 
         <label for="routeNumber">Номер маршрута:</label>
-        <input type="text" id="routeNumber" placeholder="Номер маршрута">
+        <input type="text" id="routeNumber" placeholder="Введите номер маршрута">
 
         <label for="vehicleNumber">Номер т/с:</label>
-        <input type="text" id="vehicleNumber" placeholder="Номер т/с">
+        <input type="text" id="vehicleNumber" placeholder="Введите номер ТС">
 
-        <label for="price">Стоимость поездки:</label>
-        <input type="text" id="price" placeholder="Стоимость поездки">
+        <label for="price">Стоимость проезда:</label>
+        <input type="text" id="price" placeholder="Введите стоимость">
 
-        <button onclick="showTicket()">Показать билет</button>
+        <button id="continueBtn" onclick="showTicket()">Продолжить</button>
     </div>
 
-    <!-- Билет (открывается после нажатия кнопки) -->
-    <div class="ticket-container" id="ticketSection" style="display: none;">
-        <div class="ticket">
-            <div class="header">
-                <span>Уведомление об оплате</span>
-            </div>
-            <div class="logo-container">
-                <img src="sbp_logo.jpg" alt="СБП" class="logo">
-            </div>
-            <p>Ваш проезд успешно оплачен!</p>
-            <div class="ticket-details">
-                <p><strong id="displayType">Автобус</strong>: №<span id="displayBusNumber"></span></p>
-                <h2 class="price"><span id="displayPrice"></span></h2>
-                <p id="currentDate"></p>
-                <p class="vehicle-number-row">Т/С: <span id="displayVehicleNumber"></span></p>
-            </div>
-            <p>С момента оплаты прошло: <span id="timer">00:00</span></p>
-        </div>
+    <!-- Билет -->
+    <div class="ticket-page" id="ticketSection" style="display: none;">
+        <div class="ticket-inner" id="ticketToDownload">
+            <h1 class="header-title">Уведомление об оплате</h1>
 
-        <div class="qr-code-container">
-            <img id="qrCode" src="" alt="QR Code" class="qr-code">
-        </div>
+            <p class="success-text">Ваш проезд успешно оплачен!</p>
 
-        <div class="sticky-banner">
-            <p>Ваша поездка оплачена, пожалуйста, сохраните билет в памяти телефона до конца поездки</p>
-            <button onclick="saveTicket()">Сохранить билет</button>
+            <div class="payment-info">
+                <div class="payment-info__vehicle-type">
+                    <span id="displayType">Автобус</span>: №<span id="displayBusNumber"></span>
+                </div>
+                <div class="payment-info__price">
+                    <span id="displayPrice"></span>
+                </div>
+                <div class="payment-info__date" id="currentDate"></div>
+                <div class="payment-info__vehicle-number">
+                    Т/С: <span id="displayVehicleNumber"></span>
+                </div>
+            </div>
+
+            <div class="payment-timer">
+                <p class="payment-timer__label">С момента оплаты прошло:</p>
+                <div class="payment-timer__value" id="timer">00:00:00</div>
+            </div>
+
+            <div class="ticket-qrcode">
+                <img id="qrCode" src="" alt="QR-код билета">
+            </div>
+
+            <div class="ticket-info">
+                Предъявите контролеру QR-код.<br>
+                Чтобы сохранить реквизиты билета, нажмите кнопку «Скачать»
+            </div>
+
+            <button class="btn-download" onclick="saveTicket()">Скачать билет</button>
         </div>
     </div>
 
