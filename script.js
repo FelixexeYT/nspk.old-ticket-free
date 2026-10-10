@@ -56,9 +56,10 @@ function startTimerFrom(startTimestamp) {
 
 // ===== Переключение экранов =====
 function showView(view) {
-    document.getElementById('inputSection').style.display = 'none';
-    document.getElementById('ticketSection').style.display = 'none';
-    document.getElementById('receiptSection').style.display = 'none';
+    ['inputSection', 'ticketSection', 'receiptSection'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
 
     if (view === 'form') {
         document.getElementById('inputSection').style.display = 'block';
@@ -69,7 +70,6 @@ function showView(view) {
     }
 
     window.scrollTo(0, 0);
-    localStorage.setItem('currentView', view);
 }
 
 // ===== Отрисовка билета =====
@@ -104,18 +104,28 @@ function renderReceipt(data) {
         `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`;
 }
 
-// ===== Показ билета (после «Продолжить») =====
+// ===== Новый билет (сброс) =====
+function newTicket() {
+    if (confirm('Создать новый билет? Текущий будет удалён.')) {
+        localStorage.removeItem('ticketData');
+        localStorage.removeItem('currentView');
+        window._ticketData = null;
+        if (timerInterval) clearInterval(timerInterval);
+        showView('form');
+        // Очищаем поля формы
+        document.getElementById('routeNumber').value = '';
+        document.getElementById('vehicleNumber').value = '';
+        document.getElementById('price').value = '';
+    }
+}
+
+// ===== Показ билета =====
 function showTicket() {
     try {
-        const typeEl = document.getElementById('transportType');
-        const routeEl = document.getElementById('routeNumber');
-        const vehicleEl = document.getElementById('vehicleNumber');
-        const priceEl = document.getElementById('price');
-
-        const type = typeEl.value || 'Троллейбус';
-        const route = routeEl.value.trim() || '7М';
-        const vehicle = vehicleEl.value.trim() || '422';
-        const price = priceEl.value.trim() || '40';
+        const type = document.getElementById('transportType').value || 'Троллейбус';
+        const route = document.getElementById('routeNumber').value.trim() || '7М';
+        const vehicle = document.getElementById('vehicleNumber').value.trim() || '422';
+        const price = document.getElementById('price').value.trim() || '40';
 
         const { displayDate, qrDate } = getDates();
         const serial = generateSerial();
@@ -131,35 +141,34 @@ function showTicket() {
         };
 
         localStorage.setItem('ticketData', JSON.stringify(data));
+        localStorage.setItem('currentView', 'ticket');
 
         renderTicket(data);
         renderReceipt(data);
-
         showView('ticket');
-        history.pushState({view: 'ticket'}, '', location.pathname + '#ticket');
     } catch (err) {
         console.error('ОШИБКА:', err);
         alert('Произошла ошибка: ' + err.message);
     }
 }
 
-// ===== Показ чека (после «Скачать билет») =====
+// ===== Открыть чек =====
 function openReceipt() {
     const d = window._ticketData;
     if (!d) {
         alert('Сначала создайте билет!');
         return;
     }
+    localStorage.setItem('currentView', 'receipt');
     showView('receipt');
-    history.pushState({view: 'receipt'}, '', location.pathname + '#receipt');
 }
 
-// ===== Инициализация при загрузке =====
+// ===== Инициализация =====
 document.addEventListener('DOMContentLoaded', function() {
-    // Обработчики кнопок
     const continueBtn = document.getElementById('continueBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     const receiptBackBtn = document.getElementById('receiptBackBtn');
+    const newTicketBtn = document.getElementById('newTicketBtn');
 
     if (continueBtn) {
         continueBtn.addEventListener('click', function(e) {
@@ -178,17 +187,25 @@ document.addEventListener('DOMContentLoaded', function() {
     if (receiptBackBtn) {
         receiptBackBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            history.back();
+            localStorage.setItem('currentView', 'ticket');
+            showView('ticket');
         });
     }
 
-    // Восстановление состояния
+    if (newTicketBtn) {
+        newTicketBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            newTicket();
+        });
+    }
+
+    // Восстанавливаем состояние
     const savedData = localStorage.getItem('ticketData');
     const savedView = localStorage.getItem('currentView') || 'form';
 
     if (!savedData) {
+        // Нет данных — показываем форму
         showView('form');
-        history.replaceState({view: 'form'}, '', location.pathname);
         return;
     }
 
@@ -197,29 +214,31 @@ document.addEventListener('DOMContentLoaded', function() {
         renderTicket(data);
         renderReceipt(data);
 
-        const viewToShow = ['form', 'ticket', 'receipt'].includes(savedView) ? savedView : 'ticket';
-        showView(viewToShow);
-        history.replaceState({view: viewToShow}, '', location.pathname);
+        // Показываем тот экран, который был
+        if (savedView === 'receipt') showView('receipt');
+        else if (savedView === 'ticket') showView('ticket');
+        else showView('form');
     } catch (e) {
         console.error('Ошибка чтения данных:', e);
         localStorage.removeItem('ticketData');
         showView('form');
-        history.replaceState({view: 'form'}, '', location.pathname);
     }
 });
 
-// ===== Обработка кнопки «Назад» в браузере =====
-window.addEventListener('popstate', function(e) {
-    console.log('popstate:', e.state);
-    if (e.state && e.state.view) {
-        showView(e.state.view);
+// ===== Обработка «Назад» =====
+window.addEventListener('popstate', function() {
+    const savedData = localStorage.getItem('ticketData');
+    const savedView = localStorage.getItem('currentView') || 'form';
+
+    if (!savedData) {
+        showView('form');
+        return;
+    }
+
+    if (savedView === 'receipt') {
+        showView('ticket');
+        localStorage.setItem('currentView', 'ticket');
     } else {
-        // Если состояния нет — восстанавливаем из localStorage
-        const savedData = localStorage.getItem('ticketData');
-        if (savedData) {
-            showView('ticket');
-        } else {
-            showView('form');
-        }
+        showView('form');
     }
 });
