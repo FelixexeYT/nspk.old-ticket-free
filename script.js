@@ -54,8 +54,8 @@ function startTimerFrom(startTimestamp) {
     timerInterval = setInterval(tick, 1000);
 }
 
-// ===== Переключение экранов =====
-function showView(view) {
+// ===== Переключение экранов (без записи в историю) =====
+function switchView(view) {
     ['inputSection', 'ticketSection', 'receiptSection'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
@@ -70,6 +70,12 @@ function showView(view) {
     }
 
     window.scrollTo(0, 0);
+}
+
+// ===== Переход на другой экран + запись в историю =====
+function goTo(view) {
+    switchView(view);
+    history.pushState({ view: view }, '', location.pathname + '#' + view);
 }
 
 // ===== Отрисовка билета =====
@@ -104,19 +110,20 @@ function renderReceipt(data) {
         `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`;
 }
 
-// ===== Новый билет (сброс) =====
+// ===== Создать новый билет (вернуться к форме) =====
 function newTicket() {
-    if (confirm('Создать новый билет? Текущий будет удалён.')) {
-        localStorage.removeItem('ticketData');
-        localStorage.removeItem('currentView');
-        window._ticketData = null;
-        if (timerInterval) clearInterval(timerInterval);
-        showView('form');
-        // Очищаем поля формы
-        document.getElementById('routeNumber').value = '';
-        document.getElementById('vehicleNumber').value = '';
-        document.getElementById('price').value = '';
-    }
+    localStorage.removeItem('ticketData');
+    window._ticketData = null;
+    if (timerInterval) clearInterval(timerInterval);
+
+    // Возвращаемся к форме без создания лишних записей
+    history.pushState({ view: 'form' }, '', location.pathname + '#form');
+    switchView('form');
+
+    // Чистим поля
+    document.getElementById('routeNumber').value = '';
+    document.getElementById('vehicleNumber').value = '';
+    document.getElementById('price').value = '';
 }
 
 // ===== Показ билета =====
@@ -141,11 +148,10 @@ function showTicket() {
         };
 
         localStorage.setItem('ticketData', JSON.stringify(data));
-        localStorage.setItem('currentView', 'ticket');
 
         renderTicket(data);
         renderReceipt(data);
-        showView('ticket');
+        goTo('ticket');
     } catch (err) {
         console.error('ОШИБКА:', err);
         alert('Произошла ошибка: ' + err.message);
@@ -159,8 +165,7 @@ function openReceipt() {
         alert('Сначала создайте билет!');
         return;
     }
-    localStorage.setItem('currentView', 'receipt');
-    showView('receipt');
+    goTo('receipt');
 }
 
 // ===== Инициализация =====
@@ -170,75 +175,48 @@ document.addEventListener('DOMContentLoaded', function() {
     const receiptBackBtn = document.getElementById('receiptBackBtn');
     const newTicketBtn = document.getElementById('newTicketBtn');
 
-    if (continueBtn) {
-        continueBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showTicket();
-        });
-    }
+    if (continueBtn) continueBtn.addEventListener('click', e => { e.preventDefault(); showTicket(); });
+    if (downloadBtn) downloadBtn.addEventListener('click', e => { e.preventDefault(); openReceipt(); });
+    if (receiptBackBtn) receiptBackBtn.addEventListener('click', e => { e.preventDefault(); history.back(); });
+    if (newTicketBtn) newTicketBtn.addEventListener('click', e => { e.preventDefault(); newTicket(); });
 
-    if (downloadBtn) {
-        downloadBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            openReceipt();
-        });
-    }
-
-    if (receiptBackBtn) {
-        receiptBackBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            localStorage.setItem('currentView', 'ticket');
-            showView('ticket');
-        });
-    }
-
-    if (newTicketBtn) {
-        newTicketBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            newTicket();
-        });
-    }
-
-    // Восстанавливаем состояние
+    // Проверяем, есть ли сохранённый билет
     const savedData = localStorage.getItem('ticketData');
-    const savedView = localStorage.getItem('currentView') || 'form';
 
     if (!savedData) {
-        // Нет данных — показываем форму
-        showView('form');
+        // Нет билета — показываем форму
+        switchView('form');
+        // Записываем стартовое состояние в историю
+        history.replaceState({ view: 'form' }, '', location.pathname + '#form');
         return;
     }
 
+    // Есть билет — восстанавливаем его
     try {
         const data = JSON.parse(savedData);
         renderTicket(data);
         renderReceipt(data);
 
-        // Показываем тот экран, который был
-        if (savedView === 'receipt') showView('receipt');
-        else if (savedView === 'ticket') showView('ticket');
-        else showView('form');
+        // Определяем, что показывать: хеш из URL или билет
+        const hash = location.hash.replace('#', '');
+        const view = ['ticket', 'receipt'].includes(hash) ? hash : 'ticket';
+
+        switchView(view);
+        history.replaceState({ view: view }, '', location.pathname + '#' + view);
     } catch (e) {
         console.error('Ошибка чтения данных:', e);
         localStorage.removeItem('ticketData');
-        showView('form');
+        switchView('form');
+        history.replaceState({ view: 'form' }, '', location.pathname + '#form');
     }
 });
 
-// ===== Обработка «Назад» =====
-window.addEventListener('popstate', function() {
-    const savedData = localStorage.getItem('ticketData');
-    const savedView = localStorage.getItem('currentView') || 'form';
-
-    if (!savedData) {
-        showView('form');
-        return;
-    }
-
-    if (savedView === 'receipt') {
-        showView('ticket');
-        localStorage.setItem('currentView', 'ticket');
+// ===== Обработка системной кнопки «Назад» (Android/iOS) =====
+window.addEventListener('popstate', function(e) {
+    if (e.state && e.state.view) {
+        switchView(e.state.view);
     } else {
-        showView('form');
+        // Если пользователь дошёл до самого начала — показываем форму
+        switchView('form');
     }
 });
