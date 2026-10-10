@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оплата проезда</title>
-    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
 
+    <!-- ЭКРАН 1: ФОРМА -->
     <div class="card" id="inputSection">
         <h1>Данные билета</h1>
 
@@ -36,6 +37,7 @@
         <button id="continueBtn" type="button">Продолжить</button>
     </div>
 
+    <!-- ЭКРАН 2: БИЛЕТ -->
     <div class="old-ticket" id="ticketSection" style="display: none;">
         <div class="old-header">Уведомление об оплате</div>
 
@@ -74,6 +76,49 @@
         </div>
     </div>
 
-    <script src="script.js?v=2"></script>
+    <!-- ЭКРАН 3: ЧЕК -->
+    <div class="receipt-section" id="receiptSection" style="display: none;">
+        <button class="receipt-back" id="receiptBackBtn" type="button">← Назад к билету</button>
+
+        <div class="receipt-content">
+            <div class="receipt-value" id="receiptDate"></div>
+
+            <span class="receipt-label">Вид билета</span>
+            <div class="receipt-value">Разовый билет QRPay</div>
+
+            <span class="receipt-label">Серия билета</span>
+            <div class="receipt-value" id="receiptSerial"></div>
+
+            <span class="receipt-label">Номер билета</span>
+            <div class="receipt-value" id="receiptNumber"></div>
+
+            <span class="receipt-label">ИНН перевозчика</span>
+            <div class="receipt-value">5507022628</div>
+
+            <span class="receipt-label">Наименование перевозчика</span>
+            <div class="receipt-value">АО "Пассажирское предприятие № 8"</div>
+
+            <span class="receipt-label">Вид транспорта</span>
+            <div class="receipt-value" id="receiptTransport"></div>
+
+            <span class="receipt-label">Маршрут/Станция</span>
+            <div class="receipt-value" id="receiptRoute"></div>
+
+            <span class="receipt-label">Номер ТС</span>
+            <div class="receipt-value" id="receiptVehicle"></div>
+
+            <span class="receipt-label">Дата и время поездки</span>
+            <div class="receipt-value" id="receiptDateTime"></div>
+
+            <span class="receipt-label">Стоимость</span>
+            <div class="receipt-value" id="receiptPrice"></div>
+
+            <div class="receipt-qr">
+                <img id="receiptQrCode" src="" alt="QR-код">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=3"></script>
 </body>
 </html>
