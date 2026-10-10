@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оплата проезда</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 
-    <!-- ФОРМА -->
     <div class="card" id="inputSection">
         <h1>Данные билета</h1>
 
@@ -34,16 +33,12 @@
         <label for="price">Стоимость проезда:</label>
         <input type="text" id="price" placeholder="Введите стоимость">
 
-        <button onclick="showTicket()">Продолжить</button>
+        <button id="continueBtn" type="button">Продолжить</button>
     </div>
 
-    <!-- БИЛЕТ (Старый СПБ) -->
     <div class="old-ticket" id="ticketSection" style="display: none;">
-
-        <!-- Шапка -->
         <div class="old-header">Уведомление об оплате</div>
 
-        <!-- Основной контент -->
         <div class="old-body" id="ticketToDownload">
             <div class="old-logo-wrap">
                 <img src="sbp_logo.jpg" alt="СБП" class="old-logo">
@@ -75,11 +70,10 @@
                 нажмите кнопку «Скачать».
             </div>
 
-            <button class="old-download-btn" onclick="downloadTicket()">Скачать билет</button>
+            <button class="old-download-btn" id="downloadBtn" type="button">Скачать билет</button>
         </div>
-
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=2"></script>
 </body>
 </html>
