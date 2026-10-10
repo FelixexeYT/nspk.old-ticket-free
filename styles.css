@@ -1,8 +1,9 @@
+/* ===== ОБЩЕЕ ===== */
 * { box-sizing: border-box; }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-    background-color: #f5f6f8;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f2f3f4;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,175 +12,140 @@ body {
     padding: 20px;
 }
 
-/* Верхняя панель — показываем только когда нужно (скрыта на старте) */
-.top-bar {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #ffffff;
-    padding: 10px 16px;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    z-index: 100;
-}
-
-.top-bar-label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #555;
-    margin-right: 4px;
-}
-
-.type-btn {
-    padding: 6px 16px;
-    background-color: #eef4ff;
-    color: #0d6efd;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    width: auto;
-    margin: 0;
-    font-family: inherit;
-    transition: all 0.2s;
-}
-
-.type-btn:hover { background-color: #dbe7ff; }
-.type-btn.active { background-color: #0d6efd; color: #fff; }
-
-/* Карточка формы — по центру */
+/* ===== ФОРМА (index.html) ===== */
 .card {
-    background: #ffffff;
-    padding: 36px 32px;
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     width: 100%;
-    max-width: 440px;
+    max-width: 400px;
     text-align: center;
 }
 
 .card h1 {
-    font-size: 24px;
-    color: #1a1a1a;
-    margin: 0 0 24px 0;
+    font-size: 22px;
+    color: #333;
+    margin: 0 0 20px 0;
     font-weight: 700;
 }
 
 label {
     display: block;
     text-align: left;
-    margin-top: 18px;
+    margin-top: 15px;
     font-weight: 600;
-    color: #333;
-    font-size: 15px;
+    color: #555;
+    font-size: 14px;
 }
 
 input, select {
     width: 100%;
-    padding: 13px 14px;
-    margin-top: 6px;
-    border: 1px solid #dfe1e6;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 16px;
     font-family: inherit;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    background: #ffffff;
-    color: #1a1a1a;
+    transition: border-color 0.2s;
 }
 
-input:focus, select:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
-}
-
-input::placeholder {
-    color: #9aa0a6;
-}
+input:focus, select:focus { border-color: #007bff; }
 
 .card button {
     width: 100%;
-    padding: 15px;
-    background-color: #0d6efd;
+    padding: 14px;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
-    margin-top: 28px;
+    margin-top: 25px;
     font-family: inherit;
     transition: background-color 0.2s;
 }
 
-.card button:hover { background-color: #0b5ed7; }
+.card button:hover { background-color: #0056b3; }
 
-/* ===== Билет ===== */
+/* ===== БИЛЕТ (ticket.html) — стиль как у qr.bilet.nspk.ru ===== */
+.ticket-body {
+    background-color: #f2f3f4;
+    align-items: flex-start; /* билет прижат к верху */
+    padding-top: 0;
+}
+
 .ticket-page {
-    width: 100%;
-    max-width: 500px;
     background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    width: 100%;
+    max-width: 480px;
     padding: 32px 24px 40px;
     text-align: center;
+    min-height: 100vh;
 }
 
-.ticket-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.header-title {
+/* Заголовок "Уведомление об оплате" */
+.ticket-page .header-title {
     font-size: 20px;
     font-weight: 700;
-    color: #1a1a1a;
-    margin: 0 0 30px 0;
+    color: #212121;
+    margin: 0 0 40px 0;
+    letter-spacing: 0.02em;
 }
 
-.success-text {
+/* "Ваш проезд успешно оплачен!" */
+.ticket-page .success-text {
     font-size: 18px;
     font-weight: 700;
-    color: #28a745;
-    margin: 0 0 30px 0;
+    color: #212121;
+    margin: 0 0 32px 0;
 }
 
+/* Блок с данными билета */
 .payment-info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 30px;
-    width: 100%;
+    margin-bottom: 32px;
 }
 
 .payment-info__vehicle-type {
     font-size: 20px;
     font-weight: 700;
-    color: #1a1a1a;
+    color: #212121;
     margin: 0 0 8px 0;
 }
 
 .payment-info__price {
     font-size: 48px;
+    line-height: 54px;
     font-weight: 700;
-    color: #1a1a1a;
+    color: #212121;
     margin: 0 0 17px 0;
+}
+
+.payment-info__price .currency {
+    font-size: 22px;
+    font-weight: 700;
+    vertical-align: top;
+    margin-left: 4px;
 }
 
 .payment-info__date,
 .payment-info__vehicle-number {
     font-size: 16px;
+    font-weight: 400;
     color: #424142;
     margin: 0 0 6px 0;
+    letter-spacing: 0.02em;
 }
 
-.payment-timer { margin-bottom: 30px; }
+/* Таймер */
+.payment-timer {
+    margin-bottom: 32px;
+}
 
 .payment-timer__label {
     font-size: 16px;
@@ -190,34 +156,38 @@ input::placeholder {
 .payment-timer__value {
     font-size: 32px;
     font-weight: 700;
-    color: #1a1a1a;
+    color: #212121;
     font-family: 'Courier New', monospace;
+    letter-spacing: 0.02em;
 }
 
-.ticket-qrcode {
-    margin: 20px 0 30px 0;
+/* QR-код (минимум 41x41 модулей = картинка 410x410 px) */
+.ticket__qrcode {
+    margin: 31px 0;
     display: flex;
     justify-content: center;
 }
 
-.ticket-qrcode img {
+.ticket__qrcode img {
     width: 410px;
     height: 410px;
     max-width: 100%;
     image-rendering: pixelated;
 }
 
-.ticket-info {
+/* Текст-подсказка */
+.ticket__info {
     font-size: 14px;
     line-height: 1.5;
     color: #424142;
-    margin: 0 0 30px 0;
+    margin: 0 0 32px 0;
 }
 
-.btn-download {
+/* Кнопка "Скачать билет" */
+.ticket__button {
     width: 100%;
-    padding: 15px;
-    background-color: #0d6efd;
+    padding: 16px;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -225,15 +195,23 @@ input::placeholder {
     font-weight: 700;
     cursor: pointer;
     font-family: inherit;
+    transition: background-color 0.2s;
 }
 
-.btn-download:hover { background-color: #0b5ed7; }
+.ticket__button:hover { background-color: #0056b3; }
 
+/* Адаптив для мобильных */
 @media (max-width: 480px) {
-    .card { padding: 24px 20px; }
-    .ticket-page { padding: 24px 16px 32px; }
-    .ticket-qrcode img { width: 100%; max-width: 340px; height: auto; }
+    .ticket-page {
+        padding: 24px 16px 32px;
+    }
+    
+    .ticket__qrcode img {
+        width: 100%;
+        height: auto;
+        max-width: 340px;
+    }
+    
     .payment-info__price { font-size: 40px; }
     .payment-timer__value { font-size: 26px; }
-    .top-bar { top: 10px; padding: 8px 12px; }
 }
