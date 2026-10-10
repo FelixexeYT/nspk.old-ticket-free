@@ -8,6 +8,7 @@
 </head>
 <body>
 
+    <!-- ФОРМА -->
     <div class="card" id="inputSection">
         <h1>Данные билета</h1>
 
@@ -19,9 +20,9 @@
 
         <label for="ticketType">Тип билета:</label>
         <select id="ticketType">
+            <option value="oldspb">Старый СПБ</option>
             <option value="spb">СПБ</option>
             <option value="2gis">2ГИС</option>
-            <option value="oldspb">Старый СПБ</option>
         </select>
 
         <label for="routeNumber">Номер маршрута:</label>
@@ -36,41 +37,47 @@
         <button onclick="showTicket()">Продолжить</button>
     </div>
 
-    <!-- Билет -->
-    <div class="ticket-page" id="ticketSection" style="display: none;">
-        <div class="ticket-inner" id="ticketToDownload">
-            <h1 class="header-title">Уведомление об оплате</h1>
-            <p class="success-text">Ваш проезд успешно оплачен!</p>
+    <!-- БИЛЕТ (Старый СПБ) -->
+    <div class="old-ticket" id="ticketSection" style="display: none;">
 
-            <div class="payment-info">
-                <div class="payment-info__vehicle-type">
-                    <span id="displayType">Автобус</span>: №<span id="displayBusNumber"></span>
-                </div>
-                <div class="payment-info__price">
-                    <span id="displayPrice"></span>
-                </div>
-                <div class="payment-info__date" id="currentDate"></div>
-                <div class="payment-info__vehicle-number">
-                    Т/С: <span id="displayVehicleNumber"></span>
-                </div>
+        <!-- Шапка -->
+        <div class="old-header">Уведомление об оплате</div>
+
+        <!-- Основной контент -->
+        <div class="old-body" id="ticketToDownload">
+            <div class="old-logo-wrap">
+                <img src="sbp_logo.jpg" alt="СБП" class="old-logo">
             </div>
 
-            <div class="payment-timer">
-                <p class="payment-timer__label">С момента оплаты прошло:</p>
-                <div class="payment-timer__value" id="timer">00:00:00</div>
+            <p class="old-success">Ваш проезд успешно оплачен!</p>
+
+            <div class="old-transport"><span id="displayType">Троллейбус</span>: №<span id="displayBusNumber"></span></div>
+            <div class="old-price"><span id="displayPrice">40</span> <span class="old-price-currency">₽</span></div>
+
+            <div class="old-date" id="currentDate"></div>
+            <div class="old-vehicle">Т/С: <span id="displayVehicleNumber"></span></div>
+
+            <div class="old-timer-label">С момента оплаты прошло:</div>
+            <div class="old-timer-value" id="timer">00:00</div>
+
+            <div class="old-qr-wrap">
+                <img id="qrCode" src="" alt="QR-код" class="old-qr">
             </div>
 
-            <div class="ticket__qrcode">
-                <img id="qrCode" src="" alt="QR-код билета">
+            <div class="old-serial">
+                <div>Серия билета: <span id="displaySerial"></span></div>
+                <div>Номер билета: <span id="displayTicketNumber"></span></div>
             </div>
 
-            <div class="ticket__info">
+            <div class="old-hint">
                 Предъявите контролеру QR-код.<br>
-                Чтобы сохранить реквизиты билета, нажмите кнопку «Скачать»
+                Чтобы сохранить реквизиты билета,<br>
+                нажмите кнопку «Скачать».
             </div>
 
-            <button class="ticket__button" onclick="saveTicket()">Скачать билет</button>
+            <button class="old-download-btn" onclick="downloadTicket()">Скачать билет</button>
         </div>
+
     </div>
 
     <script src="script.js"></script>
