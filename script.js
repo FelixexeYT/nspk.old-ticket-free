@@ -1,22 +1,3 @@
-// ===== Безопасная установка текста =====
-function setText(id, value) {
-    const el = document.getElementById(id);
-    if (el) {
-        el.textContent = value;
-    } else {
-        console.warn('⚠️ Не найден элемент с id:', id);
-    }
-}
-
-function setSrc(id, value) {
-    const el = document.getElementById(id);
-    if (el) {
-        el.src = value;
-    } else {
-        console.warn('⚠️ Не найден элемент с id:', id);
-    }
-}
-
 // ===== Утилиты =====
 function getDates() {
     const now = new Date();
@@ -65,7 +46,8 @@ function startTimerOld(startTimestamp) {
         const str = h > 0
             ? `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
             : `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-        setText('timerOld', str);
+        const el = document.getElementById('timerOld');
+        if (el) el.textContent = str;
     }
     tick();
     timerIntervalOld = setInterval(tick, 1000);
@@ -79,7 +61,8 @@ function startTimerNew(startTimestamp) {
         const m = Math.floor((elapsed % 3600) / 60);
         const s = elapsed % 60;
         const str = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-        setText('timerNew', str);
+        const el = document.getElementById('timerNew');
+        if (el) el.textContent = str;
     }
     tick();
     timerIntervalNew = setInterval(tick, 1000);
@@ -112,65 +95,129 @@ function goTo(view) {
     history.pushState({ view: view }, '', location.pathname + '#' + view);
 }
 
+// ===== Функция для создания элемента, если его нет =====
+function ensureElement(parent, tag, id, className = '', text = '') {
+    let el = document.getElementById(id);
+    if (!el) {
+        el = document.createElement(tag);
+        el.id = id;
+        if (className) el.className = className;
+        if (text) el.textContent = text;
+        parent.appendChild(el);
+        console.log('Создан элемент с id:', id);
+    }
+    return el;
+}
+
 // ===== Отрисовка «Старый СБП» =====
 function renderOldTicket(data) {
-    setText('displayTypeOld', data.type);
-    setText('displayBusNumberOld', data.route);
-    setText('displayVehicleNumberOld', data.vehicle);
-    setText('displayPriceOld', data.price);
-    setText('currentDateOld', data.displayDate);
-    setText('displaySerialOld', data.serial);
-    setText('displayTicketNumberOld', data.ticketNumber);
+    const container = document.getElementById('oldTicketSection');
+    if (!container) {
+        console.warn('⚠️ Не найден oldTicketSection');
+        return;
+    }
+    // Убедимся, что все нужные элементы есть
+    ensureElement(container, 'div', 'displayTypeOld', 'old-transport');
+    ensureElement(container, 'div', 'displayBusNumberOld', 'old-transport');
+    ensureElement(container, 'div', 'displayVehicleNumberOld', 'old-vehicle');
+    ensureElement(container, 'div', 'displayPriceOld', 'old-price');
+    ensureElement(container, 'div', 'currentDateOld', 'old-date');
+    ensureElement(container, 'div', 'displaySerialOld', 'old-serial');
+    ensureElement(container, 'div', 'displayTicketNumberOld', 'old-serial');
+    ensureElement(container, 'div', 'timerOld', 'old-timer-value');
+    ensureElement(container, 'img', 'qrCodeOld', 'old-qr');
 
-    setSrc('qrCodeOld',
-        `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`);
+    // Заполняем данными
+    document.getElementById('displayTypeOld').textContent = data.type;
+    document.getElementById('displayBusNumberOld').textContent = '№' + data.route;
+    document.getElementById('displayVehicleNumberOld').textContent = 'Т/С: ' + data.vehicle;
+    document.getElementById('displayPriceOld').textContent = data.price;
+    document.getElementById('currentDateOld').textContent = data.displayDate;
+    document.getElementById('displaySerialOld').textContent = data.serial;
+    document.getElementById('displayTicketNumberOld').textContent = data.ticketNumber;
+
+    document.getElementById('qrCodeOld').src =
+        `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`;
 
     startTimerOld(data.startTime);
 }
 
 // ===== Отрисовка «СБП» (новый) =====
 function renderNewTicket(data) {
-    setText('displayTypeNew', data.type);
-    setText('displayBusNumberNew', data.route);
-    setText('displayVehicleNumberNew', data.vehicle);
-    setText('displayPriceNew', data.price);
-    setText('currentDateNew', data.displayDate);
-    setText('displaySerialNew', data.serial);
-    setText('displayTicketNumberNew', data.ticketNumber);
+    const container = document.getElementById('newTicketSection');
+    if (!container) {
+        console.warn('⚠️ Не найден newTicketSection');
+        return;
+    }
+    ensureElement(container, 'div', 'displayTypeNew', 'new-transport');
+    ensureElement(container, 'div', 'displayBusNumberNew', 'new-transport');
+    ensureElement(container, 'div', 'displayVehicleNumberNew', 'new-vehicle');
+    ensureElement(container, 'div', 'displayPriceNew', 'new-price');
+    ensureElement(container, 'div', 'currentDateNew', 'new-date');
+    ensureElement(container, 'div', 'displaySerialNew', 'new-serial');
+    ensureElement(container, 'div', 'displayTicketNumberNew', 'new-serial');
+    ensureElement(container, 'div', 'timerNew', 'new-timer-value');
+    ensureElement(container, 'img', 'qrCodeNew', 'new-qr');
 
-    setSrc('qrCodeNew',
-        `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`);
+    document.getElementById('displayTypeNew').textContent = data.type;
+    document.getElementById('displayBusNumberNew').textContent = '№' + data.route;
+    document.getElementById('displayVehicleNumberNew').textContent = 'Т/С: ' + data.vehicle;
+    document.getElementById('displayPriceNew').textContent = data.price;
+    document.getElementById('currentDateNew').textContent = data.displayDate;
+    document.getElementById('displaySerialNew').textContent = data.serial;
+    document.getElementById('displayTicketNumberNew').textContent = data.ticketNumber;
+
+    document.getElementById('qrCodeNew').src =
+        `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`;
 
     startTimerNew(data.startTime);
 }
 
 // ===== Отрисовка чека =====
 function renderReceipt(data) {
-    setText('receiptDate', data.qrDate.replace('A', ' '));
-    setText('receiptSerial', data.serial);
-    setText('receiptNumber', data.ticketNumber);
-    setText('receiptTransport', data.type);
-    setText('receiptRoute', data.route);
-    setText('receiptVehicle', data.vehicle);
-    setText('receiptDateTime', data.qrDate.replace('A', ' '));
-    setText('receiptPrice', data.price + '.0 руб.');
+    const container = document.getElementById('receiptSection');
+    if (!container) {
+        console.warn('⚠️ Не найден receiptSection');
+        return;
+    }
+    ensureElement(container, 'div', 'receiptDate', 'receipt-value');
+    ensureElement(container, 'div', 'receiptType', 'receipt-value');
+    ensureElement(container, 'div', 'receiptSerial', 'receipt-value');
+    ensureElement(container, 'div', 'receiptNumber', 'receipt-value');
+    ensureElement(container, 'div', 'receiptInn', 'receipt-value');
+    ensureElement(container, 'div', 'receiptCarrier', 'receipt-value');
+    ensureElement(container, 'div', 'receiptTransport', 'receipt-value');
+    ensureElement(container, 'div', 'receiptRoute', 'receipt-value');
+    ensureElement(container, 'div', 'receiptVehicle', 'receipt-value');
+    ensureElement(container, 'div', 'receiptDateTime', 'receipt-value');
+    ensureElement(container, 'div', 'receiptPrice', 'receipt-value');
+    ensureElement(container, 'img', 'receiptQrCode', 'receipt-qr-img');
+
+    document.getElementById('receiptDate').textContent = data.qrDate.replace('A', ' ');
+    document.getElementById('receiptSerial').textContent = data.serial;
+    document.getElementById('receiptNumber').textContent = data.ticketNumber;
+    document.getElementById('receiptTransport').textContent = data.type;
+    document.getElementById('receiptRoute').textContent = data.route;
+    document.getElementById('receiptVehicle').textContent = data.vehicle;
+    document.getElementById('receiptDateTime').textContent = data.qrDate.replace('A', ' ');
+    document.getElementById('receiptPrice').textContent = data.price + '.0 руб.';
 
     if (data.ticketType === 'oldsbp') {
-        setText('receiptType', 'Разовый билет QRPay');
-        setText('receiptInn', '5507022628');
-        setText('receiptCarrier', 'АО "Пассажирское предприятие № 8"');
+        document.getElementById('receiptType').textContent = 'Разовый билет QRPay';
+        document.getElementById('receiptInn').textContent = '5507022628';
+        document.getElementById('receiptCarrier').textContent = 'АО "Пассажирское предприятие № 8"';
     } else if (data.ticketType === 'sbp') {
-        setText('receiptType', 'Разовый билет (QR) в Омске');
-        setText('receiptInn', '5507301149');
-        setText('receiptCarrier', 'АКЦИОНЕРНОЕ ОБЩЕСТВО "ПАССАЖИРСКОЕ ПРЕДПРИЯТИЕ № 8"');
+        document.getElementById('receiptType').textContent = 'Разовый билет (QR) в Омске';
+        document.getElementById('receiptInn').textContent = '5507301149';
+        document.getElementById('receiptCarrier').textContent = 'АКЦИОНЕРНОЕ ОБЩЕСТВО "ПАССАЖИРСКОЕ ПРЕДПРИЯТИЕ № 8"';
     } else {
-        setText('receiptType', 'Разовый билет');
-        setText('receiptInn', '—');
-        setText('receiptCarrier', '—');
+        document.getElementById('receiptType').textContent = 'Разовый билет';
+        document.getElementById('receiptInn').textContent = '—';
+        document.getElementById('receiptCarrier').textContent = '—';
     }
 
-    setSrc('receiptQrCode',
-        `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`);
+    document.getElementById('receiptQrCode').src =
+        `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`;
 }
 
 // ===== Показ билета =====
