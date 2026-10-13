@@ -156,7 +156,7 @@ body {
     margin: 0 auto;
     padding: 16px;
     background: linear-gradient(180deg, #209fff 0%, #0bd3d6 100%);
-    background: -webkit-linear-gradient(180deg, #209fff 0%, #0bd3d6 100%);
+    background: -webkit-linear-gradient(90deg, #209fff 0%, #0bd3d6 100%);
     color: #ffffff;
     border: none;
     border-radius: 12px;
