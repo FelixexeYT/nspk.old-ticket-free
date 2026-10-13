@@ -4,6 +4,164 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оплата проезда</title>
+    <link rel="stylesheet" href="styles.css?v=4">
+</head>
+<body>
+
+    <!-- ЭКРАН 1: ФОРМА -->
+    <div class="card" id="inputSection">
+        <h1>Данные билета</h1>
+
+        <label for="transportType">Вид транспорта:</label>
+        <select id="transportType">
+            <option value="Автобус">Автобус</option>
+            <option value="Троллейбус">Троллейбус</option>
+        </select>
+
+        <label for="ticketType">Тип билета:</label>
+        <select id="ticketType">
+            <option value="oldsbp">Старый СБП</option>
+            <option value="sbp">СБП</option>
+            <option value="2gis">2ГИС</option>
+        </select>
+
+        <label for="routeNumber">Номер маршрута:</label>
+        <input type="text" id="routeNumber" placeholder="Введите номер маршрута">
+
+        <label for="vehicleNumber">Номер т/с:</label>
+        <input type="text" id="vehicleNumber" placeholder="Введите номер ТС">
+
+        <label for="price">Стоимость проезда:</label>
+        <input type="text" id="price" placeholder="Введите стоимость">
+
+        <button id="continueBtn" type="button">Продолжить</button>
+    </div>
+
+    <!-- ЭКРАН 2А: СТАРЫЙ СБП -->
+    <div class="old-ticket" id="oldTicketSection" style="display: none;">
+        <div class="old-header">Уведомление об оплате</div>
+
+        <div class="old-body">
+            <div class="old-logo-wrap">
+                <img src="sbp_logo.jpg" alt="СБП" class="old-logo">
+            </div>
+
+            <p class="old-success">Ваш проезд успешно оплачен!</p>
+
+            <div class="old-transport"><span id="displayTypeOld">Автобус</span>: №<span id="displayBusNumberOld"></span></div>
+            <div class="old-price"><span id="displayPriceOld">40</span> <span class="old-price-currency">₽</span></div>
+
+            <div class="old-date" id="currentDateOld"></div>
+            <div class="old-vehicle">Т/С: <span id="displayVehicleNumberOld"></span></div>
+
+            <div class="old-timer-label">С момента оплаты прошло:</div>
+            <div class="old-timer-value" id="timerOld">00:00</div>
+
+            <div class="old-qr-wrap">
+                <img id="qrCodeOld" src="" alt="QR-код" class="old-qr">
+            </div>
+
+            <div class="old-serial">
+                <div>Серия билета: <span id="displaySerialOld"></span></div>
+                <div>Номер билета: <span id="displayTicketNumberOld"></span></div>
+            </div>
+
+            <div class="old-hint">
+                Предъявите контролеру QR-код.<br>
+                Чтобы сохранить реквизиты билета,<br>
+                нажмите кнопку «Скачать».
+            </div>
+
+            <button class="old-download-btn" id="downloadBtnOld" type="button">Скачать билет</button>
+        </div>
+    </div>
+
+    <!-- ЭКРАН 2Б: НОВЫЙ СБП -->
+    <div class="new-ticket" id="newTicketSection" style="display: none;">
+        <div class="new-header">— Уведомление об оплате —</div>
+
+        <div class="new-body">
+            <p class="new-success">Ваш проезд успешно оплачен!</p>
+
+            <div class="new-transport"><span id="displayTypeNew">Автобус</span>: №<span id="displayBusNumberNew"></span></div>
+            <div class="new-price"><span id="displayPriceNew">40</span> ₽</div>
+
+            <div class="new-date" id="currentDateNew"></div>
+            <div class="new-vehicle">Т/С: <span id="displayVehicleNumberNew"></span></div>
+
+            <div class="new-timer-label">С момента оплаты прошло:</div>
+            <div class="new-timer-value" id="timerNew">00:00:00</div>
+
+            <div class="new-qr-wrap">
+                <img id="qrCodeNew" src="" alt="QR-код" class="new-qr">
+            </div>
+
+            <div class="new-serial">
+                <div>Серия билета: <span id="displaySerialNew"></span></div>
+                <div>Номер билета: <span id="displayTicketNumberNew"></span></div>
+            </div>
+
+            <div class="new-hint">
+                Предъявите контролеру QR-код.<br>
+                Чтобы сохранить реквизиты билета, нажмите<br>
+                кнопку «Сохранить».
+            </div>
+
+            <button class="new-download-btn" id="downloadBtnNew" type="button">Сохранить билет</button>
+        </div>
+    </div>
+
+    <!-- ЭКРАН 3: ЧЕК -->
+    <div class="receipt-section" id="receiptSection" style="display: none;">
+        <button class="receipt-back" id="receiptBackBtn" type="button">← Назад к билету</button>
+
+        <div class="receipt-content">
+            <div class="receipt-value" id="receiptDate"></div>
+
+            <span class="receipt-label">Вид билета</span>
+            <div class="receipt-value" id="receiptType"></div>
+
+            <span class="receipt-label">Серия билета</span>
+            <div class="receipt-value" id="receiptSerial"></div>
+
+            <span class="receipt-label">Номер билета</span>
+            <div class="receipt-value" id="receiptNumber"></div>
+
+            <span class="receipt-label">ИНН перевозчика</span>
+            <div class="receipt-value" id="receiptInn"></div>
+
+            <span class="receipt-label">Наименование перевозчика</span>
+            <div class="receipt-value" id="receiptCarrier"></div>
+
+            <span class="receipt-label">Вид транспорта</span>
+            <div class="receipt-value" id="receiptTransport"></div>
+
+            <span class="receipt-label">Маршрут/Станция</span>
+            <div class="receipt-value" id="receiptRoute"></div>
+
+            <span class="receipt-label">Номер ТС</span>
+            <div class="receipt-value" id="receiptVehicle"></div>
+
+            <span class="receipt-label">Дата и время поездки</span>
+            <div class="receipt-value" id="receiptDateTime"></div>
+
+            <span class="receipt-label">Стоимость</span>
+            <div class="receipt-value" id="receiptPrice"></div>
+
+            <div class="receipt-qr">
+                <img id="receiptQrCode" src="" alt="QR-код">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=4"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата проезда</title>
     <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
