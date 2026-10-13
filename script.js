@@ -228,7 +228,7 @@ function openReceipt() {
 
 // ===== Инициализация =====
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM загружен. Проверка элементов:');
+    console.log('=== DOM загружен. Проверка элементов ===');
     console.log('inputSection:', !!document.getElementById('inputSection'));
     console.log('oldTicketSection:', !!document.getElementById('oldTicketSection'));
     console.log('newTicketSection:', !!document.getElementById('newTicketSection'));
