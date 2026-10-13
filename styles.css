@@ -127,7 +127,7 @@ body {
     max-width: 500px;
     margin: 0 auto;
     min-height: 100vh;
-    background-color: #f0f0f0;
+    background-color:  #f2f3f4;   /* было #f0f0f0 — теперь чистый белый */
     background-image: url('sbp-bg.png');
     background-repeat: no-repeat;
     background-position: top center;
@@ -155,16 +155,21 @@ body {
     max-width: 460px;
     margin: 0 auto;
     padding: 16px;
-    background: #2c9ee0;
+    background: linear-gradient(90deg, #209fff 0%, #0bd3d6 100%);
     color: #fff;
     border: none;
     border-radius: 8px;
     font-size: 17px;
     font-weight: 700;
     cursor: pointer;
+    font-family: inherit;
+    transition: filter 0.2s, box-shadow 0.2s;
 }
 
-.new-download-btn:hover { background: #1e87c4; }
+.new-download-btn:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 4px 12px rgba(11, 211, 214, 0.35);
+}
 
 /* ===== ЧЕК ===== */
 .receipt-section {
