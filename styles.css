@@ -288,3 +288,30 @@ body {
         max-width: 100%;
     }
 }
+/* ===== НОВЫЙ СБП (Экран 2Б) ===== */
+.new-ticket {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    background-image: url('sbp-bg.png');
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100% auto;
+    padding: 0 0 40px 0;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Текст «Уведомление об оплате» уже есть в картинке, поэтому HTML-версию скрываем */
+.new-header {
+    display: none;
+}
+
+.new-body {
+    /* padding-top = высота волны на картинке. Подбери, если контент заедет на волну или будет слишком низко */
+    padding: 170px 24px 30px;
+    text-align: center;
+    background: transparent;
+}
