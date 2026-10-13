@@ -155,20 +155,22 @@ body {
     max-width: 460px;
     margin: 0 auto;
     padding: 16px;
-    background: linear-gradient(90deg, #209fff 0%, #0bd3d6 100%);
-    color: #fff;
+    background: linear-gradient(180deg, #209fff 0%, #0bd3d6 100%);
+    background: -webkit-linear-gradient(180deg, #209fff 0%, #0bd3d6 100%);
+    color: #ffffff;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 17px;
     font-weight: 700;
     cursor: pointer;
     font-family: inherit;
     transition: filter 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(32, 159, 255, 0.25);
 }
 
 .new-download-btn:hover {
     filter: brightness(1.08);
-    box-shadow: 0 4px 12px rgba(11, 211, 214, 0.35);
+    box-shadow: 0 4px 14px rgba(11, 211, 214, 0.45);
 }
 
 /* ===== ЧЕК ===== */
