@@ -84,7 +84,6 @@ function switchView(view) {
     if (showId) {
         const el = document.getElementById(showId);
         if (el) el.style.setProperty('display', 'block', 'important');
-        else console.warn('⚠️ Не найден экран:', showId);
     }
 
     window.scrollTo(0, 0);
@@ -95,42 +94,11 @@ function goTo(view) {
     history.pushState({ view: view }, '', location.pathname + '#' + view);
 }
 
-// ===== Функция для создания элемента, если его нет =====
-function ensureElement(parent, tag, id, className = '', text = '') {
-    let el = document.getElementById(id);
-    if (!el) {
-        el = document.createElement(tag);
-        el.id = id;
-        if (className) el.className = className;
-        if (text) el.textContent = text;
-        parent.appendChild(el);
-        console.log('Создан элемент с id:', id);
-    }
-    return el;
-}
-
 // ===== Отрисовка «Старый СБП» =====
 function renderOldTicket(data) {
-    const container = document.getElementById('oldTicketSection');
-    if (!container) {
-        console.warn('⚠️ Не найден oldTicketSection');
-        return;
-    }
-    // Убедимся, что все нужные элементы есть
-    ensureElement(container, 'div', 'displayTypeOld', 'old-transport');
-    ensureElement(container, 'div', 'displayBusNumberOld', 'old-transport');
-    ensureElement(container, 'div', 'displayVehicleNumberOld', 'old-vehicle');
-    ensureElement(container, 'div', 'displayPriceOld', 'old-price');
-    ensureElement(container, 'div', 'currentDateOld', 'old-date');
-    ensureElement(container, 'div', 'displaySerialOld', 'old-serial');
-    ensureElement(container, 'div', 'displayTicketNumberOld', 'old-serial');
-    ensureElement(container, 'div', 'timerOld', 'old-timer-value');
-    ensureElement(container, 'img', 'qrCodeOld', 'old-qr');
-
-    // Заполняем данными
     document.getElementById('displayTypeOld').textContent = data.type;
-    document.getElementById('displayBusNumberOld').textContent = '№' + data.route;
-    document.getElementById('displayVehicleNumberOld').textContent = 'Т/С: ' + data.vehicle;
+    document.getElementById('displayBusNumberOld').textContent = data.route;
+    document.getElementById('displayVehicleNumberOld').textContent = data.vehicle;
     document.getElementById('displayPriceOld').textContent = data.price;
     document.getElementById('currentDateOld').textContent = data.displayDate;
     document.getElementById('displaySerialOld').textContent = data.serial;
@@ -144,24 +112,9 @@ function renderOldTicket(data) {
 
 // ===== Отрисовка «СБП» (новый) =====
 function renderNewTicket(data) {
-    const container = document.getElementById('newTicketSection');
-    if (!container) {
-        console.warn('⚠️ Не найден newTicketSection');
-        return;
-    }
-    ensureElement(container, 'div', 'displayTypeNew', 'new-transport');
-    ensureElement(container, 'div', 'displayBusNumberNew', 'new-transport');
-    ensureElement(container, 'div', 'displayVehicleNumberNew', 'new-vehicle');
-    ensureElement(container, 'div', 'displayPriceNew', 'new-price');
-    ensureElement(container, 'div', 'currentDateNew', 'new-date');
-    ensureElement(container, 'div', 'displaySerialNew', 'new-serial');
-    ensureElement(container, 'div', 'displayTicketNumberNew', 'new-serial');
-    ensureElement(container, 'div', 'timerNew', 'new-timer-value');
-    ensureElement(container, 'img', 'qrCodeNew', 'new-qr');
-
     document.getElementById('displayTypeNew').textContent = data.type;
-    document.getElementById('displayBusNumberNew').textContent = '№' + data.route;
-    document.getElementById('displayVehicleNumberNew').textContent = 'Т/С: ' + data.vehicle;
+    document.getElementById('displayBusNumberNew').textContent = data.route;
+    document.getElementById('displayVehicleNumberNew').textContent = data.vehicle;
     document.getElementById('displayPriceNew').textContent = data.price;
     document.getElementById('currentDateNew').textContent = data.displayDate;
     document.getElementById('displaySerialNew').textContent = data.serial;
@@ -175,24 +128,6 @@ function renderNewTicket(data) {
 
 // ===== Отрисовка чека =====
 function renderReceipt(data) {
-    const container = document.getElementById('receiptSection');
-    if (!container) {
-        console.warn('⚠️ Не найден receiptSection');
-        return;
-    }
-    ensureElement(container, 'div', 'receiptDate', 'receipt-value');
-    ensureElement(container, 'div', 'receiptType', 'receipt-value');
-    ensureElement(container, 'div', 'receiptSerial', 'receipt-value');
-    ensureElement(container, 'div', 'receiptNumber', 'receipt-value');
-    ensureElement(container, 'div', 'receiptInn', 'receipt-value');
-    ensureElement(container, 'div', 'receiptCarrier', 'receipt-value');
-    ensureElement(container, 'div', 'receiptTransport', 'receipt-value');
-    ensureElement(container, 'div', 'receiptRoute', 'receipt-value');
-    ensureElement(container, 'div', 'receiptVehicle', 'receipt-value');
-    ensureElement(container, 'div', 'receiptDateTime', 'receipt-value');
-    ensureElement(container, 'div', 'receiptPrice', 'receipt-value');
-    ensureElement(container, 'img', 'receiptQrCode', 'receipt-qr-img');
-
     document.getElementById('receiptDate').textContent = data.qrDate.replace('A', ' ');
     document.getElementById('receiptSerial').textContent = data.serial;
     document.getElementById('receiptNumber').textContent = data.ticketNumber;
@@ -223,11 +158,11 @@ function renderReceipt(data) {
 // ===== Показ билета =====
 function showTicket() {
     try {
-        const type = document.getElementById('transportType')?.value || 'Автобус';
-        const ticketType = document.getElementById('ticketType')?.value || 'oldsbp';
-        const route = document.getElementById('routeNumber')?.value.trim() || '125';
-        const vehicle = document.getElementById('vehicleNumber')?.value.trim() || '363';
-        const price = document.getElementById('price')?.value.trim() || '40';
+        const type = document.getElementById('transportType').value || 'Автобус';
+        const ticketType = document.getElementById('ticketType').value || 'oldsbp';
+        const route = document.getElementById('routeNumber').value.trim() || '125';
+        const vehicle = document.getElementById('vehicleNumber').value.trim() || '363';
+        const price = document.getElementById('price').value.trim() || '40';
 
         const { displayDate, qrDate } = getDates();
         const serial = generateSerial();
@@ -275,15 +210,6 @@ function openReceipt() {
 
 // ===== Инициализация =====
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('=== DOM загружен. Проверка элементов ===');
-    console.log('inputSection:', !!document.getElementById('inputSection'));
-    console.log('oldTicketSection:', !!document.getElementById('oldTicketSection'));
-    console.log('newTicketSection:', !!document.getElementById('newTicketSection'));
-    console.log('receiptSection:', !!document.getElementById('receiptSection'));
-    console.log('continueBtn:', !!document.getElementById('continueBtn'));
-    console.log('downloadBtnOld:', !!document.getElementById('downloadBtnOld'));
-    console.log('downloadBtnNew:', !!document.getElementById('downloadBtnNew'));
-
     const continueBtn = document.getElementById('continueBtn');
     const downloadBtnOld = document.getElementById('downloadBtnOld');
     const downloadBtnNew = document.getElementById('downloadBtnNew');
