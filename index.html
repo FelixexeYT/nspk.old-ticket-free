@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оплата проезда</title>
-    <link rel="stylesheet" href="styles.css?v=7">
+    <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
 
@@ -18,25 +18,30 @@
             <option value="Троллейбус">Троллейбус</option>
         </select>
 
-        <label for="ticketType">Тип билета:</label>
-        <select id="ticketType">
-            <option value="oldsbp">Старый СБП</option>
-            <option value="sbp">СБП</option>
-            <option value="2gis">2ГИС</option>
-        </select>
+       <label>Тип билета:</label>
 
-        <label for="routeNumber">Номер маршрута:</label>
-        <input type="text" id="routeNumber" placeholder="Введите номер маршрута">
+<div class="ticket-type-row">
+    <button type="button" class="ticket-type-btn" data-value="oldsbp">
+        <img src="oldsbp_logo.svg" alt="Старый СБП">
+        <span>Старый СБП</span>
+    </button>
+    <button type="button" class="ticket-type-btn active" data-value="sbp">
+        <img src="sbpqr_logo.svg" alt="СБП">
+        <span>СБП</span>
+    </button>
+    <button type="button" class="ticket-type-btn" data-value="2gis">
+        <img src="2GIS_Logo.svg" alt="2ГИС">
+        <span>2ГИС</span>
+    </button>
+</div>
 
-        <label for="vehicleNumber">Номер т/с:</label>
-        <input type="text" id="vehicleNumber" placeholder="Введите номер ТС">
+<!-- Скрытый input, чтобы весь остальной JS работал без изменений -->
+<input type="hidden" id="ticketType" value="sbp">
 
-        <label for="price">Стоимость проезда:</label>
-        <input type="text" id="price" placeholder="Введите стоимость">
-
-        <button id="continueBtn" type="button">Продолжить</button>
-    </div>
-
+<div class="ticket-type-selected">
+    Выбрано: <strong id="ticketTypeLabel">СБП</strong>
+</div>
+        
     <!-- ЭКРАН 2А: СТАРЫЙ СБП -->
     <div class="old-ticket" id="oldTicketSection" style="display:none;">
         <div class="old-header">Уведомление об оплате</div>
@@ -154,6 +159,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=9"></script>
 </body>
 </html>
