@@ -257,3 +257,30 @@ window.addEventListener('popstate', function(e) {
         switchView('form');
     }
 });
+// ===== Выбор типа билета через кнопки-иконки =====
+document.addEventListener('DOMContentLoaded', function() {
+    const btns = document.querySelectorAll('.ticket-type-btn');
+    const hiddenInput = document.getElementById('ticketType');
+    const label = document.getElementById('ticketTypeLabel');
+
+    if (!btns.length || !hiddenInput) return;
+
+    const names = {
+        oldsbp: 'Старый СБП',
+        sbp: 'СБП',
+        '2gis': '2ГИС'
+    };
+
+    btns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const value = this.dataset.value;
+
+            btns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            hiddenInput.value = value;
+
+            if (label) label.textContent = names[value] || value;
+        });
+    });
+});
