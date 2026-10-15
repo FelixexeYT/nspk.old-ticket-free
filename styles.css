@@ -238,6 +238,7 @@ body {
     transition: all 0.2s ease;
     width: auto;
     margin: 0;
+    overflow: visible;   /* ← ВОТ ЭТА СТРОКА */
 }
 
 .ticket-type-btn img {
