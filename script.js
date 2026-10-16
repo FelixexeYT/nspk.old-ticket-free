@@ -70,7 +70,7 @@ function startTimerNew(startTimestamp) {
 
 // ===== Переключение экранов =====
 function switchView(view) {
-    ['inputSection', 'oldTicketSection', 'newTicketSection', 'receiptSection'].forEach(id => {
+    ['inputSection', 'oldTicketSection', 'newTicketSection', 'gisTicketSection', 'receiptSection'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.setProperty('display', 'none', 'important');
     });
@@ -79,16 +79,19 @@ function switchView(view) {
     if (view === 'form') showId = 'inputSection';
     else if (view === 'oldsbp') showId = 'oldTicketSection';
     else if (view === 'sbp') showId = 'newTicketSection';
+    else if (view === '2gis') showId = 'gisTicketSection';
     else if (view === 'receipt') showId = 'receiptSection';
 
     if (showId) {
         const el = document.getElementById(showId);
-        if (el) el.style.setProperty('display', 'block', 'important');
+        if (el) {
+            // У 2ГИС свой position: fixed, поэтому display: block
+            el.style.setProperty('display', 'block', 'important');
+        }
     }
 
     window.scrollTo(0, 0);
 }
-
 function goTo(view) {
     switchView(view);
     history.pushState({ view: view }, '', location.pathname + '#' + view);
@@ -188,6 +191,9 @@ function showTicket() {
         } else if (ticketType === 'sbp') {
             renderNewTicket(data);
             goTo('sbp');
+        } else if (ticketType === '2gis') {
+            renderGisTicket(data);
+            goTo('2gis');
         } else {
             renderOldTicket(data);
             goTo('oldsbp');
@@ -283,4 +289,121 @@ document.addEventListener('DOMContentLoaded', function() {
             if (label) label.textContent = names[value] || value;
         });
     });
+});
+// ============================================
+// 2ГИС — ЛОГИКА
+// ============================================
+
+// Генерация уникальной строки в base64
+function b64(str) {
+    try {
+        return btoa(unescape(encodeURIComponent(String(str))));
+    } catch (e) {
+        return '';
+    }
+}
+
+// Случайный hex
+function randHex(len) {
+    let s = '';
+    const chars = '0123456789abcdef';
+    for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * 16)];
+    return s;
+}
+
+// UUID v4-подобный
+function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+// Показать экран 2ГИС
+function renderGisTicket(data) {
+    // Иконка транспорта
+    let icon = 'Bus.svg';
+    if (data.type === 'Троллейбус') icon = 'trolleyBus.svg';
+    // Трамвай пока не выбирается в форме, но пусть будет
+    if (data.type === 'Трамвай') icon = 'TramV.svg';
+
+    const iconEl = document.getElementById('gisTransportIcon');
+    if (iconEl) iconEl.src = icon;
+
+    // Номер маршрута
+    document.getElementById('gisRouteNumber').textContent = data.route;
+
+    // Номер ТС (в зелёной плашке) — берём из формы
+    document.getElementById('gisVehicleNum').textContent = data.vehicle;
+
+    // Гос. номер — пусть пока будет заглушка (потом заменим на актуальный)
+    document.getElementById('gisGosNum').textContent = 'у — — вх | — —';
+
+    // Дата и цена
+    const now = new Date();
+    const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    const dateStr = `${now.getDate()} ${months[now.getMonth()]} · ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    document.getElementById('gisDateTime').textContent = dateStr;
+
+    const priceStr = data.price + ' ₽';
+    document.getElementById('gisPrice').textContent = priceStr;
+    document.getElementById('gisTotalSum').textContent = priceStr;
+    document.getElementById('gisTicketHeader').textContent = 'Билет №1 · ' + priceStr;
+
+    // Генерируем ID для QR (i — ticket id, o — order id, и т.д.)
+    const ticketId = uuid();
+    const orderId = uuid();
+    const ticketNumShort = randHex(8);
+    const orderNumShort = randHex(8);
+
+    document.getElementById('gisTicketNum').textContent = ticketNumShort;
+    document.getElementById('gisOrderNum').textContent = orderNumShort;
+
+    // Собираем строку параметров для QR (как у 2ГИС)
+    const params = [
+        'i=' + b64(ticketId + ticketNumShort),
+        'o=' + b64(orderId),
+        'c=' + b64(Date.now()),
+        'n=' + b64(Date.now()),
+        'p=' + b64(Number(data.price) * 100),
+        'op=' + b64(Number(data.price) * 100),
+        'oc=' + b64(1),
+        'vi=' + b64('0x' + randHex(12)),
+        'ri=' + b64('0x' + randHex(12)),
+        'fsi=' + b64('0x' + randHex(12)),
+        's=' + b64('paid'),
+        'srv=' + b64('<nil>'),
+        'obj=' + b64('<nil>'),
+        'vl=' + b64('С' + data.vehicle + 'ХХ 55'),
+        'vb=' + b64(data.vehicle),
+        'rn=' + b64(data.route),
+        'fsn=' + b64('Академия транспорта'),
+        'sgn=' + b64(randHex(80))
+    ].join('&');
+
+    // Генерируем QR: цвет 0b3045, размер большой, ecc=H (высокий уровень коррекции)
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(params);
+    document.getElementById('gisQrCode').src = qrUrl;
+}
+
+// Открыть/закрыть модалку "Детали"
+function openGisModal() {
+    const m = document.getElementById('gisDetailsModal');
+    if (m) m.style.display = 'flex';
+}
+function closeGisModal() {
+    const m = document.getElementById('gisDetailsModal');
+    if (m) m.style.display = 'none';
+}
+
+// Обработчики для 2ГИС (добавляем к существующему DOMContentLoaded через отдельный слушатель)
+document.addEventListener('DOMContentLoaded', function() {
+    const detailsBtn = document.getElementById('gisDetailsBtn');
+    const modalClose = document.getElementById('gisModalClose');
+    const modalBackdrop = document.getElementById('gisModalBackdrop');
+
+    if (detailsBtn) detailsBtn.addEventListener('click', openGisModal);
+    if (modalClose) modalClose.addEventListener('click', closeGisModal);
+    if (modalBackdrop) modalBackdrop.addEventListener('click', closeGisModal);
 });
