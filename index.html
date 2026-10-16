@@ -105,7 +105,126 @@
             <button class="new-download-btn" id="downloadBtnNew" type="button">Сохранить билет</button>
         </div>
     </div>
+    <!-- ЭКРАН 2В: 2ГИС -->
+    <div class="gis-screen" id="gisTicketSection" style="display:none;">
 
+        <!-- Слой 1: карта -->
+        <div class="gis-map" id="gisMap"></div>
+
+        <!-- Поисковая строка сверху -->
+        <div class="gis-search">
+            <div class="gis-search__inner">
+                <div class="gis-search__row">
+                    <span class="gis-search__pin">📍</span>
+                    <span>Моё местоположение</span>
+                </div>
+                <div class="gis-search__row gis-search__row--active">
+                    <span class="gis-search__dot">🔵</span>
+                    <span>Куда поедем?</span>
+                </div>
+                <button class="gis-search__close" type="button">✕</button>
+            </div>
+        </div>
+
+        <!-- Bottom sheet "Мои оплаты" -->
+        <div class="gis-sheet">
+            <div class="gis-sheet__handle"></div>
+
+            <div class="gis-sheet__header">
+                <button class="gis-sheet__back" type="button">‹</button>
+                <span>Мои оплаты</span>
+            </div>
+
+            <!-- Плитка "Ваш билетик" — фон houses.svg + мигающий houses2.svg -->
+            <div class="gis-hero">
+                <img src="houses.svg" alt="" class="gis-hero__bg gis-hero__bg--static">
+                <img src="houses2.svg" alt="" class="gis-hero__bg gis-hero__bg--flash">
+            </div>
+
+            <!-- Плитка с данными билета -->
+            <div class="gis-card">
+                <div class="gis-card__route">
+                    <img id="gisTransportIcon" src="Bus.svg" alt="">
+                    <span id="gisRouteNumber">125</span>
+                </div>
+                <div class="gis-card__route-name">Железнодорожный вокзал — микрорайон...</div>
+
+                <div class="gis-card__plates">
+                    <span class="gis-plate gis-plate--green" id="gisVehicleNum">201</span>
+                    <span class="gis-plate gis-plate--gray" id="gisGosNum">у 939 вх | 55</span>
+                    <img src="sputnick.svg" alt="" class="gis-card__sputnick">
+                </div>
+
+                <div class="gis-card__meta">
+                    <span id="gisDateTime">13 октября · 13:17</span>
+                    <span id="gisPrice">30 ₽</span>
+                </div>
+
+                <div class="gis-card__divider"></div>
+
+                <button class="gis-card__details" id="gisDetailsBtn" type="button">
+                    <img src="info.svg" alt="">
+                    <span>Детали заказа</span>
+                    <span class="gis-arrow">›</span>
+                </button>
+            </div>
+
+            <!-- История оплат -->
+            <button class="gis-history" type="button">
+                <img src="Time.svg" alt="">
+                <span>История оплат</span>
+                <span class="gis-arrow">›</span>
+            </button>
+
+            <!-- Волнистый низ -->
+            <div class="gis-sheet__wave"></div>
+        </div>
+
+        <!-- Модалка "Детали" -->
+        <div class="gis-modal" id="gisDetailsModal" style="display:none;">
+            <div class="gis-modal__backdrop" id="gisModalBackdrop"></div>
+            <div class="gis-modal__content">
+                <div class="gis-modal__header">
+                    <span>Детали</span>
+                    <button class="gis-modal__close" id="gisModalClose" type="button">✕</button>
+                </div>
+
+                <div class="gis-modal__body">
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Общая сумма заказа</span>
+                        <span class="gis-modal__value" id="gisTotalSum">30 ₽</span>
+                    </div>
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Количество билетов</span>
+                        <span class="gis-modal__value">1</span>
+                    </div>
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Номер заказа</span>
+                        <span class="gis-modal__value" id="gisOrderNum">e9bcb8c0</span>
+                    </div>
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Номера билетов</span>
+                        <span class="gis-modal__value" id="gisTicketNum">f4ef16d5</span>
+                    </div>
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Организатор перевозок</span>
+                        <span class="gis-modal__value">АО "Пассажирсервис"</span>
+                    </div>
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Перевозчик</span>
+                        <span class="gis-modal__value">Участок 2</span>
+                    </div>
+
+                    <div class="gis-modal__ticket-header" id="gisTicketHeader">Билет №1 · 30 ₽</div>
+
+                    <div class="gis-modal__qr">
+                        <img id="gisQrCode" src="" alt="QR-код">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
     <!-- ЭКРАН 3: ЧЕК -->
     <div class="receipt-section" id="receiptSection" style="display:none;">
         <button class="receipt-back" id="receiptBackBtn" type="button">← Назад к билету</button>
