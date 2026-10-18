@@ -84,14 +84,12 @@ function switchView(view) {
 
     if (showId) {
         const el = document.getElementById(showId);
-        if (el) {
-            // У 2ГИС свой position: fixed, поэтому display: block
-            el.style.setProperty('display', 'block', 'important');
-        }
+        if (el) el.style.setProperty('display', 'block', 'important');
     }
 
     window.scrollTo(0, 0);
 }
+
 function goTo(view) {
     switchView(view);
     history.pushState({ view: view }, '', location.pathname + '#' + view);
@@ -158,6 +156,108 @@ function renderReceipt(data) {
         `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&data=${encodeURIComponent(data.qrText)}`;
 }
 
+// ============================================
+// 2ГИС — ЛОГИКА
+// ============================================
+function b64(str) {
+    try {
+        return btoa(unescape(encodeURIComponent(String(str))));
+    } catch (e) {
+        return '';
+    }
+}
+
+function randHex(len) {
+    let s = '';
+    const chars = '0123456789abcdef';
+    for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * 16)];
+    return s;
+}
+
+function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function renderGisTicket(data) {
+    let icon = 'Bus.png';
+    if (data.type === 'Троллейбус') icon = 'trolleyBus.png';
+    if (data.type === 'Трамвай') icon = 'TramV.png';
+
+    const iconEl = document.getElementById('gisTransportIcon');
+    if (iconEl) iconEl.src = icon;
+
+    document.getElementById('gisRouteNumber').textContent = data.route;
+    document.getElementById('gisVehicleNum').textContent = data.vehicle;
+    document.getElementById('gisGosNum').textContent = 'у — — вх | — —';
+
+    const now = new Date();
+    const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    const dateStr = `${now.getDate()} ${months[now.getMonth()]} · ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    document.getElementById('gisDateTime').textContent = dateStr;
+
+    const priceStr = data.price + ' ₽';
+    document.getElementById('gisPrice').textContent = priceStr;
+    document.getElementById('gisTotalSum').textContent = priceStr;
+    document.getElementById('gisTicketHeader').textContent = 'Билет №1 · ' + priceStr;
+
+    const ticketId = uuid();
+    const orderId = uuid();
+    const ticketNumShort = randHex(8);
+    const orderNumShort = randHex(8);
+
+    document.getElementById('gisTicketNum').textContent = ticketNumShort;
+    document.getElementById('gisOrderNum').textContent = orderNumShort;
+
+    const params = [
+        'i=' + b64(ticketId + ticketNumShort),
+        'o=' + b64(orderId),
+        'c=' + b64(Date.now()),
+        'n=' + b64(Date.now()),
+        'p=' + b64(Number(data.price) * 100),
+        'op=' + b64(Number(data.price) * 100),
+        'oc=' + b64(1),
+        'vi=' + b64('0x' + randHex(12)),
+        'ri=' + b64('0x' + randHex(12)),
+        'fsi=' + b64('0x' + randHex(12)),
+        's=' + b64('paid'),
+        'srv=' + b64('<nil>'),
+        'obj=' + b64('<nil>'),
+        'vl=' + b64('С' + data.vehicle + 'ХХ 55'),
+        'vb=' + b64(data.vehicle),
+        'rn=' + b64(data.route),
+        'fsn=' + b64('Академия транспорта'),
+        'sgn=' + b64(randHex(80))
+    ].join('&');
+
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(params);
+    document.getElementById('gisQrCode').src = qrUrl;
+    
+    // Показываем модалку с домиками
+    openGisHousesModal();
+}
+
+// Модалки 2ГИС
+function openGisModal() {
+    const m = document.getElementById('gisDetailsModal');
+    if (m) m.style.display = 'flex';
+}
+function closeGisModal() {
+    const m = document.getElementById('gisDetailsModal');
+    if (m) m.style.display = 'none';
+}
+function openGisHousesModal() {
+    const m = document.getElementById('gisHousesModal');
+    if (m) m.style.display = 'flex';
+}
+function closeGisHousesModal() {
+    const m = document.getElementById('gisHousesModal');
+    if (m) m.style.display = 'none';
+}
+
 // ===== Показ билета =====
 function showTicket() {
     try {
@@ -220,22 +320,53 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadBtnOld = document.getElementById('downloadBtnOld');
     const downloadBtnNew = document.getElementById('downloadBtnNew');
     const receiptBackBtn = document.getElementById('receiptBackBtn');
+    
+    // 2ГИС кнопки
+    const detailsBtn = document.getElementById('gisDetailsBtn');
+    const modalClose = document.getElementById('gisModalClose');
+    const modalBackdrop = document.getElementById('gisModalBackdrop');
+    const housesClose = document.getElementById('gisHousesClose');
 
     if (continueBtn) continueBtn.addEventListener('click', e => { e.preventDefault(); showTicket(); });
     if (downloadBtnOld) downloadBtnOld.addEventListener('click', e => { e.preventDefault(); openReceipt(); });
     if (downloadBtnNew) downloadBtnNew.addEventListener('click', e => { e.preventDefault(); openReceipt(); });
     if (receiptBackBtn) receiptBackBtn.addEventListener('click', e => { e.preventDefault(); history.back(); });
 
+    if (detailsBtn) detailsBtn.addEventListener('click', openGisModal);
+    if (modalClose) modalClose.addEventListener('click', closeGisModal);
+    if (modalBackdrop) modalBackdrop.addEventListener('click', closeGisModal);
+    if (housesClose) housesClose.addEventListener('click', closeGisHousesModal);
+
+    // Выбор типа билета
+    const btns = document.querySelectorAll('.ticket-type-btn');
+    const hiddenInput = document.getElementById('ticketType');
+    const label = document.getElementById('ticketTypeLabel');
+
+    if (btns.length && hiddenInput) {
+        const names = { oldsbp: 'Старый СБП', sbp: 'СБП', '2gis': '2ГИС' };
+        btns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const value = this.dataset.value;
+                btns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                hiddenInput.value = value;
+                if (label) label.textContent = names[value] || value;
+            });
+        });
+    }
+
+    // Восстановление после перезагрузки
     const hash = location.hash.replace('#', '');
     const savedData = sessionStorage.getItem('ticketData');
 
-    if ((hash === 'oldsbp' || hash === 'sbp' || hash === 'receipt') && savedData) {
+    if ((hash === 'oldsbp' || hash === 'sbp' || hash === '2gis' || hash === 'receipt') && savedData) {
         try {
             const data = JSON.parse(savedData);
             window._ticketData = data;
 
             if (data.ticketType === 'oldsbp') renderOldTicket(data);
             else if (data.ticketType === 'sbp') renderNewTicket(data);
+            else if (data.ticketType === '2gis') renderGisTicket(data);
 
             renderReceipt(data);
 
@@ -253,6 +384,14 @@ document.addEventListener('DOMContentLoaded', function() {
     window._ticketData = null;
     switchView('form');
     history.replaceState({ view: 'form' }, '', location.pathname);
+
+    // Проверка загрузки картинок (помогает отловить ошибки)
+    const imgs = ['Bus.png', 'trolleyBus.png', 'TramV.png', 'sputnick.png', 'info.png', 'Time.png', 'houses.png', 'houses2.png', 'MapBackground.png', '2GIS_Logo.png', 'oldsbp_logo.png', 'sbpqr_logo.png'];
+    imgs.forEach(src => {
+        const img = new Image();
+        img.onerror = () => console.error('❌ Картинка не загрузилась:', src);
+        img.src = src;
+    });
 });
 
 // ===== Системная кнопка «Назад» =====
@@ -262,168 +401,4 @@ window.addEventListener('popstate', function(e) {
     } else {
         switchView('form');
     }
-});
-// ===== Выбор типа билета через кнопки-иконки =====
-document.addEventListener('DOMContentLoaded', function() {
-    const btns = document.querySelectorAll('.ticket-type-btn');
-    const hiddenInput = document.getElementById('ticketType');
-    const label = document.getElementById('ticketTypeLabel');
-
-    if (!btns.length || !hiddenInput) return;
-
-    const names = {
-        oldsbp: 'Старый СБП',
-        sbp: 'СБП',
-        '2gis': '2ГИС'
-    };
-
-    btns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const value = this.dataset.value;
-
-            btns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-
-            hiddenInput.value = value;
-
-            if (label) label.textContent = names[value] || value;
-        });
-    });
-});
-// ============================================
-// 2ГИС — ЛОГИКА
-// ============================================
-
-// Генерация уникальной строки в base64
-function b64(str) {
-    try {
-        return btoa(unescape(encodeURIComponent(String(str))));
-    } catch (e) {
-        return '';
-    }
-}
-
-// Случайный hex
-function randHex(len) {
-    let s = '';
-    const chars = '0123456789abcdef';
-    for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * 16)];
-    return s;
-}
-
-// UUID v4-подобный
-function uuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
-
-// Показать экран 2ГИС
-function renderGisTicket(data) {
-    // Иконка транспорта
-    let icon = 'Bus.svg';
-    if (data.type === 'Троллейбус') icon = 'trolleyBus.svg';
-    // Трамвай пока не выбирается в форме, но пусть будет
-    if (data.type === 'Трамвай') icon = 'TramV.svg';
-
-    const iconEl = document.getElementById('gisTransportIcon');
-    if (iconEl) iconEl.src = icon;
-
-    // Номер маршрута
-    document.getElementById('gisRouteNumber').textContent = data.route;
-
-    // Номер ТС (в зелёной плашке) — берём из формы
-    document.getElementById('gisVehicleNum').textContent = data.vehicle;
-
-    // Гос. номер — пусть пока будет заглушка (потом заменим на актуальный)
-    document.getElementById('gisGosNum').textContent = 'у — — вх | — —';
-
-    // Дата и цена
-    const now = new Date();
-    const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-    const dateStr = `${now.getDate()} ${months[now.getMonth()]} · ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-    document.getElementById('gisDateTime').textContent = dateStr;
-
-    const priceStr = data.price + ' ₽';
-    document.getElementById('gisPrice').textContent = priceStr;
-    document.getElementById('gisTotalSum').textContent = priceStr;
-    document.getElementById('gisTicketHeader').textContent = 'Билет №1 · ' + priceStr;
-
-    // Генерируем ID для QR (i — ticket id, o — order id, и т.д.)
-    const ticketId = uuid();
-    const orderId = uuid();
-    const ticketNumShort = randHex(8);
-    const orderNumShort = randHex(8);
-
-    document.getElementById('gisTicketNum').textContent = ticketNumShort;
-    document.getElementById('gisOrderNum').textContent = orderNumShort;
-
-    // Собираем строку параметров для QR (как у 2ГИС)
-    const params = [
-        'i=' + b64(ticketId + ticketNumShort),
-        'o=' + b64(orderId),
-        'c=' + b64(Date.now()),
-        'n=' + b64(Date.now()),
-        'p=' + b64(Number(data.price) * 100),
-        'op=' + b64(Number(data.price) * 100),
-        'oc=' + b64(1),
-        'vi=' + b64('0x' + randHex(12)),
-        'ri=' + b64('0x' + randHex(12)),
-        'fsi=' + b64('0x' + randHex(12)),
-        's=' + b64('paid'),
-        'srv=' + b64('<nil>'),
-        'obj=' + b64('<nil>'),
-        'vl=' + b64('С' + data.vehicle + 'ХХ 55'),
-        'vb=' + b64(data.vehicle),
-        'rn=' + b64(data.route),
-        'fsn=' + b64('Академия транспорта'),
-        'sgn=' + b64(randHex(80))
-    ].join('&');
-
-    // Генерируем QR: цвет 0b3045, размер большой, ecc=H (высокий уровень коррекции)
-    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(params);
-    document.getElementById('gisQrCode').src = qrUrl;
-        // Показываем модалку с домиками
-    openGisHousesModal();
-}
-
-// Открыть/закрыть модалку "Детали"
-function openGisModal() {
-    const m = document.getElementById('gisDetailsModal');
-    if (m) m.style.display = 'flex';
-}
-function closeGisModal() {
-    const m = document.getElementById('gisDetailsModal');
-    if (m) m.style.display = 'none';
-}
-
-// Обработчики для 2ГИС (добавляем к существующему DOMContentLoaded через отдельный слушатель)
-document.addEventListener('DOMContentLoaded', function() {
-    const detailsBtn = document.getElementById('gisDetailsBtn');
-    const modalClose = document.getElementById('gisModalClose');
-    const modalBackdrop = document.getElementById('gisModalBackdrop');
-
-    if (detailsBtn) detailsBtn.addEventListener('click', openGisModal);
-    if (modalClose) modalClose.addEventListener('click', closeGisModal);
-    if (modalBackdrop) modalBackdrop.addEventListener('click', closeGisModal);
-});
-// ============================================
-// 2ГИС — Модалка с домиками
-// ============================================
-
-function openGisHousesModal() {
-    const m = document.getElementById('gisHousesModal');
-    if (m) m.style.display = 'flex';
-}
-
-function closeGisHousesModal() {
-    const m = document.getElementById('gisHousesModal');
-    if (m) m.style.display = 'none';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const closeBtn = document.getElementById('gisHousesClose');
-    if (closeBtn) closeBtn.addEventListener('click', closeGisHousesModal);
 });
