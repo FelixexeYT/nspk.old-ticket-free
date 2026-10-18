@@ -385,6 +385,8 @@ function renderGisTicket(data) {
     // Генерируем QR: цвет 0b3045, размер большой, ecc=H (высокий уровень коррекции)
     const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(params);
     document.getElementById('gisQrCode').src = qrUrl;
+        // Показываем модалку с домиками
+    openGisHousesModal();
 }
 
 // Открыть/закрыть модалку "Детали"
@@ -406,4 +408,22 @@ document.addEventListener('DOMContentLoaded', function() {
     if (detailsBtn) detailsBtn.addEventListener('click', openGisModal);
     if (modalClose) modalClose.addEventListener('click', closeGisModal);
     if (modalBackdrop) modalBackdrop.addEventListener('click', closeGisModal);
+});
+// ============================================
+// 2ГИС — Модалка с домиками
+// ============================================
+
+function openGisHousesModal() {
+    const m = document.getElementById('gisHousesModal');
+    if (m) m.style.display = 'flex';
+}
+
+function closeGisHousesModal() {
+    const m = document.getElementById('gisHousesModal');
+    if (m) m.style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const closeBtn = document.getElementById('gisHousesClose');
+    if (closeBtn) closeBtn.addEventListener('click', closeGisHousesModal);
 });
