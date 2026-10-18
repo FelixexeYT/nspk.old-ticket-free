@@ -109,22 +109,7 @@
     <div class="gis-screen" id="gisTicketSection" style="display:none;">
 
         <!-- Слой 1: карта -->
-        <div class="gis-map" id="gisMap"></div>
-
-        <!-- Поисковая строка сверху -->
-        <div class="gis-search">
-            <div class="gis-search__inner">
-                <div class="gis-search__row">
-                    <span class="gis-search__pin">📍</span>
-                    <span>Моё местоположение</span>
-                </div>
-                <div class="gis-search__row gis-search__row--active">
-                    <span class="gis-search__dot">🔵</span>
-                    <span>Куда поедем?</span>
-                </div>
-                <button class="gis-search__close" type="button">✕</button>
-            </div>
-        </div>
+        <div class="gis-map"></div>
 
         <!-- Bottom sheet "Мои оплаты" -->
         <div class="gis-sheet">
@@ -133,12 +118,6 @@
             <div class="gis-sheet__header">
                 <button class="gis-sheet__back" type="button">‹</button>
                 <span>Мои оплаты</span>
-            </div>
-
-            <!-- Плитка "Ваш билетик" — фон houses.svg + мигающий houses2.svg -->
-            <div class="gis-hero">
-                <img src="houses.svg" alt="" class="gis-hero__bg gis-hero__bg--static">
-                <img src="houses2.svg" alt="" class="gis-hero__bg gis-hero__bg--flash">
             </div>
 
             <!-- Плитка с данными билета -->
@@ -151,7 +130,7 @@
 
                 <div class="gis-card__plates">
                     <span class="gis-plate gis-plate--green" id="gisVehicleNum">201</span>
-                    <span class="gis-plate gis-plate--gray" id="gisGosNum">у 939 вх | 55</span>
+                    <span class="gis-plate gis-plate--gray" id="gisGosNum">у — — вх | — —</span>
                     <img src="sputnick.svg" alt="" class="gis-card__sputnick">
                 </div>
 
@@ -178,6 +157,18 @@
 
             <!-- Волнистый низ -->
             <div class="gis-sheet__wave"></div>
+        </div>
+
+        <!-- МОДАЛКА С ДОМИКАМИ — всплывает поверх всего -->
+        <div class="gis-houses-modal" id="gisHousesModal">
+            <div class="gis-houses-modal__backdrop"></div>
+            <div class="gis-houses-modal__content">
+                <button class="gis-houses-modal__close" id="gisHousesClose" type="button">✕</button>
+                <div class="gis-houses-modal__img-wrap">
+                    <img src="houses.svg" alt="" class="gis-hero__bg gis-hero__bg--static">
+                    <img src="houses2.svg" alt="" class="gis-hero__bg gis-hero__bg--flash">
+                </div>
+            </div>
         </div>
 
         <!-- Модалка "Детали" -->
