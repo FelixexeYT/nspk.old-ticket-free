@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оплата проезда</title>
-    <link rel="stylesheet" href="styles.css?v=11">
+    <link rel="stylesheet" href="styles.css?v=12">
 </head>
 <body>
 
@@ -121,6 +121,12 @@
                 <span>Мои оплаты</span>
             </div>
 
+            <!-- ВСТАВЛЯЕМ КАРТИНКУ С ДОМИКАМИ СЮДА (Прямо в окно) -->
+            <div class="gis-hero">
+                <img src="houses.png" alt="" class="gis-hero__bg gis-hero__bg--static">
+                <img src="houses2.png" alt="" class="gis-hero__bg gis-hero__bg--flash">
+            </div>
+
             <!-- Плитка с данными билета -->
             <div class="gis-card">
                 <div class="gis-card__route">
@@ -155,18 +161,6 @@
                 <span>История оплат</span>
                 <span class="gis-arrow">›</span>
             </button>
-        </div>
-
-        <!-- МОДАЛКА С ДОМИКАМИ -->
-        <div class="gis-houses-modal" id="gisHousesModal">
-            <div class="gis-houses-modal__backdrop"></div>
-            <div class="gis-houses-modal__content">
-                <button class="gis-houses-modal__close" id="gisHousesClose" type="button">✕</button>
-                <div class="gis-houses-modal__img-wrap">
-                    <img src="houses.png" alt="" class="gis-hero__bg gis-hero__bg--static">
-                    <img src="houses2.png" alt="" class="gis-hero__bg gis-hero__bg--flash">
-                </div>
-            </div>
         </div>
 
         <!-- Модалка "Детали" -->
@@ -244,6 +238,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=11"></script>
+    <script src="script.js?v=12"></script>
 </body>
 </html>
