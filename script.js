@@ -160,11 +160,7 @@ function renderReceipt(data) {
 // 2ГИС — ЛОГИКА
 // ============================================
 function b64(str) {
-    try {
-        return btoa(unescape(encodeURIComponent(String(str))));
-    } catch (e) {
-        return '';
-    }
+    try { return btoa(unescape(encodeURIComponent(String(str)))); } catch (e) { return ''; }
 }
 
 function randHex(len) {
@@ -235,26 +231,15 @@ function renderGisTicket(data) {
 
     const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(params);
     document.getElementById('gisQrCode').src = qrUrl;
-    
-    // Показываем модалку с домиками
-    openGisHousesModal();
 }
 
-// Модалки 2ГИС
+// Модалка 2ГИС (Детали)
 function openGisModal() {
     const m = document.getElementById('gisDetailsModal');
     if (m) m.style.display = 'flex';
 }
 function closeGisModal() {
     const m = document.getElementById('gisDetailsModal');
-    if (m) m.style.display = 'none';
-}
-function openGisHousesModal() {
-    const m = document.getElementById('gisHousesModal');
-    if (m) m.style.display = 'flex';
-}
-function closeGisHousesModal() {
-    const m = document.getElementById('gisHousesModal');
     if (m) m.style.display = 'none';
 }
 
@@ -325,7 +310,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const detailsBtn = document.getElementById('gisDetailsBtn');
     const modalClose = document.getElementById('gisModalClose');
     const modalBackdrop = document.getElementById('gisModalBackdrop');
-    const housesClose = document.getElementById('gisHousesClose');
 
     if (continueBtn) continueBtn.addEventListener('click', e => { e.preventDefault(); showTicket(); });
     if (downloadBtnOld) downloadBtnOld.addEventListener('click', e => { e.preventDefault(); openReceipt(); });
@@ -335,7 +319,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (detailsBtn) detailsBtn.addEventListener('click', openGisModal);
     if (modalClose) modalClose.addEventListener('click', closeGisModal);
     if (modalBackdrop) modalBackdrop.addEventListener('click', closeGisModal);
-    if (housesClose) housesClose.addEventListener('click', closeGisHousesModal);
 
     // Выбор типа билета
     const btns = document.querySelectorAll('.ticket-type-btn');
@@ -385,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
     switchView('form');
     history.replaceState({ view: 'form' }, '', location.pathname);
 
-    // Проверка загрузки картинок (помогает отловить ошибки)
+    // Проверка загрузки картинок
     const imgs = ['Bus.png', 'trolleyBus.png', 'TramV.png', 'sputnick.png', 'info.png', 'Time.png', 'houses.png', 'houses2.png', 'MapBackground.png', '2GIS_Logo.png', 'oldsbp_logo.png', 'sbpqr_logo.png'];
     imgs.forEach(src => {
         const img = new Image();
