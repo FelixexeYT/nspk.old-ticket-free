@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оплата проезда</title>
-    <link rel="stylesheet" href="styles.css?v=10">
+    <link rel="stylesheet" href="styles.css?v=11">
 </head>
 <body>
 
@@ -22,15 +22,15 @@
 
         <div class="ticket-type-row">
             <button type="button" class="ticket-type-btn" data-value="oldsbp">
-                <img src="oldsbp_logo.svg" alt="Старый СБП">
+                <img src="oldsbp_logo.png" alt="Старый СБП">
                 <span>Старый СБП</span>
             </button>
             <button type="button" class="ticket-type-btn active" data-value="sbp">
-                <img src="sbpqr_logo.svg" alt="СБП">
+                <img src="sbpqr_logo.png" alt="СБП">
                 <span>СБП</span>
             </button>
             <button type="button" class="ticket-type-btn" data-value="2gis">
-                <img src="2GIS_Logo.svg" alt="2ГИС">
+                <img src="2GIS_Logo.png" alt="2ГИС">
                 <span>2ГИС</span>
             </button>
         </div>
@@ -105,6 +105,7 @@
             <button class="new-download-btn" id="downloadBtnNew" type="button">Сохранить билет</button>
         </div>
     </div>
+
     <!-- ЭКРАН 2В: 2ГИС -->
     <div class="gis-screen" id="gisTicketSection" style="display:none;">
 
@@ -123,7 +124,7 @@
             <!-- Плитка с данными билета -->
             <div class="gis-card">
                 <div class="gis-card__route">
-                    <img id="gisTransportIcon" src="Bus.svg" alt="">
+                    <img id="gisTransportIcon" src="Bus.png" alt="">
                     <span id="gisRouteNumber">125</span>
                 </div>
                 <div class="gis-card__route-name">Железнодорожный вокзал — микрорайон...</div>
@@ -131,7 +132,7 @@
                 <div class="gis-card__plates">
                     <span class="gis-plate gis-plate--green" id="gisVehicleNum">201</span>
                     <span class="gis-plate gis-plate--gray" id="gisGosNum">у — — вх | — —</span>
-                    <img src="sputnick.svg" alt="" class="gis-card__sputnick">
+                    <img src="sputnick.png" alt="" class="gis-card__sputnick">
                 </div>
 
                 <div class="gis-card__meta">
@@ -142,7 +143,7 @@
                 <div class="gis-card__divider"></div>
 
                 <button class="gis-card__details" id="gisDetailsBtn" type="button">
-                    <img src="info.svg" alt="">
+                    <img src="info.png" alt="">
                     <span>Детали заказа</span>
                     <span class="gis-arrow">›</span>
                 </button>
@@ -150,23 +151,20 @@
 
             <!-- История оплат -->
             <button class="gis-history" type="button">
-                <img src="Time.svg" alt="">
+                <img src="Time.png" alt="">
                 <span>История оплат</span>
                 <span class="gis-arrow">›</span>
             </button>
-
-            <!-- Волнистый низ -->
-            <div class="gis-sheet__wave"></div>
         </div>
 
-        <!-- МОДАЛКА С ДОМИКАМИ — всплывает поверх всего -->
+        <!-- МОДАЛКА С ДОМИКАМИ -->
         <div class="gis-houses-modal" id="gisHousesModal">
             <div class="gis-houses-modal__backdrop"></div>
             <div class="gis-houses-modal__content">
                 <button class="gis-houses-modal__close" id="gisHousesClose" type="button">✕</button>
                 <div class="gis-houses-modal__img-wrap">
-                    <img src="houses.svg" alt="" class="gis-hero__bg gis-hero__bg--static">
-                    <img src="houses2.svg" alt="" class="gis-hero__bg gis-hero__bg--flash">
+                    <img src="houses.png" alt="" class="gis-hero__bg gis-hero__bg--static">
+                    <img src="houses2.png" alt="" class="gis-hero__bg gis-hero__bg--flash">
                 </div>
             </div>
         </div>
@@ -216,6 +214,7 @@
         </div>
 
     </div>
+
     <!-- ЭКРАН 3: ЧЕК -->
     <div class="receipt-section" id="receiptSection" style="display:none;">
         <button class="receipt-back" id="receiptBackBtn" type="button">← Назад к билету</button>
@@ -245,6 +244,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=10"></script>
+    <script src="script.js?v=11"></script>
 </body>
 </html>
