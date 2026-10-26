@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оплата проезда</title>
-    <link rel="stylesheet" href="styles.css?v=13">
+    <link rel="stylesheet" href="styles.css?v=20">
 </head>
 <body>
 
@@ -20,7 +20,6 @@
 
         <label>Тип билета:</label>
 
-         <label>Тип билета:</label>
         <div class="ticket-type-row">
             <button type="button" class="ticket-type-btn" data-value="oldsbp">
                 <img src="oldsbp_logo.svg" alt="Старый СБП">
@@ -35,7 +34,7 @@
                 <span>2ГИС</span>
             </button>
         </div>
-        
+
         <input type="hidden" id="ticketType" value="sbp">
 
         <div class="ticket-type-selected">
@@ -107,7 +106,7 @@
         </div>
     </div>
 
-      <!-- ЭКРАН 2В: 2ГИС -->
+    <!-- ЭКРАН 2В: 2ГИС -->
     <div class="gis-screen" id="gisTicketSection" style="display:none;">
 
         <!-- Слой 1: карта -->
@@ -138,9 +137,9 @@
                     </div>
                     <div class="gis-card__route-name">Железнодорожный вокзал — микрорайон...</div>
 
+                    <!-- Убрали серую плашку с гос.номером, оставили зеленую и спутник -->
                     <div class="gis-card__plates">
                         <span class="gis-plate gis-plate--green" id="gisVehicleNum">201</span>
-                        <!-- Убрали серую плашку с гос.номером -->
                         <img src="sputnick.png" alt="" class="gis-card__sputnick">
                     </div>
 
@@ -168,7 +167,7 @@
             </div>
         </div>
 
-        <!-- Модалка "Детали" (без изменений) -->
+        <!-- Модалка "Детали" -->
         <div class="gis-modal" id="gisDetailsModal" style="display:none;">
             <div class="gis-modal__backdrop" id="gisModalBackdrop"></div>
             <div class="gis-modal__content">
@@ -176,7 +175,6 @@
                     <span>Детали</span>
                     <button class="gis-modal__close" id="gisModalClose" type="button">✕</button>
                 </div>
-
                 <div class="gis-modal__body">
                     <div class="gis-modal__row">
                         <span class="gis-modal__label">Общая сумма заказа</span>
@@ -202,9 +200,7 @@
                         <span class="gis-modal__label">Перевозчик</span>
                         <span class="gis-modal__value">Участок 2</span>
                     </div>
-
                     <div class="gis-modal__ticket-header" id="gisTicketHeader">Билет №1 · 30 ₽</div>
-
                     <div class="gis-modal__qr">
                         <img id="gisQrCode" src="" alt="QR-код">
                     </div>
@@ -243,6 +239,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=13"></script>
+    <script src="script.js?v=20"></script>
 </body>
 </html>
