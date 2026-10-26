@@ -113,26 +113,18 @@
         <!-- Слой 1: карта -->
         <div class="gis-map"></div>
 
-        <!-- Bottom sheet "Мои оплаты" (Окно) -->
+        <!-- Окно "Мои оплаты" с мигающим фоном -->
         <div class="gis-sheet">
-            <div class="gis-sheet__handle"></div>
+            
+            <!-- Фоны (домики) -->
+            <img src="houses.png" alt="" class="gis-bg gis-bg--static">
+            <img src="houses2.png" alt="" class="gis-bg gis-bg--flash">
 
-            <div class="gis-sheet__header">
-                <button class="gis-sheet__back" type="button">‹</button>
-                <span>Мои оплаты</span>
-            </div>
+            <!-- Блок с данными (накладывается поверх фона) -->
+            <div class="gis-content">
 
-            <!-- ОБЪЕДИНЕННАЯ КАРТОЧКА (Домики как шапка, данные снизу) -->
-            <div class="gis-ticket-card">
-                
-                <!-- Верхняя часть: картинки с домиками (это фон/шапка карточки) -->
-                <div class="gis-hero">
-                    <img src="houses.png" alt="" class="gis-hero__bg gis-hero__bg--static">
-                    <img src="houses2.png" alt="" class="gis-hero__bg gis-hero__bg--flash">
-                </div>
-
-                <!-- Нижняя часть: данные (как бы выезжают из-под картинки) -->
-                <div class="gis-card-body">
+                <!-- Карточка билета -->
+                <div class="gis-ticket-card">
                     <div class="gis-card__route">
                         <img id="gisTransportIcon" src="Bus.png" alt="">
                         <span id="gisRouteNumber">125</span>
@@ -158,17 +150,18 @@
                         <span class="gis-arrow">›</span>
                     </button>
                 </div>
-            </div>
 
-            <!-- История оплат -->
-            <button class="gis-history" type="button">
-                <img src="Time.png" alt="">
-                <span>История оплат</span>
-                <span class="gis-arrow">›</span>
-            </button>
+                <!-- Кнопка "История оплат" -->
+                <button class="gis-history" type="button">
+                    <img src="Time.png" alt="">
+                    <span>История оплат</span>
+                    <span class="gis-arrow">›</span>
+                </button>
+
+            </div>
         </div>
 
-        <!-- Модалка "Детали" -->
+        <!-- Модалка "Детали" (без изменений) -->
         <div class="gis-modal" id="gisDetailsModal" style="display:none;">
             <div class="gis-modal__backdrop" id="gisModalBackdrop"></div>
             <div class="gis-modal__content">
