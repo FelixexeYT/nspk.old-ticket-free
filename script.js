@@ -188,7 +188,6 @@ function renderGisTicket(data) {
 
     document.getElementById('gisRouteNumber').textContent = data.route;
     document.getElementById('gisVehicleNum').textContent = data.vehicle;
-    document.getElementById('gisGosNum').textContent = 'у — — вх | — —';
 
     const now = new Date();
     const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
@@ -367,14 +366,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window._ticketData = null;
     switchView('form');
     history.replaceState({ view: 'form' }, '', location.pathname);
-
-    // Проверка загрузки картинок
-    const imgs = ['Bus.png', 'trolleyBus.png', 'TramV.png', 'sputnick.png', 'info.png', 'Time.png', 'houses.png', 'houses2.png', 'MapBackground.png', '2GIS_Logo.png', 'oldsbp_logo.png', 'sbpqr_logo.png'];
-    imgs.forEach(src => {
-        const img = new Image();
-        img.onerror = () => console.error('❌ Картинка не загрузилась:', src);
-        img.src = src;
-    });
 });
 
 // ===== Системная кнопка «Назад» =====
