@@ -301,17 +301,17 @@ body {
     filter: brightness(1.3) contrast(1.1);
 }
 
-/* Bottom sheet (Подняли выше) */
+/* Bottom sheet (Само окно "Мои оплаты") */
 .gis-sheet {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    background: #fff;
+    background: #fff; /* Белый фон окна */
     border-radius: 24px 24px 0 0;
     padding: 8px 16px 32px;
     z-index: 20;
-    max-height: 92vh; /* Увеличили высоту окна */
+    max-height: 92vh; 
     overflow-y: auto;
     box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15);
 }
@@ -353,18 +353,18 @@ body {
     flex-shrink: 0;
 }
 
-/* ===== ОБЪЕДИНЕННАЯ КАРТОЧКА БИЛЕТА ===== */
+/* ===== ОБЪЕДИНЕННАЯ КАРТОЧКА ===== */
 .gis-ticket-card {
     position: relative;
     background: #fff;
     border-radius: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     margin-bottom: 12px;
-    overflow: hidden;
+    overflow: hidden; /* Важно: обрезаем всё, что вылезает */
     border: 1px solid #f0f0f0;
 }
 
-/* Блок с домиками */
+/* Блок с домиками (служит верхней частью карточки) */
 .gis-hero {
     position: relative;
     width: 100%;
@@ -393,14 +393,14 @@ body {
     100% { opacity: 0; }
 }
 
-/* Данные билета (наезжают на картинку) */
+/* Данные билета (белая плашка, которая наезжает на картинку) */
 .gis-card-body {
     position: relative;
     background: #fff;
     border-radius: 20px 20px 0 0;
     margin-top: -20px; /* Наезжаем на картинку */
     padding: 16px 16px 8px;
-    z-index: 2;
+    z-index: 2; /* Чтобы быть поверх картинки */
 }
 
 .gis-card__route {
