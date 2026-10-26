@@ -104,6 +104,7 @@ body {
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.05));
 }
 
+/* Логотип 2ГИС шире остальных */
 .ticket-type-btn[data-value="2gis"] img {
     width: 72px;
     height: 36px;
@@ -276,6 +277,7 @@ body {
 .receipt-value { font-size: 15px; color: #333; margin-bottom: 4px; }
 .receipt-qr { margin-top: 30px; }
 .receipt-qr img { width: 400px; height: 400px; max-width: 100%; image-rendering: pixelated; }
+
 /* ============================================
    2ГИС — ЭКРАН
    ============================================ */
@@ -306,16 +308,16 @@ body {
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translateX(-50%); /* Центрируем на ПК */
+    transform: translateX(-50%);
     width: 100%;
-    max-width: 500px; /* На ПК окно не будет растягиваться на весь экран */
-    height: 85vh; /* Опустили окно, теперь видно карту сверху */
+    max-width: 500px;
+    height: 85vh;
     background: #fff;
     border-radius: 24px 24px 0 0;
     z-index: 20;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Обрезаем всё лишнее */
+    overflow: hidden;
     box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15);
 }
 
@@ -356,11 +358,11 @@ body {
     line-height: 1;
 }
 
-/* Картинки с домиками */
+/* Блок с картинками (домики) */
 .gis-hero {
     position: relative;
     width: 100%;
-    aspect-ratio: 16 / 10; /* Картинка сама подстроится под этот размер */
+    aspect-ratio: 16 / 10;
     flex-shrink: 0;
 }
 
@@ -385,12 +387,12 @@ body {
     100% { opacity: 0; }
 }
 
-/* Контент (данные билета), который наезжает на картинку */
+/* Контент (данные билета) */
 .gis-content {
-    flex: 1; /* Занимает всё оставшееся место */
-    overflow-y: auto; /* Скроллится, если не влезает */
+    flex: 1;
+    overflow-y: auto;
     padding: 0 16px 32px;
-    margin-top: -20px; /* Чуть-чуть наезжаем на картинку */
+    margin-top: -20px;
     position: relative;
     z-index: 10;
 }
@@ -522,6 +524,7 @@ body {
     margin-bottom: 20px;
     border: 1px solid #f0f0f0;
 }
+
 /* ===== МОДАЛКА "ДЕТАЛИ" ===== */
 .gis-modal {
     position: fixed;
