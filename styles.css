@@ -276,7 +276,6 @@ body {
 .receipt-value { font-size: 15px; color: #333; margin-bottom: 4px; }
 .receipt-qr { margin-top: 30px; }
 .receipt-qr img { width: 400px; height: 400px; max-width: 100%; image-rendering: pixelated; }
-
 /* ============================================
    2ГИС — ЭКРАН
    ============================================ */
@@ -301,31 +300,36 @@ body {
 }
 
 /* ============================================
-   ОКНО "МОИ ОПЛАТЫ" С КАРТИНКАМИ-ФОНАМИ
+   ОКНО "МОИ ОПЛАТЫ"
    ============================================ */
 .gis-sheet {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    background: #fff; /* Белый фон под картинками */
-    border-radius: 24px 24px 0 0;
+    /* Убрали белый фон, чтобы не было пустых углов */
+    background: transparent; 
+    border-radius: 0; /* Убрали скругления у самого окна */
     z-index: 20;
-    height: 92vh; /* Высота окна */
-    overflow: hidden; /* Обрезаем всё лишнее */
-    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15);
+    height: 92vh;
+    overflow: hidden;
+    /* Убрали тень, чтобы она не выделяла прямоугольник */
+    box-shadow: none; 
 }
 
-/* Картинки домиков на заднем фоне окна */
+/* Картинки домиков (накладываются друг на друга) */
 .gis-bg {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: auto; /* Сохраняем пропорции картинки */
+    height: auto;
     object-fit: cover;
+    pointer-events: none;
+}
+
+.gis-bg--static {
     z-index: 1;
-    pointer-events: none; /* Чтобы клики проходили сквозь картинку */
 }
 
 /* Мигающая картинка */
