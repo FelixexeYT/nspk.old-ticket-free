@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оплата проезда</title>
-    <link rel="stylesheet" href="styles.css?v=1">
+    <link rel="stylesheet" href="styles.css?v=13">
 </head>
 <body>
 
@@ -19,6 +19,8 @@
         </select>
 
         <label>Тип билета:</label>
+
+         <label>Тип билета:</label>
         <div class="ticket-type-row">
             <button type="button" class="ticket-type-btn" data-value="oldsbp">
                 <img src="oldsbp_logo.svg" alt="Старый СБП">
@@ -33,7 +35,7 @@
                 <span>2ГИС</span>
             </button>
         </div>
-
+        
         <input type="hidden" id="ticketType" value="sbp">
 
         <div class="ticket-type-selected">
@@ -120,38 +122,42 @@
                 <span>Мои оплаты</span>
             </div>
 
-            <!-- ВСТАВЛЯЕМ КАРТИНКУ С ДОМИКАМИ СЮДА (Прямо в окно) -->
-            <div class="gis-hero">
-                <img src="houses.png" alt="" class="gis-hero__bg gis-hero__bg--static">
-                <img src="houses2.png" alt="" class="gis-hero__bg gis-hero__bg--flash">
-            </div>
-
-            <!-- Плитка с данными билета -->
-            <div class="gis-card">
-                <div class="gis-card__route">
-                    <img id="gisTransportIcon" src="Bus.png" alt="">
-                    <span id="gisRouteNumber">125</span>
-                </div>
-                <div class="gis-card__route-name">Железнодорожный вокзал — микрорайон...</div>
-
-                <div class="gis-card__plates">
-                    <span class="gis-plate gis-plate--green" id="gisVehicleNum">201</span>
-                    <span class="gis-plate gis-plate--gray" id="gisGosNum">у — — вх | — —</span>
-                    <img src="sputnick.png" alt="" class="gis-card__sputnick">
+            <!-- ОБЪЕДИНЕННАЯ КАРТОЧКА БИЛЕТА -->
+            <div class="gis-ticket-card">
+                
+                <!-- Верхняя часть: картинки с домиками -->
+                <div class="gis-hero">
+                    <img src="houses.png" alt="" class="gis-hero__bg gis-hero__bg--static">
+                    <img src="houses2.png" alt="" class="gis-hero__bg gis-hero__bg--flash">
                 </div>
 
-                <div class="gis-card__meta">
-                    <span id="gisDateTime">13 октября · 13:17</span>
-                    <span id="gisPrice">30 ₽</span>
+                <!-- Нижняя часть: данные (наезжают на картинку) -->
+                <div class="gis-card-body">
+                    <div class="gis-card__route">
+                        <img id="gisTransportIcon" src="Bus.png" alt="">
+                        <span id="gisRouteNumber">125</span>
+                    </div>
+                    <div class="gis-card__route-name">Железнодорожный вокзал — микрорайон...</div>
+
+                    <div class="gis-card__plates">
+                        <span class="gis-plate gis-plate--green" id="gisVehicleNum">201</span>
+                        <span class="gis-plate gis-plate--gray" id="gisGosNum">у — — вх | — —</span>
+                        <img src="sputnick.png" alt="" class="gis-card__sputnick">
+                    </div>
+
+                    <div class="gis-card__meta">
+                        <span id="gisDateTime">13 октября · 13:17</span>
+                        <span id="gisPrice">30 ₽</span>
+                    </div>
+
+                    <div class="gis-card__divider"></div>
+
+                    <button class="gis-card__details" id="gisDetailsBtn" type="button">
+                        <img src="info.png" alt="">
+                        <span>Детали заказа</span>
+                        <span class="gis-arrow">›</span>
+                    </button>
                 </div>
-
-                <div class="gis-card__divider"></div>
-
-                <button class="gis-card__details" id="gisDetailsBtn" type="button">
-                    <img src="info.png" alt="">
-                    <span>Детали заказа</span>
-                    <span class="gis-arrow">›</span>
-                </button>
             </div>
 
             <!-- История оплат -->
@@ -237,6 +243,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=1"></script>
+    <script src="script.js?v=13"></script>
 </body>
 </html>
