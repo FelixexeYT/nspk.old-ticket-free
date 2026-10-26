@@ -305,36 +305,75 @@ body {
 .gis-sheet {
     position: absolute;
     bottom: 0;
-    left: 0;
-    right: 0;
-    /* Убрали белый фон, чтобы не было пустых углов */
-    background: transparent; 
-    border-radius: 0; /* Убрали скругления у самого окна */
+    left: 50%;
+    transform: translateX(-50%); /* Центрируем на ПК */
+    width: 100%;
+    max-width: 500px; /* На ПК окно не будет растягиваться на весь экран */
+    height: 85vh; /* Опустили окно, теперь видно карту сверху */
+    background: #fff;
+    border-radius: 24px 24px 0 0;
     z-index: 20;
-    height: 92vh;
-    overflow: hidden;
-    /* Убрали тень, чтобы она не выделяла прямоугольник */
-    box-shadow: none; 
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Обрезаем всё лишнее */
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15);
 }
 
-/* Картинки домиков (накладываются друг на друга) */
+.gis-sheet__handle {
+    width: 36px;
+    height: 4px;
+    background: #d0d0d0;
+    border-radius: 2px;
+    margin: 8px auto 8px;
+    flex-shrink: 0;
+}
+
+.gis-sheet__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #1a1a1a;
+    padding: 0 16px 12px;
+    flex-shrink: 0;
+}
+
+.gis-sheet__back {
+    background: #f0f0f0;
+    border: none;
+    border-radius: 10px;
+    width: 34px;
+    height: 34px;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+}
+
+/* Картинки с домиками */
+.gis-hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10; /* Картинка сама подстроится под этот размер */
+    flex-shrink: 0;
+}
+
 .gis-bg {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: cover;
-    pointer-events: none;
+    display: block;
 }
 
-.gis-bg--static {
-    z-index: 1;
-}
-
-/* Мигающая картинка */
 .gis-bg--flash {
-    z-index: 2;
     animation: flashHouses 10s ease-in-out infinite;
 }
 
@@ -346,20 +385,14 @@ body {
     100% { opacity: 0; }
 }
 
-/* Контент (билет и кнопки) поверх фона */
+/* Контент (данные билета), который наезжает на картинку */
 .gis-content {
+    flex: 1; /* Занимает всё оставшееся место */
+    overflow-y: auto; /* Скроллится, если не влезает */
+    padding: 0 16px 32px;
+    margin-top: -20px; /* Чуть-чуть наезжаем на картинку */
     position: relative;
     z-index: 10;
-    height: 100%;
-    overflow-y: auto;
-    
-    /* 
-      ВОТ ЭТОТ ОТСТУП НУЖНО ПОДОГНАТЬ ПОД СВОЮ КАРТИНКУ!
-      Он равен высоте верхней части houses.png (где домики и пустое место).
-      Начни с 450px. Если карточка налезает на домики — увеличивай.
-      Если карточка слишком низко — уменьшай.
-    */
-    padding: 450px 16px 32px; 
 }
 
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
@@ -415,7 +448,6 @@ body {
 }
 
 .gis-plate--green { background: #e3f4e6; color: #1e8e3e; }
-.gis-plate--gray { background: #f0f0f0; color: #444; font-weight: 500; }
 
 .gis-card__sputnick {
     width: 16px;
@@ -490,7 +522,6 @@ body {
     margin-bottom: 20px;
     border: 1px solid #f0f0f0;
 }
-
 /* ===== МОДАЛКА "ДЕТАЛИ" ===== */
 .gis-modal {
     position: fixed;
