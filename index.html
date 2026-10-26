@@ -107,23 +107,30 @@
         </div>
     </div>
 
-    <!-- ЭКРАН 2В: 2ГИС -->
+      <!-- ЭКРАН 2В: 2ГИС -->
     <div class="gis-screen" id="gisTicketSection" style="display:none;">
 
         <!-- Слой 1: карта -->
         <div class="gis-map"></div>
 
-        <!-- Окно "Мои оплаты" с мигающим фоном -->
+        <!-- Окно "Мои оплаты" -->
         <div class="gis-sheet">
-            
-            <!-- Фоны (домики) -->
-            <img src="houses.png" alt="" class="gis-bg gis-bg--static">
-            <img src="houses2.png" alt="" class="gis-bg gis-bg--flash">
+            <div class="gis-sheet__handle"></div>
 
-            <!-- Блок с данными (накладывается поверх фона) -->
+            <div class="gis-sheet__header">
+                <button class="gis-sheet__back" type="button">‹</button>
+                <span>Мои оплаты</span>
+            </div>
+
+            <!-- Блок с картинками (домики) -->
+            <div class="gis-hero">
+                <img src="houses.png" alt="" class="gis-bg gis-bg--static">
+                <img src="houses2.png" alt="" class="gis-bg gis-bg--flash">
+            </div>
+
+            <!-- Блок с данными (накладывается снизу) -->
             <div class="gis-content">
 
-                <!-- Карточка билета -->
                 <div class="gis-ticket-card">
                     <div class="gis-card__route">
                         <img id="gisTransportIcon" src="Bus.png" alt="">
@@ -133,7 +140,7 @@
 
                     <div class="gis-card__plates">
                         <span class="gis-plate gis-plate--green" id="gisVehicleNum">201</span>
-                        <span class="gis-plate gis-plate--gray" id="gisGosNum">у — — вх | — —</span>
+                        <!-- Убрали серую плашку с гос.номером -->
                         <img src="sputnick.png" alt="" class="gis-card__sputnick">
                     </div>
 
@@ -151,7 +158,7 @@
                     </button>
                 </div>
 
-                <!-- Кнопка "История оплат" -->
+                <!-- История оплат -->
                 <button class="gis-history" type="button">
                     <img src="Time.png" alt="">
                     <span>История оплат</span>
