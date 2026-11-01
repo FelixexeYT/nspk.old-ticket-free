@@ -170,14 +170,6 @@ function randHex(len) {
     return s;
 }
 
-function uuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
-
 function renderGisTicket(data) {
     let icon = 'Bus.png';
     if (data.type === 'Троллейбус') icon = 'trolleyBus.png';
@@ -205,15 +197,15 @@ function renderGisTicket(data) {
     document.getElementById('gisTicketNum').textContent = ticketNumShort;
     document.getElementById('gisOrderNum').textContent = orderNumShort;
 
-    // МАКСИМАЛЬНО КОРОТКИЙ QR ДЛЯ 2ГИС (чтобы сетка была крупной)
-    const qrText = `ticket=${Math.floor(Math.random()*1000000)}&price=${data.price}`;
+    // МАКСИМАЛЬНО КОРОТКИЙ ТЕКСТ, ЧТОБЫ КВАДРАТИКИ БЫЛИ КРУПНЫМИ
+    const qrText = `t=${data.ticketNumber.slice(-4)}&p=${data.price}`;
     
-    // Запрашиваем большой размер (600x600), ecc=L дает меньше квадратиков
-    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&ecc=L&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(qrText);
+    // Запрашиваем 300х300, чтобы при сжатии до 80х80 не было каши
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&ecc=L&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(qrText);
     document.getElementById('gisQrCode').src = qrUrl;
 }
 
-// Модалка 2ГИС (Детали)
+// Модалка 2ГИС
 function openGisModal() {
     const m = document.getElementById('gisDetailsModal');
     if (m) m.style.display = 'flex';
@@ -286,7 +278,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadBtnNew = document.getElementById('downloadBtnNew');
     const receiptBackBtn = document.getElementById('receiptBackBtn');
     
-    // 2ГИС кнопки
     const detailsBtn = document.getElementById('gisDetailsBtn');
     const modalClose = document.getElementById('gisModalClose');
     const modalBackdrop = document.getElementById('gisModalBackdrop');
@@ -300,22 +291,29 @@ document.addEventListener('DOMContentLoaded', function() {
     if (modalClose) modalClose.addEventListener('click', closeGisModal);
     if (modalBackdrop) modalBackdrop.addEventListener('click', closeGisModal);
 
-    // Выбор типа билета (починено для мобилок)
-    const btns = document.querySelectorAll('.ticket-type-btn');
+    // ДЕЛЕГИРОВАНИЕ СОБЫТИЙ ДЛЯ КНОПОК ВЫБОРА (надежный способ)
+    const ticketTypeRow = document.getElementById('ticketTypeRow');
     const hiddenInput = document.getElementById('ticketType');
     const label = document.getElementById('ticketTypeLabel');
 
-    if (btns.length && hiddenInput) {
-        const names = { oldsbp: 'Старый СБП', sbp: 'СБП', '2gis': '2ГИС' };
-        btns.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault(); // Страховка
-                const value = this.getAttribute('data-value');
-                btns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                hiddenInput.value = value;
-                if (label) label.textContent = names[value] || value;
-            });
+    if (ticketTypeRow && hiddenInput && label) {
+        ticketTypeRow.addEventListener('click', function(e) {
+            const btn = e.target.closest('.ticket-type-btn');
+            if (!btn) return;
+
+            // Убираем активный класс у всех
+            const allBtns = ticketTypeRow.querySelectorAll('.ticket-type-btn');
+            allBtns.forEach(b => b.classList.remove('active'));
+            
+            // Добавляем нажатой
+            btn.classList.add('active');
+
+            // Меняем значение скрытого поля и текст
+            const value = btn.getAttribute('data-value');
+            hiddenInput.value = value;
+            
+            const names = { oldsbp: 'Старый СБП', sbp: 'СБП', '2gis': '2ГИС' };
+            label.textContent = names[value] || value;
         });
     }
 
