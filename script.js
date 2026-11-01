@@ -208,29 +208,19 @@ function renderGisTicket(data) {
     document.getElementById('gisOrderNum').textContent = orderNumShort;
 
     const params = [
-        'i=' + b64(ticketId + ticketNumShort),
-        'o=' + b64(orderId),
-        'c=' + b64(Date.now()),
-        'n=' + b64(Date.now()),
+        'i=' + b64(ticketId.split('-')[0]), // Сократили ID
+        'o=' + b64(orderId.split('-')[0]),
         'p=' + b64(Number(data.price) * 100),
-        'op=' + b64(Number(data.price) * 100),
-        'oc=' + b64(1),
-        'vi=' + b64('0x' + randHex(12)),
-        'ri=' + b64('0x' + randHex(12)),
-        'fsi=' + b64('0x' + randHex(12)),
         's=' + b64('paid'),
-        'srv=' + b64('<nil>'),
-        'obj=' + b64('<nil>'),
         'vl=' + b64('С' + data.vehicle + 'ХХ 55'),
         'vb=' + b64(data.vehicle),
-        'rn=' + b64(data.route),
-        'fsn=' + b64('Академия транспорта'),
-        'sgn=' + b64(randHex(80))
+        'rn=' + b64(data.route)
     ].join('&');
 
-    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(params);
+    // Меняем ecc=H на ecc=L (низкий уровень коррекции = меньше модулей)
+    // И ставим размер 400x400, чтобы на экране он выглядел четко
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&ecc=L&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(params);
     document.getElementById('gisQrCode').src = qrUrl;
-}
 
 // Модалка 2ГИС (Детали)
 function openGisModal() {
