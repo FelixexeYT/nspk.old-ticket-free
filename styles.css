@@ -311,14 +311,45 @@ body {
     transform: translateX(-50%);
     width: 100%;
     max-width: 500px;
-    height: 85vh;
-    background: #fff;
+    height: 85vh; /* Высота окна */
+    background: #f4f4f4; /* Цвет на случай, если картинка не прогрузится */
     border-radius: 24px 24px 0 0;
     z-index: 20;
-    display: flex;
-    flex-direction: column;
     overflow: hidden;
     box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* КАРТИНКИ-ДОМИКИ НА ЗАДНЕМ ФОНЕ */
+.gis-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto; /* Картинка тянется по ширине, высота автоматически */
+    z-index: 1;
+    pointer-events: none;
+}
+
+.gis-bg--flash {
+    z-index: 2; /* Второй домик поверх первого */
+    animation: flashHouses 10s ease-in-out infinite;
+}
+
+@keyframes flashHouses {
+    0%   { opacity: 0; }
+    20%  { opacity: 1; }
+    50%  { opacity: 1; }
+    70%  { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+/* Слой с контентом (кнопки, текст) — поверх картинок */
+.gis-sheet__content-layer {
+    position: relative;
+    z-index: 10;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .gis-sheet__handle {
@@ -330,6 +361,7 @@ body {
     flex-shrink: 0;
 }
 
+/* Шапка окна */
 .gis-sheet__header {
     display: flex;
     align-items: center;
@@ -358,45 +390,20 @@ body {
     line-height: 1;
 }
 
-/* Блок с картинками (домики) */
-.gis-hero {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    flex-shrink: 0;
-}
-
-.gis-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.gis-bg--flash {
-    animation: flashHouses 10s ease-in-out infinite;
-}
-
-@keyframes flashHouses {
-    0%   { opacity: 0; }
-    20%  { opacity: 1; }
-    50%  { opacity: 1; }
-    70%  { opacity: 0; }
-    100% { opacity: 0; }
-}
-
 /* Контент (данные билета) */
 .gis-content {
     flex: 1;
     overflow-y: auto;
     padding: 0 16px 32px;
-    margin-top: -20px;
-    position: relative;
-    z-index: 10;
+    
+    /* 
+      ВОТ ЭТОТ ОТСТУП НУЖНО ПОДОГНАТЬ!
+      Он опускает карточку билета вниз, чтобы она легла на белое поле твоей картинки.
+      Если карточка слишком высоко (налезает на домики) — увеличь это число (например, 400px).
+      Если слишком низко — уменьши (например, 350px).
+    */
+    margin-top: 380px; 
 }
-
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
 .gis-ticket-card {
     background: #fff;
