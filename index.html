@@ -106,7 +106,7 @@
         </div>
     </div>
 
-        <!-- ЭКРАН 2В: 2ГИС -->
+    <!-- ЭКРАН 2В: 2ГИС -->
     <div class="gis-screen" id="gisTicketSection" style="display:none;">
 
         <!-- Слой 1: карта -->
@@ -115,7 +115,7 @@
         <!-- Окно "Мои оплаты" -->
         <div class="gis-sheet">
             
-            <!-- ДОМИКИ КАК ФОН ВСЕГО ОКНА -->
+            <!-- ДОМИКИ КАК ФОН ВСЕГО ОКНА (с уже нарисованной шапкой) -->
             <img src="houses.png" alt="" class="gis-bg gis-bg--static">
             <img src="houses2.png" alt="" class="gis-bg gis-bg--flash">
 
@@ -123,11 +123,7 @@
             <div class="gis-sheet__content-layer">
                 <div class="gis-sheet__handle"></div>
 
-                <div class="gis-sheet__header">
-                    <button class="gis-sheet__back" type="button">‹</button>
-                    <span>Мои оплаты</span>
-                </div>
-
+                <!-- Блок с данными -->
                 <div class="gis-content">
                     <div class="gis-ticket-card">
                         <div class="gis-card__route">
@@ -163,6 +159,50 @@
                 </div>
             </div>
         </div>
+
+        <!-- Модалка "Детали" (восстановленная) -->
+        <div class="gis-modal" id="gisDetailsModal" style="display:none;">
+            <div class="gis-modal__backdrop" id="gisModalBackdrop"></div>
+            <div class="gis-modal__content">
+                <div class="gis-modal__header">
+                    <span>Детали</span>
+                    <button class="gis-modal__close" id="gisModalClose" type="button">✕</button>
+                </div>
+
+                <div class="gis-modal__body">
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Общая сумма заказа</span>
+                        <span class="gis-modal__value" id="gisTotalSum">30 ₽</span>
+                    </div>
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Количество билетов</span>
+                        <span class="gis-modal__value">1</span>
+                    </div>
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Номер заказа</span>
+                        <span class="gis-modal__value" id="gisOrderNum">e9bcb8c0</span>
+                    </div>
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Номера билетов</span>
+                        <span class="gis-modal__value" id="gisTicketNum">f4ef16d5</span>
+                    </div>
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Организатор перевозок</span>
+                        <span class="gis-modal__value">АО "Пассажирсервис"</span>
+                    </div>
+                    <div class="gis-modal__row">
+                        <span class="gis-modal__label">Перевозчик</span>
+                        <span class="gis-modal__value">Участок 2</span>
+                    </div>
+                    <div class="gis-modal__ticket-header" id="gisTicketHeader">Билет №1 · 30 ₽</div>
+                    <div class="gis-modal__qr">
+                        <img id="gisQrCode" src="" alt="QR-код">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
         <!-- Модалка "Детали" -->
         <div class="gis-modal" id="gisDetailsModal" style="display:none;">
