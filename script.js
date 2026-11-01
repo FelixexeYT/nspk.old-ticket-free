@@ -191,18 +191,48 @@ function renderGisTicket(data) {
     document.getElementById('gisTotalSum').textContent = priceStr;
     document.getElementById('gisTicketHeader').textContent = 'Билет №1 · ' + priceStr;
 
+    const ticketId = uuid();
+    const orderId = uuid();
     const ticketNumShort = randHex(8);
     const orderNumShort = randHex(8);
 
     document.getElementById('gisTicketNum').textContent = ticketNumShort;
     document.getElementById('gisOrderNum').textContent = orderNumShort;
 
-    // МАКСИМАЛЬНО КОРОТКИЙ ТЕКСТ, ЧТОБЫ КВАДРАТИКИ БЫЛИ КРУПНЫМИ
-    const qrText = `t=${data.ticketNumber.slice(-4)}&p=${data.price}`;
-    
-    // Запрашиваем 300х300, чтобы при сжатии до 80х80 не было каши
-    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&ecc=L&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(qrText);
+    // Формируем строку средней длины (около 400-500 символов), 
+    // чтобы получить QR-код 15-16 версии (около 80x80 кубиков).
+    const params = [
+        'i=' + b64(ticketId + ticketNumShort),
+        'o=' + b64(orderId),
+        'c=' + b64(Date.now()),
+        'n=' + b64(Date.now()),
+        'p=' + b64(Number(data.price) * 100),
+        'op=' + b64(Number(data.price) * 100),
+        'oc=' + b64(1),
+        'vi=' + b64('0x' + randHex(12)),
+        'ri=' + b64('0x' + randHex(12)),
+        'fsi=' + b64('0x' + randHex(12)),
+        's=' + b64('paid'),
+        'srv=' + b64('<nil>'),
+        'obj=' + b64('<nil>'),
+        'vl=' + b64('С' + data.vehicle + 'ХХ 55'),
+        'vb=' + b64(data.vehicle),
+        'rn=' + b64(data.route),
+        'fsn=' + b64('Академия транспорта')
+    ].join('&');
+
+    // Используем ecc=M (средний уровень коррекции), 
+    // чтобы сетка была ~80x80, а не 101x101.
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&ecc=M&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(params);
     document.getElementById('gisQrCode').src = qrUrl;
+}
+
+function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }
 
 // Модалка 2ГИС
@@ -291,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (modalClose) modalClose.addEventListener('click', closeGisModal);
     if (modalBackdrop) modalBackdrop.addEventListener('click', closeGisModal);
 
-    // ДЕЛЕГИРОВАНИЕ СОБЫТИЙ ДЛЯ КНОПОК ВЫБОРА (надежный способ)
+    // Делегирование событий (кнопки работают 100%)
     const ticketTypeRow = document.getElementById('ticketTypeRow');
     const hiddenInput = document.getElementById('ticketType');
     const label = document.getElementById('ticketTypeLabel');
@@ -301,14 +331,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const btn = e.target.closest('.ticket-type-btn');
             if (!btn) return;
 
-            // Убираем активный класс у всех
             const allBtns = ticketTypeRow.querySelectorAll('.ticket-type-btn');
             allBtns.forEach(b => b.classList.remove('active'));
-            
-            // Добавляем нажатой
             btn.classList.add('active');
 
-            // Меняем значение скрытого поля и текст
             const value = btn.getAttribute('data-value');
             hiddenInput.value = value;
             
@@ -317,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Восстановление после перезагрузки
+    // Восстановление
     const hash = location.hash.replace('#', '');
     const savedData = sessionStorage.getItem('ticketData');
 
