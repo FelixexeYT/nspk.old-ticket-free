@@ -106,7 +106,7 @@
         </div>
     </div>
 
-    <!-- ЭКРАН 2В: 2ГИС -->
+        <!-- ЭКРАН 2В: 2ГИС -->
     <div class="gis-screen" id="gisTicketSection" style="display:none;">
 
         <!-- Слой 1: карта -->
@@ -115,47 +115,45 @@
         <!-- Окно "Мои оплаты" -->
         <div class="gis-sheet">
             
-            <!-- ДОМИКИ КАК ФОН ВСЕГО ОКНА (с уже нарисованной шапкой) -->
-            <img src="houses.png" alt="" class="gis-bg gis-bg--static">
-            <img src="houses2.png" alt="" class="gis-bg gis-bg--flash">
+            <!-- Блок с картинками (они теперь часть потока) -->
+            <div class="gis-hero-images">
+                <img src="houses.png" alt="" class="gis-bg gis-bg--static">
+                <img src="houses2.png" alt="" class="gis-bg gis-bg--flash">
+            </div>
 
-            <!-- Контент поверх фона -->
-            <div class="gis-sheet__content-layer">
+            <!-- Блок с данными -->
+            <div class="gis-content">
+                <div class="gis-ticket-card">
+                    <div class="gis-card__route">
+                        <img id="gisTransportIcon" src="Bus.png" alt="">
+                        <span id="gisRouteNumber">125</span>
+                    </div>
+                    <div class="gis-card__route-name">Железнодорожный вокзал — микрорайон...</div>
 
-                <!-- Блок с данными -->
-                <div class="gis-content">
-                    <div class="gis-ticket-card">
-                        <div class="gis-card__route">
-                            <img id="gisTransportIcon" src="Bus.png" alt="">
-                            <span id="gisRouteNumber">125</span>
-                        </div>
-                        <div class="gis-card__route-name">Железнодорожный вокзал — микрорайон...</div>
-
-                        <div class="gis-card__plates">
-                            <span class="gis-plate gis-plate--green" id="gisVehicleNum">201</span>
-                            <img src="sputnick.png" alt="" class="gis-card__sputnick">
-                        </div>
-
-                        <div class="gis-card__meta">
-                            <span id="gisDateTime">13 октября · 13:17</span>
-                            <span id="gisPrice">30 ₽</span>
-                        </div>
-
-                        <div class="gis-card__divider"></div>
-
-                        <button class="gis-card__details" id="gisDetailsBtn" type="button">
-                            <img src="info.png" alt="">
-                            <span>Детали заказа</span>
-                            <span class="gis-arrow">›</span>
-                        </button>
+                    <div class="gis-card__plates">
+                        <span class="gis-plate gis-plate--green" id="gisVehicleNum">201</span>
+                        <img src="sputnick.png" alt="" class="gis-card__sputnick">
                     </div>
 
-                    <button class="gis-history" type="button">
-                        <img src="Time.png" alt="">
-                        <span>История оплат</span>
+                    <div class="gis-card__meta">
+                        <span id="gisDateTime">13 октября · 13:17</span>
+                        <span id="gisPrice">30 ₽</span>
+                    </div>
+
+                    <div class="gis-card__divider"></div>
+
+                    <button class="gis-card__details" id="gisDetailsBtn" type="button">
+                        <img src="info.png" alt="">
+                        <span>Детали заказа</span>
                         <span class="gis-arrow">›</span>
                     </button>
                 </div>
+
+                <button class="gis-history" type="button">
+                    <img src="Time.png" alt="">
+                    <span>История оплат</span>
+                    <span class="gis-arrow">›</span>
+                </button>
             </div>
         </div>
 
