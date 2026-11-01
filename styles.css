@@ -282,17 +282,25 @@ body {
    2ГИС — ЭКРАН
    ============================================ */
 
+/* Разрешаем скроллить всей странице */
+body {
+    overflow-x: hidden;
+}
+
+/* Само окно приложения */
 .gis-screen {
-    position: fixed;
-    inset: 0;
+    position: relative; /* Убрали fixed */
+    min-height: 100vh;
     background: #d8d8d8;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-top: 15vh; /* Оставляем место сверху, чтобы карта была видна */
     z-index: 1000;
 }
 
+/* Карта теперь прибита к экрану и не уезжает */
 .gis-map {
-    position: absolute;
+    position: fixed;
     inset: 0;
     background-image: url('MapBackground.png');
     background-size: cover;
@@ -305,35 +313,25 @@ body {
    ОКНО "МОИ ОПЛАТЫ"
    ============================================ */
 .gis-sheet {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
+    z-index: 10;
     width: 100%;
     max-width: 500px;
-    height: 85vh;
+    margin: 0 auto; /* Центрируем на ПК */
     background: #f4f4f4;
     border-radius: 24px 24px 0 0;
-    z-index: 20;
-    /* ТЕПЕРЬ СКРОЛЛИТСЯ ВСЁ ОКНО */
-    overflow-y: auto;
     box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15);
-    
-    /* Прячем полосу прокрутки для красоты (опционально) */
-    scrollbar-width: none; 
-}
-.gis-sheet::-webkit-scrollbar { 
-    display: none; 
+    flex-grow: 1; /* Растягиваем вниз */
 }
 
 /* Блок с картинками */
 .gis-hero-images {
     position: relative;
     width: 100%;
-    line-height: 0; /* Убирает микро-отступ под картинкой */
+    line-height: 0;
 }
 
-/* Нижняя картинка (задает высоту блока) */
+/* Нижняя картинка (задает высоту) */
 .gis-bg--static {
     position: relative;
     width: 100%;
@@ -364,13 +362,14 @@ body {
 .gis-content {
     position: relative;
     z-index: 10;
-    padding: 20px 16px 40px; /* Отступы вокруг данных */
+    padding: 0 16px 40px;
     
     /* 
-       Если данные начинаются прямо под картинкой — оставляем 20px.
-       Если нужно, чтобы карточка "наехала" на белое поле картинки — 
-       добавь отрицательный margin-top, например: margin-top: -40px; 
+       ВОТ ТУТ ПОДНИМАЕМ КАРТОЧКУ НА ПК!
+       Отрицательный margin заставляет её наехать на белое поле картинки.
+       Начинаем с -120px.
     */
+    margin-top: -120px; 
 }
 
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
@@ -499,6 +498,16 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
     margin-bottom: 20px;
     border: 1px solid #f0f0f0;
+}
+
+/* ============================================
+   АДАПТИВ ДЛЯ МОБИЛЬНЫХ
+   ============================================ */
+@media (max-width: 600px) {
+    .gis-content {
+        /* На мобилке картинка сжимается, поэтому и отступ нужен меньше */
+        margin-top: -80px; 
+    }
 }
 /* ===== МОДАЛКА "ДЕТАЛИ" ===== */
 .gis-modal {
