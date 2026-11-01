@@ -589,26 +589,25 @@ body {
 .gis-modal__value { display: block; font-size: 15px; color: #1a1a1a; font-weight: 500; }
 .gis-modal__ticket-header { font-size: 15px; font-weight: 700; color: #9a9a9a; margin: 24px 0 14px; }
 
-/* Контейнер для QR-кода */
+/* Контейнер для QR-кода (квадратная рамка) */
 .gis-modal__qr {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 16px;
     border: 1px solid #e8e8e8;
-    border-radius: 12px;
+    border-radius: 16px;
     background: #fff;
-    width: 100px;   /* Контейнер чуть больше самого кода, чтобы были отступы */
-    height: 100px;  
-    margin: 0 auto; /* По центру */
+    width: fit-content;   /* Рамка подстраивается под размер картинки */
+    margin: 0 auto;
 }
 
-/* Сам QR-код — ровно 80х80 */
+/* Сам QR-код — делаем 202x202 */
 .gis-modal__qr img {
-    width: 80px;   /* Ровно 80 пикселей */
-    height: 80px;
+    width: 202px;   
+    height: 202px;
     object-fit: contain; 
-    /* САМОЕ ВАЖНОЕ: убирает размытие, делает квадратики четкими */
+    /* Делаем квадратики идеально четкими */
     image-rendering: pixelated; 
     image-rendering: crisp-edges;
     display: block;
