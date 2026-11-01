@@ -282,23 +282,15 @@ body {
    2ГИС — ЭКРАН
    ============================================ */
 
-/* Разрешаем скроллить всей странице */
-body {
-    overflow-x: hidden;
-}
-
-/* Само окно приложения */
 .gis-screen {
-    position: relative; /* Убрали fixed */
-    min-height: 100vh;
+    position: fixed;
+    inset: 0;
     background: #d8d8d8;
-    display: flex;
-    flex-direction: column;
-    padding-top: 15vh; /* Оставляем место сверху, чтобы карта была видна */
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    overflow-y: auto; /* Скроллится вся страница */
     z-index: 1000;
 }
 
-/* Карта теперь прибита к экрану и не уезжает */
 .gis-map {
     position: fixed;
     inset: 0;
@@ -317,11 +309,12 @@ body {
     z-index: 10;
     width: 100%;
     max-width: 500px;
-    margin: 0 auto; /* Центрируем на ПК */
-    background: #f4f4f4;
+    margin: 15vh auto 0; /* Опускаем вниз, чтобы было видно карту */
+    background: #f0f0f0; /* Тот самый цвет фона */
     border-radius: 24px 24px 0 0;
+    min-height: 85vh; /* Окно занимает почти весь экран */
+    padding-bottom: 40px;
     box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15);
-    flex-grow: 1; /* Растягиваем вниз */
 }
 
 /* Блок с картинками */
@@ -362,26 +355,42 @@ body {
 .gis-content {
     position: relative;
     z-index: 10;
-    padding: 0 16px 40px;
+    padding: 0 16px;
     
     /* 
-       ВОТ ТУТ ПОДНИМАЕМ КАРТОЧКУ НА ПК!
-       Отрицательный margin заставляет её наехать на белое поле картинки.
-       Начинаем с -120px.
+      ВОТ ТУТ МАГИЯ!
+      Отрицательный отступ поднимает карточку вверх, прямо на белое поле картинки.
+      Если на телефоне карточка всё ещё слишком низко — увеличь число (например, -180px).
+      Если наоборот высоко — уменьши (например, -80px).
     */
-    margin-top: -120px; 
+    margin-top: -140px; 
 }
 
-/* ===== КАРТОЧКА С БИЛЕТОМ ===== */
+/* ===== КАРТОЧКА С БИЛЕТОМ И ВОЛНОЙ ===== */
 .gis-ticket-card {
     background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    border-radius: 20px 20px 0 0; /* Нижние углы прямые, там будет волна */
+    padding: 16px 16px 28px; /* Добавили отступ снизу под волну */
     margin-bottom: 12px;
+    position: relative;
     border: 1px solid #f0f0f0;
-    padding: 16px 16px 8px;
+    border-bottom: none; /* Убрали нижнюю границу */
 }
 
+/* ТА САМАЯ ВОЛНА (ПЕРФОРАЦИЯ) */
+.gis-ticket-card::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; /* Высота волны */
+    left: -1px; /* Накладываем на границу */
+    right: -1px;
+    height: 10px;
+    background-image: radial-gradient(circle at 10px 0, transparent 10px, #fff 11px);
+    background-size: 20px 10px;
+    background-repeat: repeat-x;
+}
+
+/* Внутренности карточки (без изменений) */
 .gis-card__route {
     display: flex;
     align-items: center;
@@ -498,6 +507,7 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
     margin-bottom: 20px;
     border: 1px solid #f0f0f0;
+    margin-top: 20px; /* Отступ от волны */
 }
 
 /* ============================================
