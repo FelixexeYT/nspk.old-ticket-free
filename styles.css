@@ -311,8 +311,8 @@ body {
     transform: translateX(-50%);
     width: 100%;
     max-width: 500px;
-    height: 85vh; /* Высота окна */
-    background: #f4f4f4; /* Цвет на случай, если картинка не прогрузится */
+    height: 85vh;
+    background: #f4f4f4;
     border-radius: 24px 24px 0 0;
     z-index: 20;
     overflow: hidden;
@@ -325,13 +325,13 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: auto; /* Картинка тянется по ширине, высота автоматически */
+    height: auto;
     z-index: 1;
     pointer-events: none;
 }
 
 .gis-bg--flash {
-    z-index: 2; /* Второй домик поверх первого */
+    z-index: 2;
     animation: flashHouses 10s ease-in-out infinite;
 }
 
@@ -343,7 +343,7 @@ body {
     100% { opacity: 0; }
 }
 
-/* Слой с контентом (кнопки, текст) — поверх картинок */
+/* Слой с контентом */
 .gis-sheet__content-layer {
     position: relative;
     z-index: 10;
@@ -357,53 +357,25 @@ body {
     height: 4px;
     background: #d0d0d0;
     border-radius: 2px;
-    margin: 8px auto 8px;
+    margin: 8px auto 0;
     flex-shrink: 0;
-}
-
-/* Шапка окна */
-.gis-sheet__header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 17px;
-    font-weight: 600;
-    color: #1a1a1a;
-    padding: 0 16px 12px;
-    flex-shrink: 0;
-}
-
-.gis-sheet__back {
-    background: #f0f0f0;
-    border: none;
-    border-radius: 10px;
-    width: 34px;
-    height: 34px;
-    font-size: 20px;
-    color: #333;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    margin: 0;
-    line-height: 1;
 }
 
 /* Контент (данные билета) */
 .gis-content {
     flex: 1;
     overflow-y: auto;
-    padding: 0 16px 32px;
     
     /* 
-      ВОТ ЭТОТ ОТСТУП НУЖНО ПОДОГНАТЬ!
-      Он опускает карточку билета вниз, чтобы она легла на белое поле твоей картинки.
-      Если карточка слишком высоко (налезает на домики) — увеличь это число (например, 400px).
-      Если слишком низко — уменьши (например, 350px).
+      ТУТ ИСПРАВЛЕНИЕ!
+      Вместо margin-top используем padding-top. 
+      Из-за этого при скролле данные не будут упираться в невидимую стену.
+      Значение 420px опускает карточку вниз. 
+      Если надо ещё ниже — увеличь (например, 450px).
     */
-    margin-top: 380px; 
+    padding: 420px 16px 32px; 
 }
+
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
 .gis-ticket-card {
     background: #fff;
@@ -531,7 +503,6 @@ body {
     margin-bottom: 20px;
     border: 1px solid #f0f0f0;
 }
-
 /* ===== МОДАЛКА "ДЕТАЛИ" ===== */
 .gis-modal {
     position: fixed;
