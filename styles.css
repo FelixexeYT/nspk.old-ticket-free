@@ -352,25 +352,28 @@ body { overflow-x: hidden; }
     margin-top: -140px; 
 }
 
+/* ===== КАРТОЧКА С БИЛЕТОМ ===== */
 .gis-ticket-card {
     background: #fff;
-    border-radius: 20px 20px 0 0;
-    padding: 16px 16px 28px;
-    margin-bottom: 12px;
+    border-radius: 20px 20px 0 0; /* Скругляем только верх */
+    padding: 16px 16px 20px; 
+    margin-bottom: 24px; /* Отступ снизу, чтобы волна не наезжала на Историю оплат */
     position: relative;
     border: 1px solid #f0f0f0;
-    border-bottom: none;
+    border-bottom: none; /* Убираем нижнюю границу */
 }
 
+/* ТА САМАЯ ПЕРФОРАЦИЯ (ВОЛНА) */
 .gis-ticket-card::after {
     content: '';
     position: absolute;
-    bottom: -10px;
-    left: -1px;
+    bottom: -8px; /* Высота волны */
+    left: -1px; /* Компенсируем границу родителя */
     right: -1px;
-    height: 10px;
-    background-image: radial-gradient(circle at 10px 0, transparent 10px, #fff 11px);
-    background-size: 20px 10px;
+    height: 8px;
+    /* Рисуем кружочки, совпадающие по цвету с фоном (.gis-sheet #f0f0f0) */
+    background-image: radial-gradient(circle at 8px 0, transparent 8px, #fff 9px);
+    background-size: 16px 8px;
     background-repeat: repeat-x;
 }
 
