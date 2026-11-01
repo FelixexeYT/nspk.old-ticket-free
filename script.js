@@ -199,28 +199,19 @@ function renderGisTicket(data) {
     document.getElementById('gisTotalSum').textContent = priceStr;
     document.getElementById('gisTicketHeader').textContent = 'Билет №1 · ' + priceStr;
 
-    const ticketId = uuid();
-    const orderId = uuid();
     const ticketNumShort = randHex(8);
     const orderNumShort = randHex(8);
 
     document.getElementById('gisTicketNum').textContent = ticketNumShort;
     document.getElementById('gisOrderNum').textContent = orderNumShort;
 
-    const params = [
-        'i=' + b64(ticketId.split('-')[0]), // Сократили ID
-        'o=' + b64(orderId.split('-')[0]),
-        'p=' + b64(Number(data.price) * 100),
-        's=' + b64('paid'),
-        'vl=' + b64('С' + data.vehicle + 'ХХ 55'),
-        'vb=' + b64(data.vehicle),
-        'rn=' + b64(data.route)
-    ].join('&');
-
-    // Меняем ecc=H на ecc=L (низкий уровень коррекции = меньше модулей)
-    // И ставим размер 400x400, чтобы на экране он выглядел четко
-    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&ecc=L&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(params);
+    // МАКСИМАЛЬНО КОРОТКИЙ QR ДЛЯ 2ГИС (чтобы сетка была крупной)
+    const qrText = `ticket=${Math.floor(Math.random()*1000000)}&price=${data.price}`;
+    
+    // Запрашиваем большой размер (600x600), ecc=L дает меньше квадратиков
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&ecc=L&margin=1&color=0b3045&bgcolor=ffffff&data=' + encodeURIComponent(qrText);
     document.getElementById('gisQrCode').src = qrUrl;
+}
 
 // Модалка 2ГИС (Детали)
 function openGisModal() {
@@ -309,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (modalClose) modalClose.addEventListener('click', closeGisModal);
     if (modalBackdrop) modalBackdrop.addEventListener('click', closeGisModal);
 
-    // Выбор типа билета
+    // Выбор типа билета (починено для мобилок)
     const btns = document.querySelectorAll('.ticket-type-btn');
     const hiddenInput = document.getElementById('ticketType');
     const label = document.getElementById('ticketTypeLabel');
@@ -317,8 +308,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btns.length && hiddenInput) {
         const names = { oldsbp: 'Старый СБП', sbp: 'СБП', '2gis': '2ГИС' };
         btns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const value = this.dataset.value;
+            btn.addEventListener('click', function(e) {
+                e.preventDefault(); // Страховка
+                const value = this.getAttribute('data-value');
                 btns.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 hiddenInput.value = value;
