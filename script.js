@@ -171,12 +171,14 @@ function randHex(len) {
 }
 
 function renderGisTicket(data) {
-    let icon = 'Bus.png';
-    if (data.type === 'Троллейбус') icon = 'trolleyBus.png';
-    if (data.type === 'Трамвай') icon = 'TramV.png';
+    let icon = 'pictures/Bus.png';
+    if (data.type === 'Троллейбус') icon = 'pictures/trolleyBus.png';
+    if (data.type === 'Трамвай') icon = 'pictures/TramV.png';
 
     const iconEl = document.getElementById('gisTransportIcon');
     if (iconEl) iconEl.src = icon;
+    
+    // ... остальной код функции без изменени
 
     document.getElementById('gisRouteNumber').textContent = data.route;
     document.getElementById('gisVehicleNum').textContent = data.vehicle;
