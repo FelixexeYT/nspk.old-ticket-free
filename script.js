@@ -99,14 +99,14 @@ function goTo(view) {
 function generateLocalQR(containerId, text) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    container.innerHTML = ''; // Очищаем старое
+    container.innerHTML = ''; 
     new QRCode(container, {
         text: text,
         width: 400,
         height: 400,
         colorDark : "#000000",
         colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.M // Средний уровень (дает сетку ~80х80)
+        correctLevel : QRCode.CorrectLevel.M
     });
 }
 
@@ -118,7 +118,7 @@ function generateLocalQRColored(containerId, text) {
         text: text,
         width: 300,
         height: 300,
-        colorDark : "#0b3045", // Синеватый для 2ГИС
+        colorDark : "#0b3045",
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.M
     });
@@ -231,7 +231,6 @@ function renderGisTicket(data) {
     document.getElementById('gisTicketNum').textContent = ticketNumShort;
     document.getElementById('gisOrderNum').textContent = orderNumShort;
 
-    // Формируем строку средней длины (около 400-500 символов)
     const params = [
         'i=' + b64(ticketId + ticketNumShort),
         'o=' + b64(orderId),
@@ -255,7 +254,6 @@ function renderGisTicket(data) {
     generateLocalQRColored('gisQrWrap', params);
 }
 
-// Модалка 2ГИС
 function openGisModal() {
     const m = document.getElementById('gisDetailsModal');
     if (m) m.style.display = 'flex';
@@ -311,7 +309,6 @@ function showTicket() {
     }
 }
 
-// ===== Открыть чек =====
 function openReceipt() {
     const d = window._ticketData;
     if (!d) {
@@ -321,7 +318,6 @@ function openReceipt() {
     goTo('receipt');
 }
 
-// ===== Инициализация =====
 document.addEventListener('DOMContentLoaded', function() {
     const continueBtn = document.getElementById('continueBtn');
     const downloadBtnOld = document.getElementById('downloadBtnOld');
@@ -341,7 +337,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (modalClose) modalClose.addEventListener('click', closeGisModal);
     if (modalBackdrop) modalBackdrop.addEventListener('click', closeGisModal);
 
-    // Делегирование событий для кнопок
     const ticketTypeRow = document.getElementById('ticketTypeRow');
     const hiddenInput = document.getElementById('ticketType');
     const label = document.getElementById('ticketTypeLabel');
@@ -350,20 +345,16 @@ document.addEventListener('DOMContentLoaded', function() {
         ticketTypeRow.addEventListener('click', function(e) {
             const btn = e.target.closest('.ticket-type-btn');
             if (!btn) return;
-
             const allBtns = ticketTypeRow.querySelectorAll('.ticket-type-btn');
             allBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
             const value = btn.getAttribute('data-value');
             hiddenInput.value = value;
-            
             const names = { oldsbp: 'Старый СБП', sbp: 'СБП', '2gis': '2ГИС' };
             label.textContent = names[value] || value;
         });
     }
 
-    // Восстановление после перезагрузки
     const hash = location.hash.replace('#', '');
     const savedData = sessionStorage.getItem('ticketData');
 
@@ -394,7 +385,6 @@ document.addEventListener('DOMContentLoaded', function() {
     history.replaceState({ view: 'form' }, '', location.pathname);
 });
 
-// ===== Системная кнопка «Назад» =====
 window.addEventListener('popstate', function(e) {
     if (e.state && e.state.view) {
         switchView(e.state.view);
