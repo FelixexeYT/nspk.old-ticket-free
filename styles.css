@@ -107,10 +107,10 @@ body {
     margin-bottom: auto;
 }
 
-/* Логотип 2ГИС шире, поэтому увеличиваем только его */
 .ticket-type-btn[data-value="2gis"] img {
-    height: 24px;
-    width: 70px;
+    height: 48px;  /* Было 24px, стало 48px (в 2 раза больше) */
+    width: 120px;  /* Пропорционально увеличили ширину */
+    max-width: 100%; /* Чтобы не вылезала за пределы кнопки */
 }
 
 .ticket-type-btn span {
