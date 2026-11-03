@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оплата проезда</title>
-    <link rel="stylesheet" href="styles.css?v=6">
+    <link rel="stylesheet" href="styles.css?v=41">
 </head>
 <body>
 
@@ -16,21 +16,22 @@
         <select id="transportType">
             <option value="Автобус">Автобус</option>
             <option value="Троллейбус">Троллейбус</option>
+            <option value="Трамвай">Трамвай</option>
         </select>
 
         <label>Тип билета:</label>
 
         <div class="ticket-type-row" id="ticketTypeRow">
             <button type="button" class="ticket-type-btn" data-value="oldsbp">
-                <img src="oldsbp_logo.png" alt="Старый СБП">
+                <img src="pictures/oldsbp_logo.png" alt="Старый СБП">
                 <span>Старый СБП</span>
             </button>
             <button type="button" class="ticket-type-btn active" data-value="sbp">
-                <img src="sbpqr_logo.png" alt="СБП">
+                <img src="pictures/sbpqr_logo.png" alt="СБП">
                 <span>СБП</span>
             </button>
             <button type="button" class="ticket-type-btn" data-value="2gis">
-                <img src="2GIS_Logo.png" alt="2ГИС">
+                <img src="pictures/2GIS_Logo.png" alt="2ГИС">
                 <span>2ГИС</span>
             </button>
         </div>
@@ -58,7 +59,7 @@
         <div class="old-header">Уведомление об оплате</div>
         <div class="old-body">
             <div class="old-logo-wrap">
-                <img src="sbp_logo.jpg" alt="СБП" class="old-logo">
+                <img src="pictures/sbp_logo.jpg" alt="СБП" class="old-logo">
             </div>
             <p class="old-success">Ваш проезд успешно оплачен!</p>
             <div class="old-transport"><span id="displayTypeOld">Автобус</span>: №<span id="displayBusNumberOld"></span></div>
@@ -67,7 +68,7 @@
             <div class="old-vehicle">Т/С: <span id="displayVehicleNumberOld"></span></div>
             <div class="old-timer-label">С момента оплаты прошло:</div>
             <div class="old-timer-value" id="timerOld">00:00</div>
-            <div class="old-qr-wrap"><img id="qrCodeOld" src="" alt="QR-код" class="old-qr"></div>
+            <div class="old-qr-wrap" id="oldQrWrap"></div>
             <div class="old-serial">
                 <div>Серия билета: <span id="displaySerialOld"></span></div>
                 <div>Номер билета: <span id="displayTicketNumberOld"></span></div>
@@ -92,7 +93,7 @@
             <div class="new-vehicle">Т/С: <span id="displayVehicleNumberNew"></span></div>
             <div class="new-timer-label">С момента оплаты прошло:</div>
             <div class="new-timer-value" id="timerNew">00:00:00</div>
-            <div class="new-qr-wrap"><img id="qrCodeNew" src="" alt="QR-код" class="new-qr"></div>
+            <div class="new-qr-wrap" id="newQrWrap"></div>
             <div class="new-serial">
                 <div>Серия билета: <span id="displaySerialNew"></span></div>
                 <div>Номер билета: <span id="displayTicketNumberNew"></span></div>
@@ -108,47 +109,36 @@
 
     <!-- ЭКРАН 2В: 2ГИС -->
     <div class="gis-screen" id="gisTicketSection" style="display:none;">
-
-        <!-- Слой 1: карта -->
         <div class="gis-map"></div>
-
-        <!-- Окно "Мои оплаты" -->
         <div class="gis-sheet">
-            
             <div class="gis-hero-images">
-                <img src="houses.png" alt="" class="gis-bg gis-bg--static">
-                <img src="houses2.png" alt="" class="gis-bg gis-bg--flash">
+                <img src="pictures/houses.png" alt="" class="gis-bg--static">
+                <img src="pictures/houses2.png" alt="" class="gis-bg--flash">
             </div>
-
             <div class="gis-content">
                 <div class="gis-ticket-card">
                     <div class="gis-card__route">
-                        <img id="gisTransportIcon" src="Bus.png" alt="">
+                        <img id="gisTransportIcon" src="pictures/Bus.png" alt="">
                         <span id="gisRouteNumber">125</span>
                     </div>
                     <div class="gis-card__route-name">Железнодорожный вокзал — микрорайон...</div>
-
                     <div class="gis-card__plates">
                         <span class="gis-plate gis-plate--green" id="gisVehicleNum">201</span>
-                        <img src="sputnick.png" alt="" class="gis-card__sputnick">
+                        <img src="pictures/sputnick.png" alt="" class="gis-card__sputnick">
                     </div>
-
                     <div class="gis-card__meta">
                         <span id="gisDateTime">13 октября · 13:17</span>
                         <span id="gisPrice">30 ₽</span>
                     </div>
-
                     <div class="gis-card__divider"></div>
-
                     <button class="gis-card__details" id="gisDetailsBtn" type="button">
-                        <img src="info.png" alt="">
+                        <img src="pictures/info.png" alt="">
                         <span>Детали заказа</span>
                         <span class="gis-arrow">›</span>
                     </button>
                 </div>
-
                 <button class="gis-history" type="button">
-                    <img src="Time.png" alt="">
+                    <img src="pictures/Time.png" alt="">
                     <span>История оплат</span>
                     <span class="gis-arrow">›</span>
                 </button>
@@ -163,7 +153,6 @@
                     <span>Детали</span>
                     <button class="gis-modal__close" id="gisModalClose" type="button">✕</button>
                 </div>
-
                 <div class="gis-modal__body">
                     <div class="gis-modal__row">
                         <span class="gis-modal__label">Общая сумма заказа</span>
@@ -189,16 +178,11 @@
                         <span class="gis-modal__label">Перевозчик</span>
                         <span class="gis-modal__value">Участок 2</span>
                     </div>
-
                     <div class="gis-modal__ticket-header" id="gisTicketHeader">Билет №1 · 30 ₽</div>
-
-                    <div class="gis-modal__qr">
-                        <img id="gisQrCode" src="" alt="QR-код">
-                    </div>
+                    <div class="gis-modal__qr" id="gisQrWrap"></div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <!-- ЭКРАН 3: ЧЕК -->
@@ -226,10 +210,12 @@
             <div class="receipt-value" id="receiptDateTime"></div>
             <span class="receipt-label">Стоимость</span>
             <div class="receipt-value" id="receiptPrice"></div>
-            <div class="receipt-qr"><img id="receiptQrCode" src="" alt="QR-код"></div>
+            <div class="receipt-qr" id="receiptQrWrap"></div>
         </div>
     </div>
 
-    <script src="script.js?v=6"></script>
+    <!-- Локальная библиотека для генерации QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="script.js?v=41"></script>
 </body>
 </html>
