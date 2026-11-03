@@ -37,4 +37,368 @@ let timerIntervalOld = null;
 let timerIntervalNew = null;
 
 function startTimerOld(startTimestamp) {
-    if (timerIntervalOld)
+    if (timerIntervalOld) clearInterval(timerIntervalOld);
+    function tick() {
+        const elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+        const h = Math.floor(elapsed / 3600);
+        const m = Math.floor((elapsed % 3600) / 60);
+        const s = elapsed % 60;
+        const str = h > 0
+            ? `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+            : `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        const el = document.getElementById('timerOld');
+        if (el) el.textContent = str;
+    }
+    tick();
+    timerIntervalOld = setInterval(tick, 1000);
+}
+
+function startTimerNew(startTimestamp) {
+    if (timerIntervalNew) clearInterval(timerIntervalNew);
+    function tick() {
+        const elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+        const h = Math.floor(elapsed / 3600);
+        const m = Math.floor((elapsed % 3600) / 60);
+        const s = elapsed % 60;
+        const str = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        const el = document.getElementById('timerNew');
+        if (el) el.textContent = str;
+    }
+    tick();
+    timerIntervalNew = setInterval(tick, 1000);
+}
+
+// ===== Переключение экранов =====
+function switchView(view) {
+    ['inputSection', 'oldTicketSection', 'newTicketSection', 'gisTicketSection', 'receiptSection'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.setProperty('display', 'none', 'important');
+    });
+
+    let showId = null;
+    if (view === 'form') showId = 'inputSection';
+    else if (view === 'oldsbp') showId = 'oldTicketSection';
+    else if (view === 'sbp') showId = 'newTicketSection';
+    else if (view === '2gis') showId = 'gisTicketSection';
+    else if (view === 'receipt') showId = 'receiptSection';
+
+    if (showId) {
+        const el = document.getElementById(showId);
+        if (el) el.style.setProperty('display', 'block', 'important');
+    }
+
+    window.scrollTo(0, 0);
+}
+
+function goTo(view) {
+    switchView(view);
+    history.pushState({ view: view }, '', location.pathname + '#' + view);
+}
+
+// ===== Локальная генерация QR =====
+function generateLocalQR(containerId, text) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = ''; // Очищаем старое
+    new QRCode(container, {
+        text: text,
+        width: 400,
+        height: 400,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.M // Средний уровень (дает сетку ~80х80)
+    });
+}
+
+function generateLocalQRColored(containerId, text) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    new QRCode(container, {
+        text: text,
+        width: 300,
+        height: 300,
+        colorDark : "#0b3045", // Синеватый для 2ГИС
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.M
+    });
+}
+
+// ===== Отрисовка «Старый СБП» =====
+function renderOldTicket(data) {
+    document.getElementById('displayTypeOld').textContent = data.type;
+    document.getElementById('displayBusNumberOld').textContent = data.route;
+    document.getElementById('displayVehicleNumberOld').textContent = data.vehicle;
+    document.getElementById('displayPriceOld').textContent = data.price;
+    document.getElementById('currentDateOld').textContent = data.displayDate;
+    document.getElementById('displaySerialOld').textContent = data.serial;
+    document.getElementById('displayTicketNumberOld').textContent = data.ticketNumber;
+
+    generateLocalQR('oldQrWrap', data.qrText);
+    startTimerOld(data.startTime);
+}
+
+// ===== Отрисовка «СБП» (новый) =====
+function renderNewTicket(data) {
+    document.getElementById('displayTypeNew').textContent = data.type;
+    document.getElementById('displayBusNumberNew').textContent = data.route;
+    document.getElementById('displayVehicleNumberNew').textContent = data.vehicle;
+    document.getElementById('displayPriceNew').textContent = data.price;
+    document.getElementById('currentDateNew').textContent = data.displayDate;
+    document.getElementById('displaySerialNew').textContent = data.serial;
+    document.getElementById('displayTicketNumberNew').textContent = data.ticketNumber;
+
+    generateLocalQR('newQrWrap', data.qrText);
+    startTimerNew(data.startTime);
+}
+
+// ===== Отрисовка чека =====
+function renderReceipt(data) {
+    document.getElementById('receiptDate').textContent = data.qrDate.replace('A', ' ');
+    document.getElementById('receiptSerial').textContent = data.serial;
+    document.getElementById('receiptNumber').textContent = data.ticketNumber;
+    document.getElementById('receiptTransport').textContent = data.type;
+    document.getElementById('receiptRoute').textContent = data.route;
+    document.getElementById('receiptVehicle').textContent = data.vehicle;
+    document.getElementById('receiptDateTime').textContent = data.qrDate.replace('A', ' ');
+    document.getElementById('receiptPrice').textContent = data.price + '.0 руб.';
+
+    if (data.ticketType === 'oldsbp') {
+        document.getElementById('receiptType').textContent = 'Разовый билет QRPay';
+        document.getElementById('receiptInn').textContent = '5507022628';
+        document.getElementById('receiptCarrier').textContent = 'АО "Пассажирское предприятие № 8"';
+    } else if (data.ticketType === 'sbp') {
+        document.getElementById('receiptType').textContent = 'Разовый билет (QR) в Омске';
+        document.getElementById('receiptInn').textContent = '5507301149';
+        document.getElementById('receiptCarrier').textContent = 'АКЦИОНЕРНОЕ ОБЩЕСТВО "ПАССАЖИРСКОЕ ПРЕДПРИЯТИЕ № 8"';
+    } else {
+        document.getElementById('receiptType').textContent = 'Разовый билет';
+        document.getElementById('receiptInn').textContent = '—';
+        document.getElementById('receiptCarrier').textContent = '—';
+    }
+
+    generateLocalQR('receiptQrWrap', data.qrText);
+}
+
+// ============================================
+// 2ГИС — ЛОГИКА
+// ============================================
+function b64(str) {
+    try { return btoa(unescape(encodeURIComponent(String(str)))); } catch (e) { return ''; }
+}
+
+function randHex(len) {
+    let s = '';
+    const chars = '0123456789abcdef';
+    for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * 16)];
+    return s;
+}
+
+function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function renderGisTicket(data) {
+    let icon = 'pictures/Bus.png';
+    if (data.type === 'Троллейбус') icon = 'pictures/trolleyBus.png';
+    if (data.type === 'Трамвай') icon = 'pictures/TramV.png';
+
+    const iconEl = document.getElementById('gisTransportIcon');
+    if (iconEl) iconEl.src = icon;
+
+    document.getElementById('gisRouteNumber').textContent = data.route;
+    document.getElementById('gisVehicleNum').textContent = data.vehicle;
+
+    const now = new Date();
+    const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    const dateStr = `${now.getDate()} ${months[now.getMonth()]} · ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    document.getElementById('gisDateTime').textContent = dateStr;
+
+    const priceStr = data.price + ' ₽';
+    document.getElementById('gisPrice').textContent = priceStr;
+    document.getElementById('gisTotalSum').textContent = priceStr;
+    document.getElementById('gisTicketHeader').textContent = 'Билет №1 · ' + priceStr;
+
+    const ticketId = uuid();
+    const orderId = uuid();
+    const ticketNumShort = randHex(8);
+    const orderNumShort = randHex(8);
+
+    document.getElementById('gisTicketNum').textContent = ticketNumShort;
+    document.getElementById('gisOrderNum').textContent = orderNumShort;
+
+    // Формируем строку средней длины (около 400-500 символов)
+    const params = [
+        'i=' + b64(ticketId + ticketNumShort),
+        'o=' + b64(orderId),
+        'c=' + b64(Date.now()),
+        'n=' + b64(Date.now()),
+        'p=' + b64(Number(data.price) * 100),
+        'op=' + b64(Number(data.price) * 100),
+        'oc=' + b64(1),
+        'vi=' + b64('0x' + randHex(12)),
+        'ri=' + b64('0x' + randHex(12)),
+        'fsi=' + b64('0x' + randHex(12)),
+        's=' + b64('paid'),
+        'srv=' + b64('<nil>'),
+        'obj=' + b64('<nil>'),
+        'vl=' + b64('С' + data.vehicle + 'ХХ 55'),
+        'vb=' + b64(data.vehicle),
+        'rn=' + b64(data.route),
+        'fsn=' + b64('Академия транспорта')
+    ].join('&');
+
+    generateLocalQRColored('gisQrWrap', params);
+}
+
+// Модалка 2ГИС
+function openGisModal() {
+    const m = document.getElementById('gisDetailsModal');
+    if (m) m.style.display = 'flex';
+}
+function closeGisModal() {
+    const m = document.getElementById('gisDetailsModal');
+    if (m) m.style.display = 'none';
+}
+
+// ===== Показ билета =====
+function showTicket() {
+    try {
+        const type = document.getElementById('transportType').value || 'Автобус';
+        const ticketType = document.getElementById('ticketType').value || 'oldsbp';
+        const route = document.getElementById('routeNumber').value.trim() || '125';
+        const vehicle = document.getElementById('vehicleNumber').value.trim() || '363';
+        const price = document.getElementById('price').value.trim() || '40';
+
+        const { displayDate, qrDate } = getDates();
+        const serial = generateSerial();
+        const ticketNumber = generateTicketNumber();
+
+        const typeEng = type === 'Автобус' ? 'bus' : 'trolleybus';
+        const qrText = `https://qr.bilet.nspk.ru/payment?paytagid=${serial}&type=${typeEng}&route=${route}&ts=${vehicle}&date=${qrDate}&price=${price}`;
+
+        const data = {
+            type, ticketType, route, vehicle, price, qrDate, displayDate,
+            serial, ticketNumber, typeEng, qrText,
+            startTime: Date.now()
+        };
+
+        sessionStorage.setItem('ticketData', JSON.stringify(data));
+        window._ticketData = data;
+
+        renderReceipt(data);
+
+        if (ticketType === 'oldsbp') {
+            renderOldTicket(data);
+            goTo('oldsbp');
+        } else if (ticketType === 'sbp') {
+            renderNewTicket(data);
+            goTo('sbp');
+        } else if (ticketType === '2gis') {
+            renderGisTicket(data);
+            goTo('2gis');
+        } else {
+            renderOldTicket(data);
+            goTo('oldsbp');
+        }
+    } catch (err) {
+        console.error('ОШИБКА:', err);
+        alert('Произошла ошибка: ' + err.message);
+    }
+}
+
+// ===== Открыть чек =====
+function openReceipt() {
+    const d = window._ticketData;
+    if (!d) {
+        alert('Сначала создайте билет!');
+        return;
+    }
+    goTo('receipt');
+}
+
+// ===== Инициализация =====
+document.addEventListener('DOMContentLoaded', function() {
+    const continueBtn = document.getElementById('continueBtn');
+    const downloadBtnOld = document.getElementById('downloadBtnOld');
+    const downloadBtnNew = document.getElementById('downloadBtnNew');
+    const receiptBackBtn = document.getElementById('receiptBackBtn');
+    
+    const detailsBtn = document.getElementById('gisDetailsBtn');
+    const modalClose = document.getElementById('gisModalClose');
+    const modalBackdrop = document.getElementById('gisModalBackdrop');
+
+    if (continueBtn) continueBtn.addEventListener('click', e => { e.preventDefault(); showTicket(); });
+    if (downloadBtnOld) downloadBtnOld.addEventListener('click', e => { e.preventDefault(); openReceipt(); });
+    if (downloadBtnNew) downloadBtnNew.addEventListener('click', e => { e.preventDefault(); openReceipt(); });
+    if (receiptBackBtn) receiptBackBtn.addEventListener('click', e => { e.preventDefault(); history.back(); });
+
+    if (detailsBtn) detailsBtn.addEventListener('click', openGisModal);
+    if (modalClose) modalClose.addEventListener('click', closeGisModal);
+    if (modalBackdrop) modalBackdrop.addEventListener('click', closeGisModal);
+
+    // Делегирование событий для кнопок
+    const ticketTypeRow = document.getElementById('ticketTypeRow');
+    const hiddenInput = document.getElementById('ticketType');
+    const label = document.getElementById('ticketTypeLabel');
+
+    if (ticketTypeRow && hiddenInput && label) {
+        ticketTypeRow.addEventListener('click', function(e) {
+            const btn = e.target.closest('.ticket-type-btn');
+            if (!btn) return;
+
+            const allBtns = ticketTypeRow.querySelectorAll('.ticket-type-btn');
+            allBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const value = btn.getAttribute('data-value');
+            hiddenInput.value = value;
+            
+            const names = { oldsbp: 'Старый СБП', sbp: 'СБП', '2gis': '2ГИС' };
+            label.textContent = names[value] || value;
+        });
+    }
+
+    // Восстановление после перезагрузки
+    const hash = location.hash.replace('#', '');
+    const savedData = sessionStorage.getItem('ticketData');
+
+    if ((hash === 'oldsbp' || hash === 'sbp' || hash === '2gis' || hash === 'receipt') && savedData) {
+        try {
+            const data = JSON.parse(savedData);
+            window._ticketData = data;
+
+            if (data.ticketType === 'oldsbp') renderOldTicket(data);
+            else if (data.ticketType === 'sbp') renderNewTicket(data);
+            else if (data.ticketType === '2gis') renderGisTicket(data);
+
+            renderReceipt(data);
+
+            history.replaceState({ view: 'form' }, '', location.pathname + '#form');
+            switchView(hash);
+            history.pushState({ view: hash }, '', location.pathname + '#' + hash);
+            return;
+        } catch (e) {
+            console.error('Ошибка:', e);
+            sessionStorage.removeItem('ticketData');
+        }
+    }
+
+    sessionStorage.removeItem('ticketData');
+    window._ticketData = null;
+    switchView('form');
+    history.replaceState({ view: 'form' }, '', location.pathname);
+});
+
+// ===== Системная кнопка «Назад» =====
+window.addEventListener('popstate', function(e) {
+    if (e.state && e.state.view) {
+        switchView(e.state.view);
+    } else {
+        switchView('form');
+    }
+});
