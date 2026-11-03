@@ -295,7 +295,7 @@ body { overflow-x: hidden; }
 .gis-map {
     position: fixed;
     inset: 0;
-    background-image: url('MapBackground.png');
+    background-image: url('pictures/MapBackground.png'); /* ДОБАВИЛИ pictures/ */
     background-size: cover;
     background-position: center;
     z-index: 1;
