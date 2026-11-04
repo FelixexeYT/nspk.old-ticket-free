@@ -366,39 +366,38 @@ body { overflow-x: hidden; }
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
 .gis-ticket-card {
     background: #fff;
-    border-radius: 20px 20px 0 0; /* Скругление только сверху */
+    border-radius: 20px 20px 0 0;
     padding: 16px 16px 20px;
     position: relative;
     border: 1px solid #f0f0f0;
     border-bottom: none;
-    
-    /* Увеличиваем отступ, чтобы волна (19px) не наезжала на следующий блок */
-    margin-bottom: 35px; 
-    
-    overflow: visible; /* Чтобы волна вылезала за границы карточки */
+    margin-bottom: 35px; /* Отступ под волну */
+    overflow: visible;
 }
 
-/* ===== ИМИТАЦИЯ ПЕРФОРАЦИИ (РОВНО 8 ПОЛУКРУГОВ) ===== */
+/* ===== ИМИТАЦИЯ ПЕРФОРАЦИИ (ПЛАВНАЯ ВОЛНА) ===== */
 .gis-ticket-card::after {
     content: "";
     position: absolute;
-    left: -1px; /* Компенсируем рамку карточки */
+    left: -1px; /* Компенсируем рамку */
     right: -1px;
-    bottom: -19px; /* Сдвигаем вниз на глубину волны */
-    height: 19px;  /* Высота выступа */
-
-    background-image: radial-gradient(
-        circle 19px at 50% 0,  /* Радиус 19px, центр по центру каждого сегмента */
-        #ffffff 18.5px,        /* Белый цвет выступа */
-        transparent 19px       /* Прозрачность (показывает серый фон окна) */
-    );
-
-    background-size: 12.5% 100%; /* 100% / 8 = 12.5% (ровно 8 повторений) */
+    bottom: -19px;
+    height: 19px;
+    
+    /* 
+      Два градиента, сдвинутых на половину шага (19px), 
+      создают эффект перекрывающихся волн (синусоиду).
+    */
+    background-image: 
+        radial-gradient(circle at 50% 0%, #ffffff 19px, transparent 19.5px),
+        radial-gradient(circle at 0% 0%, #ffffff 19px, transparent 19.5px);
+    
+    background-size: 38px 19px; /* Ширина и высота одной "волны" */
+    background-position: 0 0, 19px 0; /* Сдвиг второго градиента */
     background-repeat: repeat-x;
-    background-position: left top;
-
     pointer-events: none;
 }
+
 .gis-card__route {
     display: flex;
     align-items: center;
@@ -488,13 +487,13 @@ body { overflow-x: hidden; }
     text-align: left;
 }
 
+/* ===== УВЕЛИЧЕНИЕ ИКОНОК В 2 РАЗА ===== */
 .gis-card__details img,
 .gis-history img {
-    width: 22px;
-    height: 22px;
+    width: 44px;   /* Было 22px */
+    height: 44px;  /* Было 22px */
     object-fit: contain;
-    opacity: 0.7;
-}
+    opacity:
 
 .gis-card__details span:nth-child(2),
 .gis-history span:nth-child(2) {
