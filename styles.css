@@ -459,17 +459,18 @@ body { overflow-x: hidden; }
 
 .gis-card__meta {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start; /* Выравниваем по левому краю */
     align-items: center;
+    gap: 8px; /* Отступ между датой и ценой */
     font-size: 13px;
     color: #8a8a8a;
     padding: 0 0 12px;
 }
 
 .gis-card__meta #gisPrice {
-    color: #1a1a1a;
-    font-weight: 600;
-    font-size: 14px;
+    color: #8a8a8a; /* Сделали серым, как дату */
+    font-weight: 400; /* Убрали жирность */
+    font-size: 13px; /* Одинаковый размер с датой */
 }
 
 .gis-card__divider {
@@ -516,15 +517,25 @@ body { overflow-x: hidden; }
 }
 
 .gis-history {
-    background: #fff;
+    background: #ffffff; /* Явно указали белый фон */
+    position: relative;  /* Поднимаем над волнами */
+    z-index: 2;          /* Чтобы волны не перекрывали кнопку */
     border-radius: 18px;
     padding: 16px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-    margin-bottom: 20px;
     border: 1px solid #f0f0f0;
     margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    color: #1a1a1a;
+    cursor: pointer;
+    text-align: left;
 }
-
 /* МОДАЛКА "ДЕТАЛИ" */
 .gis-modal {
     position: fixed;
