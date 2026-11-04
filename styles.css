@@ -370,42 +370,40 @@ body { overflow-x: hidden; }
     padding: 16px 16px 20px;
     position: relative;
     border: 1px solid #f0f0f0;
-    border-bottom: none; /* Важно: убираем нижнюю границу, чтобы волна сливалась с фоном */
+    border-bottom: none;
     
-    /* 
-      Увеличиваем нижний отступ, чтобы следующий блок (История оплат) 
-      не наезжал на новую глубокую волну (глубина 30px).
-    */
-    margin-bottom: 50px; 
+    /* Отступ снизу, чтобы кнопка "История оплат" не наезжала на волну */
+    margin-bottom: 30px; 
+    
+    overflow: visible; /* Важно, чтобы волна вылезала за границы */
+    
+    /* Твои переменные */
+    --wave-radius: clamp(12px, 2.4vw, 22px);
+    --wave-step: calc(var(--wave-radius) * 4.3);
 }
 
 /* ===== ИМИТАЦИЯ ПЕРФОРАЦИИ (ВОЛНА) ===== */
 .gis-ticket-card::after {
     content: "";
     position: absolute;
-    
-    /* Позиционируем ровно под карточкой */
-    left: -1px; /* Компенсируем границу родителя (1px) */
-    right: -1px;
-    bottom: -30px; /* Сдвигаем вниз на глубину волны */
-    height: 30px;  /* Высота выступа */
-    
-    /* Рисуем белые круги. Центр по X = 47.5px (половина от 95), по Y = 0 (верхний край) */
-    background: radial-gradient(
-        circle at 47.5px 0,
-        #fff 30px,       /* Радиус круга */
-        transparent 31px /* Сглаживание края */
-    );
-    
-    background-size: 95px 30px; /* Шаг повторения (95px) и высота (30px) */
+    left: 0;
+    right: 0;
+
+    height: calc(var(--wave-radius) * 2);
+    bottom: calc(0px - var(--wave-radius));
+
+    background:
+        radial-gradient(
+            circle var(--wave-radius) at center,
+            #fff calc(var(--wave-radius) - 0.5px),
+            transparent var(--wave-radius)
+        );
+
+    background-size:
+        var(--wave-step) calc(var(--wave-radius) * 2);
+
     background-repeat: repeat-x;
-    pointer-events: none; /* Чтобы волна не перехватывала клики */
-    
-    /* 
-      Если хочешь, чтобы волна начиналась ровно с полукруга у левого края,
-      раскомментируй строку ниже (сдвиг на половину периода):
-    */
-    /* background-position: -47.5px 0; */
+    pointer-events: none;
 }
 
 .gis-card__route {
