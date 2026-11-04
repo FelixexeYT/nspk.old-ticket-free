@@ -370,35 +370,34 @@ body { overflow-x: hidden; }
     padding: 16px 16px 20px;
     position: relative;
     border: 1px solid #f0f0f0;
-    border-bottom: none;
-    margin-bottom: 35px; /* Отступ, чтобы кнопка "История оплат" не наезжала */
+    border-bottom: none; /* Убираем нижнюю границу, её заменит картинка */
     
-    /* 
-      МАГИЯ ВОЛНЫ (вырезаем полукруги снизу)
-      transparent 19px (радиус выреза), black 19.5px (остальная карточка)
-    */
-    -webkit-mask-image: radial-gradient(
-        circle at 50% 100%,
-        transparent 19px,
-        black 19.5px
-    );
-    -webkit-mask-size: 12.5% 100%; /* 100% / 8 = 12.5% (ровно 8 волн) */
-    -webkit-mask-repeat: repeat-x;
-    -webkit-mask-position: bottom;
-    
-    mask-image: radial-gradient(
-        circle at 50% 100%,
-        transparent 19px,
-        black 19.5px
-    );
-    mask-size: 12.5% 100%;
-    mask-repeat: repeat-x;
-    mask-position: bottom;
+    /* Отступ снизу, чтобы кнопка "История оплат" не наезжала на картинку с волнами */
+    margin-bottom: 30px; 
 }
 
-/* Псевдоэлемент больше не нужен, так как мы вырезаем маску */
+/* ===== ИМИТАЦИЯ ПЕРФОРАЦИИ (КАРТИНКА) ===== */
 .gis-ticket-card::after {
-    display: none; 
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% - 1px); /* Ставим картинку ровно под карточкой, перекрывая рамку на 1px */
+    width: 100%;
+    
+    /* 
+      Магия пропорций! 
+      Твоя картинка 1080 на 49. Это соотношение 1080 / 49.
+      Свойство aspect-ratio заставит картинку автоматически 
+      подстраивать высоту под ширину экрана, чтобы она не сплющивалась.
+    */
+    aspect-ratio: 1080 / 49; 
+    
+    /* Путь к твоей картинке */
+    background-image: url('pictures/perforation.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    pointer-events: none; /* Чтобы клики проходили сквозь картинку */
 }
 
 .gis-card__route {
