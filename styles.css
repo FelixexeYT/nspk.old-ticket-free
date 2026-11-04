@@ -203,24 +203,24 @@ body {
     width: 100%;
     max-width: 500px;
     margin: 0 auto;
-    min-height: 100vh;
+    /* Убрали min-height: 100vh, чтобы карточка не растягивалась и не центрировалась */
     background-color: #f2f3f4;
     background-image: url('pictures/sbp-bg.png');
     background-repeat: no-repeat;
     background-position: top center;
     background-size: 100% auto;
-    padding-top: 0; /* Важно: убеждаемся, что отступа сверху нет */
     padding-bottom: 40px;
 }
 
 .new-header { display: none; }
 .new-body { 
     /* 
-       Увеличили отступ с 55vw до 75vw. 
-       Если текст всё еще на волне — поставь 80vw или 85vw.
-       Если наоборот слишком низко — уменьши до 70vw.
+       Используем % вместо vw!
+       Проценты в padding-top считаются от ШИРИНЫ карточки.
+       Так как картинка тоже масштабируется по ширине, этот отступ 
+       всегда будет идеально попадать под волну на любом устройстве.
     */
-    padding: 75vw 24px 30px; 
+    padding: 65% 24px 30px; 
     text-align: center; 
 }
 }
