@@ -372,40 +372,33 @@ body { overflow-x: hidden; }
     border: 1px solid #f0f0f0;
     border-bottom: none;
     
-    /* Отступ снизу, чтобы кнопка "История оплат" не наезжала на волну */
-    margin-bottom: 30px; 
+    /* Увеличиваем отступ, чтобы волна (19px) не наезжала на следующий блок */
+    margin-bottom: 35px; 
     
-    overflow: visible; /* Важно, чтобы волна вылезала за границы */
-    
-    /* Твои переменные */
-    --wave-radius: clamp(12px, 2.4vw, 22px);
-    --wave-step: calc(var(--wave-radius) * 4.3);
+    overflow: visible; /* Чтобы волна вылезала за границы карточки */
 }
 
-/* ===== ИМИТАЦИЯ ПЕРФОРАЦИИ (ВОЛНА) ===== */
+/* ===== ИМИТАЦИЯ ПЕРФОРАЦИИ (РОВНО 8 ПОЛУКРУГОВ) ===== */
 .gis-ticket-card::after {
     content: "";
     position: absolute;
-    left: 0;
-    right: 0;
+    left: -1px; /* Компенсируем рамку карточки */
+    right: -1px;
+    bottom: -19px; /* Сдвигаем вниз на глубину волны */
+    height: 19px;  /* Высота выступа */
 
-    height: calc(var(--wave-radius) * 2);
-    bottom: calc(0px - var(--wave-radius));
+    background-image: radial-gradient(
+        circle 19px at 50% 0,  /* Радиус 19px, центр по центру каждого сегмента */
+        #ffffff 18.5px,        /* Белый цвет выступа */
+        transparent 19px       /* Прозрачность (показывает серый фон окна) */
+    );
 
-    background:
-        radial-gradient(
-            circle var(--wave-radius) at center,
-            #fff calc(var(--wave-radius) - 0.5px),
-            transparent var(--wave-radius)
-        );
-
-    background-size:
-        var(--wave-step) calc(var(--wave-radius) * 2);
-
+    background-size: 12.5% 100%; /* 100% / 8 = 12.5% (ровно 8 повторений) */
     background-repeat: repeat-x;
+    background-position: left top;
+
     pointer-events: none;
 }
-
 .gis-card__route {
     display: flex;
     align-items: center;
