@@ -395,38 +395,46 @@ body { overflow-x: hidden; }
     
     /* Никаких transform: scale и width: 110% — они ломают края */
 }
+/* Контейнер с иконкой и номером маршрута */
 .gis-card__route {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 2px;
+    align-items: center; 
+    gap: 12px; /* Увеличили отступ, чтобы текст сместился правее */
+    margin-bottom: 4px;
+    padding-top: 4px; /* Небольшой отступ сверху для "квадратности" */
 }
 
+/* Иконка транспорта */
 .gis-card__route img {
-    width: 26px;
-    height: 26px;
+    width: 30px;  /* Чуть увеличили для баланса */
+    height: 30px;
     object-fit: contain;
+    margin-top: 6px; /* ОПУСКАЕМ ИКОНКУ НИЖЕ, чтобы она встала ровно с текстом */
 }
 
+/* Номер маршрута */
 .gis-card__route span {
     font-size: 22px;
     font-weight: 700;
     color: #1a1a1a;
+    line-height: 1.2;
 }
 
+/* Название остановки (текст под номером) */
 .gis-card__route-name {
     font-size: 13px;
     color: #8a8a8a;
     margin-bottom: 10px;
-    padding-left: 36px;
+    padding-left: 42px; /* Выравниваем по тексту выше: 30px иконка + 12px отступ */
 }
 
+/* Плашки с номерами ТС */
 .gis-card__plates {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 14px;
-    padding-left: 36px;
+    padding-left: 42px; /* Тоже выравниваем по тексту */
 }
 
 .gis-plate {
@@ -440,10 +448,16 @@ body { overflow-x: hidden; }
 .gis-plate--green { background: #e3f4e6; color: #1e8e3e; }
 
 .gis-card__sputnick {
-    width: 16px;
-    height: 16px;
+    /* Было 16px, увеличиваем в 2.5 раза */
+    width: 40px;  
+    height: 40px; 
     object-fit: contain;
-    opacity: 0.5;
+    
+    /* Делаем чуть заметнее (было 0.5) */
+    opacity: 0.8; 
+    
+    /* Добавим отступ слева, чтобы она не прилипала к зеленой плашке */
+    margin-left: 4px;
 }
 
 .gis-card__meta {
@@ -506,13 +520,19 @@ body { overflow-x: hidden; }
 }
 
 .gis-history {
-    background: #ffffff !important; /* Принудительно белый фон */
+    /* ВЫТАСКИВАЕМ НА ПЕРЕДНИЙ ПЛАН */
+    position: relative;
+    z-index: 9999 !important; 
+    
+    /* ЖЕСТКО ЗАДАЕМ БЕЛЫЙ ФОН И ТЕНЬ */
+    background-color: #ffffff !important; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+    
     border-radius: 16px;
     padding: 16px;
-    margin-top: 10px; /* Отступ от волны */
+    margin-top: 10px;
     margin-bottom: 20px;
     border: 1px solid #f0f0f0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
     
     display: flex;
     align-items: center;
