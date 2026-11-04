@@ -611,7 +611,8 @@ body { overflow-x: hidden; }
 
 /* Адаптив */
 @media (max-width: 480px) {
-    .old-body, .new-body { padding: 24px 16px; }
+    /* Убрали .new-body отсюда, чтобы процентный отступ работал! */
+    .old-body { padding: 24px 16px; } 
     .old-price, .new-price { font-size: 42px; }
     .gis-content { margin-top: -48%; }
     .gis-modal__qr { width: 100%; max-width: 250px; height: auto; aspect-ratio: 1/1; }
