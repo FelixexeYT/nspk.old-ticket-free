@@ -215,12 +215,13 @@ body {
 .new-header { display: none; }
 .new-body { 
     /* 
-       Используем vw (проценты от ширины экрана).
-       Подбери значение: если на телефоне текст залазит на волну, 
-       увеличь 55vw до 60vw или 65vw.
+       Вместо vw или px используем padding-top, который будет 
+       автоматически подстраиваться под высоту картинки на любом устройстве.
     */
-    padding: 55vw 24px 30px; 
+    padding: 0 24px 30px; 
     text-align: center; 
+    /* Сдвигаем весь блок вниз ровно на высоту твоей картинки в процентах от ширины */
+    margin-top: 55%; 
 }
 .new-success { font-size: 17px; color: #333; margin: 10px 0 30px; }
 .new-transport { font-size: 20px; font-weight: 700; color: #4a4a4a; margin-bottom: 10px; }
