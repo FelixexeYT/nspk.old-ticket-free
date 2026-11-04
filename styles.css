@@ -366,36 +366,39 @@ body { overflow-x: hidden; }
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
 .gis-ticket-card {
     background: #fff;
-    border-radius: 20px 20px 0 0;
+    border-radius: 20px 20px 0 0; /* Скругление только сверху */
     padding: 16px 16px 20px;
     position: relative;
     border: 1px solid #f0f0f0;
     border-bottom: none;
-    margin-bottom: 35px; /* Отступ под волну */
-    overflow: visible;
-}
-
-/* ===== ИМИТАЦИЯ ПЕРФОРАЦИИ (ПЛАВНАЯ ВОЛНА) ===== */
-.gis-ticket-card::after {
-    content: "";
-    position: absolute;
-    left: -1px; /* Компенсируем рамку */
-    right: -1px;
-    bottom: -19px;
-    height: 19px;
+    margin-bottom: 35px; /* Отступ, чтобы кнопка "История оплат" не наезжала */
     
     /* 
-      Два градиента, сдвинутых на половину шага (19px), 
-      создают эффект перекрывающихся волн (синусоиду).
+      МАГИЯ ВОЛНЫ (вырезаем полукруги снизу)
+      transparent 19px (радиус выреза), black 19.5px (остальная карточка)
     */
-    background-image: 
-        radial-gradient(circle at 50% 0%, #ffffff 19px, transparent 19.5px),
-        radial-gradient(circle at 0% 0%, #ffffff 19px, transparent 19.5px);
+    -webkit-mask-image: radial-gradient(
+        circle at 50% 100%,
+        transparent 19px,
+        black 19.5px
+    );
+    -webkit-mask-size: 12.5% 100%; /* 100% / 8 = 12.5% (ровно 8 волн) */
+    -webkit-mask-repeat: repeat-x;
+    -webkit-mask-position: bottom;
     
-    background-size: 38px 19px; /* Ширина и высота одной "волны" */
-    background-position: 0 0, 19px 0; /* Сдвиг второго градиента */
-    background-repeat: repeat-x;
-    pointer-events: none;
+    mask-image: radial-gradient(
+        circle at 50% 100%,
+        transparent 19px,
+        black 19.5px
+    );
+    mask-size: 12.5% 100%;
+    mask-repeat: repeat-x;
+    mask-position: bottom;
+}
+
+/* Псевдоэлемент больше не нужен, так как мы вырезаем маску */
+.gis-ticket-card::after {
+    display: none; 
 }
 
 .gis-card__route {
