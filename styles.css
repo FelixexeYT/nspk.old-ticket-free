@@ -609,11 +609,4 @@ body { overflow-x: hidden; }
 .new-qr-wrap canvas { width: 100%; max-width: 420px; height: auto !important; }
 .receipt-qr canvas { width: 400px; height: 400px; max-width: 100%; }
 
-/* Адаптив */
-@media (max-width: 480px) {
-    /* Убрали .new-body отсюда, чтобы процентный отступ работал! */
-    .old-body { padding: 24px 16px; } 
-    .old-price, .new-price { font-size: 42px; }
-    .gis-content { margin-top: -48%; }
-    .gis-modal__qr { width: 100%; max-width: 250px; height: auto; aspect-ratio: 1/1; }
 }
