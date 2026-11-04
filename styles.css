@@ -363,27 +363,49 @@ body { overflow-x: hidden; }
     margin-top: -50%; /* Процентный отступ, чтобы не съезжало на мобилках */
 }
 
+/* ===== КАРТОЧКА С БИЛЕТОМ ===== */
 .gis-ticket-card {
     background: #fff;
-    border-radius: 20px 20px 0 0;
+    border-radius: 20px 20px 0 0; /* Скругление только сверху */
     padding: 16px 16px 20px;
-    margin-bottom: 24px;
     position: relative;
     border: 1px solid #f0f0f0;
-    border-bottom: none;
+    border-bottom: none; /* Важно: убираем нижнюю границу, чтобы волна сливалась с фоном */
+    
+    /* 
+      Увеличиваем нижний отступ, чтобы следующий блок (История оплат) 
+      не наезжал на новую глубокую волну (глубина 30px).
+    */
+    margin-bottom: 50px; 
 }
 
-/* Перфорация снизу */
+/* ===== ИМИТАЦИЯ ПЕРФОРАЦИИ (ВОЛНА) ===== */
 .gis-ticket-card::after {
-    content: '';
+    content: "";
     position: absolute;
-    bottom: -8px;
-    left: -1px;
+    
+    /* Позиционируем ровно под карточкой */
+    left: -1px; /* Компенсируем границу родителя (1px) */
     right: -1px;
-    height: 8px;
-    background-image: radial-gradient(circle at 8px 0, transparent 8px, #fff 9px);
-    background-size: 16px 8px;
+    bottom: -30px; /* Сдвигаем вниз на глубину волны */
+    height: 30px;  /* Высота выступа */
+    
+    /* Рисуем белые круги. Центр по X = 47.5px (половина от 95), по Y = 0 (верхний край) */
+    background: radial-gradient(
+        circle at 47.5px 0,
+        #fff 30px,       /* Радиус круга */
+        transparent 31px /* Сглаживание края */
+    );
+    
+    background-size: 95px 30px; /* Шаг повторения (95px) и высота (30px) */
     background-repeat: repeat-x;
+    pointer-events: none; /* Чтобы волна не перехватывала клики */
+    
+    /* 
+      Если хочешь, чтобы волна начиналась ровно с полукруга у левого края,
+      раскомментируй строку ниже (сдвиг на половину периода):
+    */
+    /* background-position: -47.5px 0; */
 }
 
 .gis-card__route {
