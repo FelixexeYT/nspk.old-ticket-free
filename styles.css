@@ -391,8 +391,8 @@ body { overflow-x: hidden; }
     background-image: url('pictures/perforation.png');
     background-size: 100% 100%; /* Растягивает картинку ровно на всю ширину и высоту */
     background-repeat: no-repeat;
-    pointer-events: none;
-    
+    pointer-events: none !important; 
+    z-index: 1;
     /* Никаких transform: scale и width: 110% — они ломают края */
 }
 /* Контейнер с иконкой и номером маршрута */
@@ -482,14 +482,13 @@ body { overflow-x: hidden; }
     margin: 0 -16px;
 }
 
-.gis-card__details,
-.gis-history {
+.gis-card__details {
     width: 100%;
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 14px 0;
-    background: none;
+    background: transparent; /* Прозрачный фон */
     border: none;
     font-family: inherit;
     font-size: 15px;
@@ -497,6 +496,8 @@ body { overflow-x: hidden; }
     cursor: pointer;
     margin: 0;
     text-align: left;
+    position: relative;
+    z-index: 10; /* Поднимаем над слоями карточки */
 }
 
 /* ===== УВЕЛИЧЕНИЕ ИКОНОК В 2 РАЗА ===== */
@@ -520,30 +521,27 @@ body { overflow-x: hidden; }
 }
 
 .gis-history {
-    /* ВЫТАСКИВАЕМ НА ПЕРЕДНИЙ ПЛАН */
-    position: relative;
-    z-index: 9999 !important; 
-    
-    /* ЖЕСТКО ЗАДАЕМ БЕЛЫЙ ФОН И ТЕНЬ */
-    background-color: #ffffff !important; 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
-    
+    /* Жестко задаем фон и тень */
+    background: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f0f0f0;
     border-radius: 16px;
     padding: 16px;
-    margin-top: 10px;
+    margin-top: 30px; /* Отступ от волны */
     margin-bottom: 20px;
-    border: 1px solid #f0f0f0;
-    
+    width: 100%;
     display: flex;
     align-items: center;
     gap: 12px;
-    width: 100%;
-    box-sizing: border-box;
     font-family: inherit;
     font-size: 15px;
     color: #1a1a1a;
     cursor: pointer;
     text-align: left;
+    
+    /* Вытаскиваем на передний план */
+    position: relative;
+    z-index: 9999; 
 }
 /* МОДАЛКА "ДЕТАЛИ" */
 .gis-modal {
