@@ -93,7 +93,7 @@ body {
     transition: all 0.2s ease;
     width: auto;
     margin: 0;
-    height: 80px; /* Одинаковая высота для всех кнопок */
+    height: 80px;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -108,9 +108,9 @@ body {
 }
 
 .ticket-type-btn[data-value="2gis"] img {
-    height: 48px;  /* Было 24px, стало 48px (в 2 раза больше) */
-    width: 120px;  /* Пропорционально увеличили ширину */
-    max-width: 100%; /* Чтобы не вылезала за пределы кнопки */
+    height: 48px;
+    width: 120px;
+    max-width: 100%;
 }
 
 .ticket-type-btn span {
@@ -203,7 +203,6 @@ body {
     width: 100%;
     max-width: 500px;
     margin: 0 auto;
-    /* Убрали min-height: 100vh, чтобы карточка не растягивалась и не центрировалась */
     background-color: #f2f3f4;
     background-image: url('pictures/sbp-bg.png');
     background-repeat: no-repeat;
@@ -214,16 +213,10 @@ body {
 
 .new-header { display: none; }
 .new-body { 
-    /* 
-       Используем % вместо vw!
-       Проценты в padding-top считаются от ШИРИНЫ карточки.
-       Так как картинка тоже масштабируется по ширине, этот отступ 
-       всегда будет идеально попадать под волну на любом устройстве.
-    */
     padding: 30% 24px 30px; 
     text-align: center; 
 }
-}
+
 .new-success { font-size: 20px; color: #333; margin: 10px 0 30px; }
 .new-transport { font-size: 20px; font-weight: 700; color: #4a4a4a; margin-bottom: 10px; }
 .new-price { font-size: 48px; font-weight: 700; color: #4a4a4a; line-height: 1; margin-bottom: 24px; }
@@ -356,70 +349,59 @@ body { overflow-x: hidden; }
     100% { opacity: 0; }
 }
 
-.gis-content {
-    position: relative;
-    z-index: 10;
-    padding: 0 16px 40px;
-    margin-top: -50%; /* Процентный отступ, чтобы не съезжало на мобилках */
-}
-
-/* ===== КАРТОЧКА С БИЛЕТОМ ===== */
-.gis-ticket-card {
-    background: #fff;
-    border-radius: 20px; /* Вернули скругление со всех сторон, так как волна теперь отдельно */
-    padding: 16px 16px 8px;
-    position: relative;
-    border: 1px solid #f0f0f0;
-    margin-bottom: 20px; /* Отступ до кнопки "История оплат" */
-}
-
 /* ===== СЛОЙ С ВОЛНОЙ ===== */
 .gis-wave-layer {
     position: absolute;
     left: 0;
     right: 0;
-    
-    /* 
-      ВОТ ТУТ РУЧНАЯ РЕГУЛИРОВКА ВЫСОТЫ! 
-      Меняй top, чтобы опустить или поднять волну.
-      Сейчас 380px — это примерно под карточкой. 
-    */
-    top: 380px; 
-    
-    height: 25px; /* Высота самой волны */
-    
+    top: 780px; /* Опущено на 400px от предыдущего значения 380px */
+    height: 25px; /* Высота волны */
     background-image: url('pictures/perforation.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    
-    /* Ставим слой ПОД данные (у .gis-content z-index: 10, у волны будет 5) */
-    z-index: 5; 
-    pointer-events: none; /* Волна не будет мешать кликам */
+    z-index: 5; /* Волна под данными */
+    pointer-events: none; 
 }
 
 /* ===== КОНТЕНТ (ДАННЫЕ) ===== */
 .gis-content {
     position: relative;
-    z-index: 10; /* Данные всегда поверх волны */
+    z-index: 10; /* Данные поверх волны */
     padding: 0 16px 40px;
-    margin-top: -50%; /* Подними/опусти данные относительно домиков */
+    
+    /* 
+      Поднимаем данные на 300px выше!
+      Было -50%, теперь -50% минус 300px.
+    */
+    margin-top: calc(-50% - 300px); 
+}
 
+/* ===== КАРТОЧКА С БИЛЕТОМ ===== */
+.gis-ticket-card {
+    background: #fff;
+    border-radius: 20px 20px 0 0; /* Скругление ТОЛЬКО СВЕРХУ */
+    padding: 16px 16px 8px;
+    position: relative;
+    border: 1px solid #f0f0f0;
+    border-bottom: none; /* Убрали нижнюю границу, так как снизу волна */
+    margin-bottom: 20px; 
+}
 
 /* Контейнер с иконкой и номером маршрута */
 .gis-card__route {
     display: flex;
     align-items: center; 
-    gap: 12px; /* Увеличили отступ, чтобы текст сместился правее */
+    gap: 12px; 
     margin-bottom: 4px;
-    padding-top: 4px; /* Небольшой отступ сверху для "квадратности" */
+    padding-top: 4px; 
 }
 
 /* Иконка транспорта */
 .gis-card__route img {
-    width: 30px;  /* Чуть увеличили для баланса */
+    width: 30px;  
     height: 30px;
     object-fit: contain;
-    margin-top: 6px; /* ОПУСКАЕМ ИКОНКУ НИЖЕ, чтобы она встала ровно с текстом */
+    margin-top: 6px; 
 }
 
 /* Номер маршрута */
@@ -430,12 +412,12 @@ body { overflow-x: hidden; }
     line-height: 1.2;
 }
 
-/* Название остановки (текст под номером) */
+/* Название остановки */
 .gis-card__route-name {
     font-size: 13px;
     color: #8a8a8a;
     margin-bottom: 10px;
-    padding-left: 42px; /* Выравниваем по тексту выше: 30px иконка + 12px отступ */
+    padding-left: 42px; 
 }
 
 /* Плашки с номерами ТС */
@@ -444,7 +426,7 @@ body { overflow-x: hidden; }
     align-items: center;
     gap: 8px;
     margin-bottom: 14px;
-    padding-left: 42px; /* Тоже выравниваем по тексту */
+    padding-left: 42px; 
 }
 
 .gis-plate {
@@ -458,32 +440,27 @@ body { overflow-x: hidden; }
 .gis-plate--green { background: #e3f4e6; color: #1e8e3e; }
 
 .gis-card__sputnick {
-    /* Было 16px, увеличиваем в 2.5 раза */
     width: 40px;  
     height: 40px; 
     object-fit: contain;
-    
-    /* Делаем чуть заметнее (было 0.5) */
     opacity: 0.8; 
-    
-    /* Добавим отступ слева, чтобы она не прилипала к зеленой плашке */
     margin-left: 4px;
 }
 
 .gis-card__meta {
     display: flex;
-    justify-content: flex-start; /* Выравниваем по левому краю */
+    justify-content: flex-start; 
     align-items: center;
-    gap: 8px; /* Отступ между датой и ценой */
+    gap: 8px; 
     font-size: 13px;
     color: #8a8a8a;
     padding: 0 0 12px;
 }
 
 .gis-card__meta #gisPrice {
-    color: #8a8a8a; /* Сделали серым, как дату */
-    font-weight: 400; /* Убрали жирность */
-    font-size: 13px; /* Одинаковый размер с датой */
+    color: #8a8a8a; 
+    font-weight: 400; 
+    font-size: 13px; 
 }
 
 .gis-card__divider {
@@ -498,7 +475,7 @@ body { overflow-x: hidden; }
     align-items: center;
     gap: 12px;
     padding: 14px 0;
-    background: transparent; /* Прозрачный фон */
+    background: transparent; 
     border: none;
     font-family: inherit;
     font-size: 15px;
@@ -507,16 +484,17 @@ body { overflow-x: hidden; }
     margin: 0;
     text-align: left;
     position: relative;
-    z-index: 10; /* Поднимаем над слоями карточки */
+    z-index: 10; 
 }
 
-/* ===== УВЕЛИЧЕНИЕ ИКОНОК В 2 РАЗА ===== */
+/* ===== ИКОНКИ (УВЕЛИЧЕНЫ) ===== */
 .gis-card__details img,
 .gis-history img {
-    width: 44px;   /* Было 22px */
-    height: 44px;  /* Было 22px */
+    width: 44px;   
+    height: 44px;  
     object-fit: contain;
-    opacity: 0.7
+    opacity: 0.7;
+}
 
 .gis-card__details span:nth-child(2),
 .gis-history span:nth-child(2) {
@@ -530,14 +508,14 @@ body { overflow-x: hidden; }
     font-weight: 400;
 }
 
+/* ===== ИСТОРИЯ ОПЛАТ ===== */
 .gis-history {
-    /* Жестко задаем фон и тень */
     background: #ffffff !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     border: 1px solid #f0f0f0;
-    border-radius: 16px;
+    border-radius: 18px; /* Скругление по всем сторонам */
     padding: 16px;
-    margin-top: 30px; /* Отступ от волны */
+    margin-top: 30px; 
     margin-bottom: 20px;
     width: 100%;
     display: flex;
@@ -548,11 +526,10 @@ body { overflow-x: hidden; }
     color: #1a1a1a;
     cursor: pointer;
     text-align: left;
-    
-    /* Вытаскиваем на передний план */
     position: relative;
     z-index: 9999; 
 }
+
 /* МОДАЛКА "ДЕТАЛИ" */
 .gis-modal {
     position: fixed;
@@ -656,5 +633,3 @@ body { overflow-x: hidden; }
 .old-qr-wrap canvas { width: 100%; max-width: 420px; height: auto !important; }
 .new-qr-wrap canvas { width: 100%; max-width: 420px; height: auto !important; }
 .receipt-qr canvas { width: 400px; height: 400px; max-width: 100%; }
-
-}
