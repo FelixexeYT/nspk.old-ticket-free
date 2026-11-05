@@ -354,7 +354,7 @@ body { overflow-x: hidden; }
     position: absolute;
     left: 0;
     right: 0;
-    top: 780px; /* Опущено на 400px от предыдущего значения 380px */
+    top: 900px; /* Опущено на 400px от предыдущего значения 380px */
     height: 25px; /* Высота волны */
     background-image: url('pictures/perforation.png');
     background-size: 100% 100%;
@@ -367,13 +367,13 @@ body { overflow-x: hidden; }
 .gis-content {
     position: relative;
     z-index: 10; /* Данные поверх волны */
-    padding: 0 16px 40px;
+    padding: 0 0px 40px;
     
     /* 
       Поднимаем данные на 300px выше!
       Было -50%, теперь -50% минус 300px.
     */
-    margin-top: calc(-50% - 300px); 
+    margin-top: calc(-50% - 270px); 
 }
 
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
