@@ -354,7 +354,8 @@ body { overflow-x: hidden; }
     position: absolute;
     left: 0;
     right: 0;
-    top: 900px; /* Опущено на 400px от предыдущего значения 380px */
+    top: 
+        800px; /* Опущено на 400px от предыдущего значения 380px */
     height: 25px; /* Высота волны */
     background-image: url('pictures/perforation.png');
     background-size: 100% 100%;
