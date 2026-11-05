@@ -367,13 +367,13 @@ body { overflow-x: hidden; }
 .gis-content {
     position: relative;
     z-index: 10; /* Данные поверх волны */
-    padding: 0 0px 40px;
+    padding: 0 24px 40px;
     
     /* 
       Поднимаем данные на 300px выше!
       Было -50%, теперь -50% минус 300px.
     */
-    margin-top: calc(-50% - 270px); 
+    margin-top: calc(-50% - 280px); 
 }
 
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
