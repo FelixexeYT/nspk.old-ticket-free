@@ -352,10 +352,10 @@ body { overflow-x: hidden; }
 /* ===== СЛОЙ С ВОЛНОЙ ===== */
 .gis-wave-layer {
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 20;
+    right: 20;
     top: 
-        835px; /* Опущено на 400px от предыдущего значения 380px */
+        833px; /* 832 */
     height: 25px; /* Высота волны */
     background-image: url('pictures/perforation.png');
     background-size: 100% 100%;
