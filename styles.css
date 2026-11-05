@@ -220,11 +220,11 @@ body {
        Так как картинка тоже масштабируется по ширине, этот отступ 
        всегда будет идеально попадать под волну на любом устройстве.
     */
-    padding: 45% 24px 30px; 
+    padding: 30% 24px 30px; 
     text-align: center; 
 }
 }
-.new-success { font-size: 17px; color: #333; margin: 10px 0 30px; }
+.new-success { font-size: 20px; color: #333; margin: 10px 0 30px; }
 .new-transport { font-size: 20px; font-weight: 700; color: #4a4a4a; margin-bottom: 10px; }
 .new-price { font-size: 48px; font-weight: 700; color: #4a4a4a; line-height: 1; margin-bottom: 24px; }
 .new-date { font-size: 17px; color: #4a4a4a; margin-bottom: 6px; }
@@ -366,35 +366,45 @@ body { overflow-x: hidden; }
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
 .gis-ticket-card {
     background: #fff;
-    border-radius: 20px 20px 0 0;
-    padding: 16px 16px 20px;
+    border-radius: 20px; /* Вернули скругление со всех сторон, так как волна теперь отдельно */
+    padding: 16px 16px 8px;
     position: relative;
     border: 1px solid #f0f0f0;
-    border-bottom: none;
-    
-    /* Отступ снизу, чтобы кнопка истории не наезжала на волну */
-    margin-bottom: 25px; 
+    margin-bottom: 20px; /* Отступ до кнопки "История оплат" */
 }
 
-/* ===== ИМИТАЦИЯ ПЕРФОРАЦИИ (МАСШТАБИРОВАНИЕ) ===== */
-.gis-ticket-card::after {
-    content: "";
+/* ===== СЛОЙ С ВОЛНОЙ ===== */
+.gis-wave-layer {
     position: absolute;
     left: 0;
     right: 0;
-    top: 100%; /* Приклеена ровно к низу карточки */
-    width: 100%;
     
-    /* ВОТ ГЛАВНАЯ НАСТРОЙКА РАЗМЕРА ВОЛНЫ! */
-    height: 20px; /* Меняй это число: 15px (мелкая), 25px (крупная) */
+    /* 
+      ВОТ ТУТ РУЧНАЯ РЕГУЛИРОВКА ВЫСОТЫ! 
+      Меняй top, чтобы опустить или поднять волну.
+      Сейчас 380px — это примерно под карточкой. 
+    */
+    top: 380px; 
+    
+    height: 25px; /* Высота самой волны */
     
     background-image: url('pictures/perforation.png');
-    background-size: 100% 100%; /* Растягивает картинку ровно на всю ширину и высоту */
+    background-size: 100% 100%;
     background-repeat: no-repeat;
-    pointer-events: none !important; 
-    z-index: 1;
-    /* Никаких transform: scale и width: 110% — они ломают края */
+    
+    /* Ставим слой ПОД данные (у .gis-content z-index: 10, у волны будет 5) */
+    z-index: 5; 
+    pointer-events: none; /* Волна не будет мешать кликам */
 }
+
+/* ===== КОНТЕНТ (ДАННЫЕ) ===== */
+.gis-content {
+    position: relative;
+    z-index: 10; /* Данные всегда поверх волны */
+    padding: 0 16px 40px;
+    margin-top: -50%; /* Подними/опусти данные относительно домиков */
+
+
 /* Контейнер с иконкой и номером маршрута */
 .gis-card__route {
     display: flex;
