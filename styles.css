@@ -352,9 +352,9 @@ body { overflow-x: hidden; }
 /* ===== СЛОЙ С ВОЛНОЙ ===== */
 .gis-wave-layer {
     position: absolute;
-    left: 20px;
-    right: 20px;
-    top: 833px; /* 832 или 833 */
+    left: 10px;
+    right: 10px;
+    top: 800px; /* 832 или 833 */
     height: 25px; /* Высота волны */
     background-image: url('pictures/perforation.png');
     background-size: 100% 100%;
@@ -373,7 +373,7 @@ body { overflow-x: hidden; }
       Поднимаем данные на 300px выше!
       Было -50%, теперь -50% минус 300px.
     */
-    margin-top: calc(-50% - 290px); 
+    margin-top: calc(-50% - 310px); 
 }
 
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
