@@ -374,7 +374,7 @@ body { overflow-x: hidden; }
     right: 20px;
     
     /* ВЕРНУЛИ ВОЛНУ НА МЕСТО (возможно, придется чуть подогнать top) */
-    top: 755px; 
+    top: 820px; /*755*/
     
     height: 20px; 
     background-image: url('pictures/perforation.png');
@@ -422,7 +422,7 @@ body { overflow-x: hidden; }
 
 /* ВЕРНУЛИ СТИЛИ ДЛЯ НОМЕРА АВТОБУСА + УВЕЛИЧИЛИ */
 .gis-card__route span {
-    font-size: 26px; /* Увеличили размер */
+    font-size: 20px; /* Увеличили размер */
     font-family: 'SBSansText', sans-serif;
     font-weight: 500; 
     color: #1a1a1a;
