@@ -374,7 +374,7 @@ body { overflow-x: hidden; }
     right: 10px;
     
     /* ВЕРНУЛИ ВОЛНУ НА МЕСТО (возможно, придется чуть подогнать top) */
-    top: 755px; /*755*/
+    top: 785px; /*755*/
     
     height: 20px; 
     background-image: url('pictures/perforation.png');
