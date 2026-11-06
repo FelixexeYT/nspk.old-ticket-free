@@ -123,9 +123,19 @@ body {
 }
 
 .ticket-type-btn[data-value="2gis"] img {
-    height: 48px;
-    width: 120px;
-    max-width: 100%;
+    height: 36px; /* Задаем базовую высоту */
+    width: auto;  /* Позволяем ширине подстроиться */
+    
+    /* 
+      ВОТ МАГИЯ: 
+      scale(1.4) увеличивает картинку на 40% визуально, 
+      не раздвигая соседние элементы и не ломая кнопку.
+      Если надо еще больше — поставь 1.5 или 1.6.
+    */
+    transform: scale(1.4); 
+    
+    /* Чтобы при увеличении картинка не вылезала за пределы кнопки по бокам */
+    max-width: 100%; 
 }
 
 .ticket-type-btn span {
@@ -420,12 +430,13 @@ body { overflow-x: hidden; }
 }
 
 /* Номер маршрута */
-.gis-card__route span {
-    font-size: 22px;
-    font-family: 'SBSansText', sans-serif; /* Применили шрифт */
-    font-weight: 400; /* Сделали тоньше (было 700) */
-    color: #1a1a1a;
-    line-height: 1.2;
+.gis-card__route-name {
+    font-size: 14px;
+    color: #8a8a8a;
+    margin-bottom: 10px;
+    padding-left: 42px; 
+    font-family: 'SBSansText', sans-serif; /* Тоже применим шрифт */
+    font-weight: 400;
 }
 
 /* Название остановки */
@@ -461,11 +472,18 @@ body { overflow-x: hidden; }
 }
 
 .gis-card__sputnick {
-    width: 40px;  
-    height: 40px; 
+    /* Было 40px, увеличиваем в 2 раза */
+    width: 80px;  
+    height: 80px; 
     object-fit: contain;
     opacity: 0.8; 
-    margin-left: 4px;
+    
+    /* 
+      Сдвигаем левее!
+      Отрицательный margin-left притягивает картинку влево, 
+      ближе к зеленой плашке (раньше было 4px).
+    */
+    margin-left: -15px; 
 }
 
 .gis-card__meta {
