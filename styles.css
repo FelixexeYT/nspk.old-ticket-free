@@ -354,7 +354,7 @@ body { overflow-x: hidden; }
     position: absolute;
     left: 10px;
     right: 10px;
-    top: 7500px; /* 832 или 833 */
+    top: 750px; /* 832 или 833 */
     height: 25px; /* Высота волны */
     background-image: url('pictures/perforation.png');
     background-size: 100% 100%;
@@ -373,7 +373,7 @@ body { overflow-x: hidden; }
       Поднимаем данные на 300px выше!
       Было -50%, теперь -50% минус 300px.
     */
-    margin-top: calc(-50% - 220px); 
+    margin-top: calc(-50% - 230px); 
 }
 
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
