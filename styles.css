@@ -370,11 +370,11 @@ body { overflow-x: hidden; }
 /* ===== СЛОЙ С ВОЛНОЙ ===== */
 .gis-wave-layer {
     position: absolute;
-    left: 10px;
-    right: 10px;
+    left: 20px;
+    right: 20px;
     
     /* ВЕРНУЛИ ВОЛНУ НА МЕСТО (возможно, придется чуть подогнать top) */
-    top: 795px; /*755*/
+    top: 810px; /*755*/
     
     height: 20px; 
     background-image: url('pictures/perforation.png');
