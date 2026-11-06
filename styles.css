@@ -422,7 +422,8 @@ body { overflow-x: hidden; }
 /* Номер маршрута */
 .gis-card__route span {
     font-size: 22px;
-    font-weight: 700;
+    font-family: 'SBSansText', sans-serif; /* Применили шрифт */
+    font-weight: 400; /* Сделали тоньше (было 700) */
     color: #1a1a1a;
     line-height: 1.2;
 }
@@ -448,11 +449,16 @@ body { overflow-x: hidden; }
     display: inline-block;
     padding: 4px 10px;
     border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 14px; /* Чуть увеличили для читаемости */
+    
+    font-family: 'SBSansText', sans-serif; /* Применили шрифт */
+    font-weight: 400; /* Сделали тоньше (было 600) */
 }
 
-.gis-plate--green { background: #e3f4e6; color: #1e8e3e; }
+.gis-plate--green { 
+    background: #e3f4e6; 
+    color: #1e8e3e; 
+}
 
 .gis-card__sputnick {
     width: 40px;  
@@ -467,15 +473,19 @@ body { overflow-x: hidden; }
     justify-content: flex-start; 
     align-items: center;
     gap: 8px; 
-    font-size: 13px;
+    font-size: 14px; /* Чуть увеличили размер */
     color: #8a8a8a;
     padding: 0 0 12px;
+    
+    font-family: 'SBSansText', sans-serif; /* Применили шрифт */
+    font-weight: 400; /* Обычная толщина */
 }
 
 .gis-card__meta #gisPrice {
     color: #8a8a8a; 
+    font-family: 'SBSansText', sans-serif;
     font-weight: 400; 
-    font-size: 13px; 
+    font-size: 14px; 
 }
 
 .gis-card__divider {
@@ -535,26 +545,27 @@ body { overflow-x: hidden; }
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     border: 1px solid #f0f0f0;
     border-radius: 18px; 
-    padding: 16px;
-    margin-top: 30px; 
+    
+    /* Уменьшили отступы сверху и снизу (было 16px) */
+    padding: 12px 16px; 
+    
+    /* Сдвинули ниже на 20px (было 30px) */
+    margin-top: 50px; 
     margin-bottom: 20px;
+    
     width: 100%;
     display: flex;
     align-items: center;
     gap: 12px;
-    
-    /* Применяем шрифт, вес 500 (Medium) */
     font-family: 'SBSansText', sans-serif;
     font-size: 17px; 
     font-weight: 500; 
-    
     color: #1a1a1a;
     cursor: pointer;
     text-align: left;
     position: relative;
     z-index: 9999; 
 }
-
 /* МОДАЛКА "ДЕТАЛИ" */
 .gis-modal {
     position: fixed;
