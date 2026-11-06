@@ -1,3 +1,18 @@
+/* ===== ПОДКЛЮЧЕНИЕ ШРИФТОВ ДЛЯ 2ГИС ===== */
+@font-face {
+    font-family: 'SBSansText';
+    src: url('fonts/SBSansText.ttf') format('truetype');
+    font-weight: 400; /* Regular */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SBSansText';
+    src: url('fonts/sb-sans-text-medium.ttf') format('truetype');
+    font-weight: 500; /* Medium */
+    font-style: normal;
+}
+
 /* ===== ОБЩЕЕ ===== */
 * { box-sizing: border-box; }
 
@@ -469,6 +484,7 @@ body { overflow-x: hidden; }
     margin: 0 -16px;
 }
 
+/* Кнопка «Детали заказа» */
 .gis-card__details {
     width: 100%;
     display: flex;
@@ -477,8 +493,12 @@ body { overflow-x: hidden; }
     padding: 14px 0;
     background: transparent; 
     border: none;
-    font-family: inherit;
-    font-size: 15px;
+    
+    /* Применяем шрифт, вес 500 (Medium) */
+    font-family: 'SBSansText', sans-serif;
+    font-size: 17px; 
+    font-weight: 500; 
+    
     color: #1a1a1a;
     cursor: pointer;
     margin: 0;
@@ -496,10 +516,11 @@ body { overflow-x: hidden; }
     opacity: 0.7;
 }
 
+/* Текст внутри кнопок */
 .gis-card__details span:nth-child(2),
 .gis-history span:nth-child(2) {
     flex: 1;
-    font-weight: 500;
+    font-weight: 500; /* Наследуем Medium */
 }
 
 .gis-arrow {
@@ -508,12 +529,12 @@ body { overflow-x: hidden; }
     font-weight: 400;
 }
 
-/* ===== ИСТОРИЯ ОПЛАТ ===== */
+/* Кнопка «История оплат» */
 .gis-history {
     background: #ffffff !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     border: 1px solid #f0f0f0;
-    border-radius: 18px; /* Скругление по всем сторонам */
+    border-radius: 18px; 
     padding: 16px;
     margin-top: 30px; 
     margin-bottom: 20px;
@@ -521,8 +542,12 @@ body { overflow-x: hidden; }
     display: flex;
     align-items: center;
     gap: 12px;
-    font-family: inherit;
-    font-size: 15px;
+    
+    /* Применяем шрифт, вес 500 (Medium) */
+    font-family: 'SBSansText', sans-serif;
+    font-size: 17px; 
+    font-weight: 500; 
+    
     color: #1a1a1a;
     cursor: pointer;
     text-align: left;
