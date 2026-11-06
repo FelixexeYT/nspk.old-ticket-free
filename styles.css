@@ -123,18 +123,9 @@ body {
 }
 
 .ticket-type-btn[data-value="2gis"] img {
-    height: 36px; /* Задаем базовую высоту */
-    width: auto;  /* Позволяем ширине подстроиться */
-    
-    /* 
-      ВОТ МАГИЯ: 
-      scale(1.4) увеличивает картинку на 40% визуально, 
-      не раздвигая соседние элементы и не ломая кнопку.
-      Если надо еще больше — поставь 1.5 или 1.6.
-    */
+    height: 36px;
+    width: auto;
     transform: scale(1.4); 
-    
-    /* Чтобы при увеличении картинка не вылезала за пределы кнопки по бокам */
     max-width: 100%; 
 }
 
@@ -259,8 +250,7 @@ body {
     max-width: 460px;
     margin: 0 auto;
     padding: 16px;
-    background: linear-gradient(90deg, #209fff 0%, #0bd3d6 100%);
-    background: -webkit-linear-gradient(90deg, #209fff 0%, #0bd3d6 100%);
+    background: linear-gradient(to bottom, #209fff 0%, #0bd3d6 100%);
     color: #ffffff;
     border: none;
     border-radius: 12px;
@@ -341,6 +331,9 @@ body { overflow-x: hidden; }
     border-radius: 24px 24px 0 0;
     box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15);
     flex-grow: 1;
+    
+    /* ДОБАВИЛИ ОТСТУП СНИЗУ, ЧТОБЫ БЫЛО КУДА ПРОКРУЧИВАТЬ */
+    padding-bottom: 120px; 
 }
 
 .gis-hero-images {
@@ -377,38 +370,36 @@ body { overflow-x: hidden; }
 /* ===== СЛОЙ С ВОЛНОЙ ===== */
 .gis-wave-layer {
     position: absolute;
-    left: 20px; /* отступ */
+    left: 20px;
     right: 20px;
-    top: 755px; /* 755 */
-    height: 25px; /* Высота волны */
+    
+    /* ВЕРНУЛИ ВОЛНУ НА МЕСТО (возможно, придется чуть подогнать top) */
+    top: 755px; 
+    
+    height: 20px; 
     background-image: url('pictures/perforation.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    z-index: 5; /* Волна под данными */
+    z-index: 5; 
     pointer-events: none; 
 }
 
 /* ===== КОНТЕНТ (ДАННЫЕ) ===== */
 .gis-content {
     position: relative;
-    z-index: 10; /* Данные поверх волны */
+    z-index: 10; 
     padding: 0 20px 40px;
-    
-    /* 
-      Поднимаем данные на 300px выше!
-      Было -50%, теперь -50% минус 300px.
-    */
     margin-top: calc(-50% - 240px); 
 }
 
 /* ===== КАРТОЧКА С БИЛЕТОМ ===== */
 .gis-ticket-card {
     background: #fff;
-    border-radius: 20px 20px 0 0; /* Скругление ТОЛЬКО СВЕРХУ */
+    border-radius: 20px 20px 0 0; 
     padding: 16px 16px 8px;
     position: relative;
     border: 1px solid #f0f0f0;
-    border-bottom: none; /* Убрали нижнюю границу, так как снизу волна */
+    border-bottom: none; 
     margin-bottom: 20px; 
 }
 
@@ -429,22 +420,23 @@ body { overflow-x: hidden; }
     margin-top: 6px; 
 }
 
-/* Номер маршрута */
+/* ВЕРНУЛИ СТИЛИ ДЛЯ НОМЕРА АВТОБУСА + УВЕЛИЧИЛИ */
+.gis-card__route span {
+    font-size: 26px; /* Увеличили размер */
+    font-family: 'SBSansText', sans-serif;
+    font-weight: 500; 
+    color: #1a1a1a;
+    line-height: 1.2;
+}
+
+/* Название остановки (исправили дубликат) */
 .gis-card__route-name {
     font-size: 14px;
     color: #8a8a8a;
     margin-bottom: 10px;
     padding-left: 42px; 
-    font-family: 'SBSansText', sans-serif; /* Тоже применим шрифт */
+    font-family: 'SBSansText', sans-serif;
     font-weight: 400;
-}
-
-/* Название остановки */
-.gis-card__route-name {
-    font-size: 13px;
-    color: #8a8a8a;
-    margin-bottom: 10px;
-    padding-left: 42px; 
 }
 
 /* Плашки с номерами ТС */
@@ -460,10 +452,9 @@ body { overflow-x: hidden; }
     display: inline-block;
     padding: 4px 10px;
     border-radius: 6px;
-    font-size: 14px; /* Чуть увеличили для читаемости */
-    
-    font-family: 'SBSansText', sans-serif; /* Применили шрифт */
-    font-weight: 400; /* Сделали тоньше (было 600) */
+    font-size: 14px; 
+    font-family: 'SBSansText', sans-serif; 
+    font-weight: 400; 
 }
 
 .gis-plate--green { 
@@ -472,17 +463,10 @@ body { overflow-x: hidden; }
 }
 
 .gis-card__sputnick {
-    /* Было 40px, увеличиваем в 2 раза */
     width: 80px;  
     height: 80px; 
     object-fit: contain;
     opacity: 0.8; 
-    
-    /* 
-      Сдвигаем левее!
-      Отрицательный margin-left притягивает картинку влево, 
-      ближе к зеленой плашке (раньше было 4px).
-    */
     margin-left: -15px; 
 }
 
@@ -491,12 +475,11 @@ body { overflow-x: hidden; }
     justify-content: flex-start; 
     align-items: center;
     gap: 8px; 
-    font-size: 14px; /* Чуть увеличили размер */
+    font-size: 14px; 
     color: #8a8a8a;
     padding: 0 0 12px;
-    
-    font-family: 'SBSansText', sans-serif; /* Применили шрифт */
-    font-weight: 400; /* Обычная толщина */
+    font-family: 'SBSansText', sans-serif; 
+    font-weight: 400; 
 }
 
 .gis-card__meta #gisPrice {
@@ -521,12 +504,9 @@ body { overflow-x: hidden; }
     padding: 14px 0;
     background: transparent; 
     border: none;
-    
-    /* Применяем шрифт, вес 500 (Medium) */
     font-family: 'SBSansText', sans-serif;
     font-size: 17px; 
     font-weight: 500; 
-    
     color: #1a1a1a;
     cursor: pointer;
     margin: 0;
@@ -535,7 +515,7 @@ body { overflow-x: hidden; }
     z-index: 10; 
 }
 
-/* ===== ИКОНКИ (УВЕЛИЧЕНЫ) ===== */
+/* ===== ИКОНКИ ===== */
 .gis-card__details img,
 .gis-history img {
     width: 44px;   
@@ -544,11 +524,10 @@ body { overflow-x: hidden; }
     opacity: 0.7;
 }
 
-/* Текст внутри кнопок */
 .gis-card__details span:nth-child(2),
 .gis-history span:nth-child(2) {
     flex: 1;
-    font-weight: 500; /* Наследуем Medium */
+    font-weight: 500; 
 }
 
 .gis-arrow {
@@ -563,14 +542,9 @@ body { overflow-x: hidden; }
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     border: 1px solid #f0f0f0;
     border-radius: 18px; 
-    
-    /* Уменьшили отступы сверху и снизу (было 16px) */
     padding: 12px 16px; 
-    
-    /* Сдвинули ниже на 20px (было 30px) */
-    margin-top: 50px; 
+    margin-top: 40px; 
     margin-bottom: 20px;
-    
     width: 100%;
     display: flex;
     align-items: center;
@@ -584,6 +558,7 @@ body { overflow-x: hidden; }
     position: relative;
     z-index: 9999; 
 }
+
 /* МОДАЛКА "ДЕТАЛИ" */
 .gis-modal {
     position: fixed;
